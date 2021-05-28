@@ -1,0 +1,171 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "rozetka",
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "https://pigeon-inc.stoplight.io"
+    }
+  ],
+  "paths": {
+    "/products": {
+      "get": {
+        "summary": "Show products",
+        "tags": [],
+        "operationId": "get",
+        "description": "",
+        "x-internal": false,
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "description": {
+                        "type": "string"
+                      },
+                      "price": {
+                        "type": "integer"
+                      },
+                      "discount": {
+                        "type": "integer"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "price"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": []
+      },
+      "post": {
+        "summary": "Add product",
+        "tags": [],
+        "responses": {},
+        "operationId": "post"
+      },
+      "put": {
+        "summary": "Increase\\decrease product quantity",
+        "operationId": "put",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "description": ""
+      },
+      "parameters": []
+    },
+    "/cart": {
+      "get": {
+        "summary": "Show cart products",
+        "tags": [],
+        "responses": {},
+        "operationId": "get-cart"
+      },
+      "post": {
+        "summary": "Make order",
+        "tags": [],
+        "responses": {},
+        "operationId": "post-cart"
+      },
+      "put": {
+        "summary": "Increase\\decrease product quantity",
+        "tags": [],
+        "responses": {},
+        "operationId": "put-cart"
+      },
+      "delete": {
+        "summary": "Remove product",
+        "tags": [],
+        "responses": {},
+        "operationId": "delete-cart"
+      }
+    },
+    "/products/{productid}": {
+      "parameters": [
+        {
+          "schema": {
+            "type": "string"
+          },
+          "name": "productid",
+          "in": "path",
+          "required": true
+        }
+      ],
+      "get": {
+        "summary": "Show product info",
+        "tags": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "price": {
+                      "type": "integer"
+                    },
+                    "discount": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "price"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-product-productid"
+      },
+      "post": {
+        "summary": "Post reviews",
+        "tags": [],
+        "responses": {},
+        "operationId": "post-product-productid"
+      },
+      "put": {
+        "summary": "Update product info",
+        "tags": [],
+        "responses": {},
+        "operationId": "put-product-productid"
+      }
+    }
+  },
+  "components": {
+    "schemas": {},
+    "securitySchemes": {}
+  }
+}
