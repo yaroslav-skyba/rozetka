@@ -20,7 +20,7 @@
       "get": {
         "summary": "Show products",
         "tags": [],
-        "operationId": "search-products",
+        "operationId": "get-products",
         "description": "Show all products",
         "responses": {
           "200": {
@@ -69,82 +69,6 @@
         "description": "Add product on main page"
       },
       "parameters": []
-    },
-    "/cart": {
-      "get": {
-        "summary": "Show cart products",
-        "tags": [],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/product"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "operationId": "get-cart",
-        "description": "Show products in cart whis are added by customer"
-      },
-      "post": {
-        "summary": "Make order",
-        "tags": [],
-        "responses": {
-          "201": {
-            "description": "Created"
-          }
-        },
-        "operationId": "post-cart",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/product"
-              }
-            }
-          }
-        },
-        "description": "Send order to server"
-      },
-      "delete": {
-        "summary": "Remove product",
-        "tags": [],
-        "responses": {
-          "204": {
-            "description": "No Content"
-          }
-        },
-        "operationId": "delete-cart",
-        "description": "Remove product from cart"
-      },
-      "patch": {
-        "summary": "Increase\\decrease product quantity",
-        "operationId": "patch-cart",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "integer",
-                "minimum": 0
-              },
-              "examples": {}
-            }
-          }
-        },
-        "description": "Increase\\decrease product quantity in cart",
-        "tags": []
-      }
     },
     "/products/{uuid}": {
       "parameters": [
