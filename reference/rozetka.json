@@ -20,9 +20,8 @@
       "get": {
         "summary": "Show products",
         "tags": [],
-        "operationId": "get",
+        "operationId": "search-products",
         "description": "Show all products",
-        "x-internal": false,
         "responses": {
           "200": {
             "description": "OK",
@@ -69,39 +68,7 @@
         },
         "description": "Add product on main page"
       },
-      "parameters": [],
-      "delete": {
-        "summary": "Remove product",
-        "operationId": "delete-products",
-        "responses": {
-          "204": {
-            "description": "No Content"
-          }
-        },
-        "description": "Remove product from main page",
-        "tags": []
-      },
-      "patch": {
-        "summary": "Increase\\decrease product quantity",
-        "operationId": "patch-products",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "description": "Increase\\decrease product quantity in cart",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "integer",
-                "minimum": 0
-              }
-            }
-          }
-        },
-        "tags": []
-      }
+      "parameters": []
     },
     "/cart": {
       "get": {
@@ -179,13 +146,13 @@
         "tags": []
       }
     },
-    "/products/{id}": {
+    "/products/{uuid}": {
       "parameters": [
         {
           "schema": {
             "type": "integer"
           },
-          "name": "id",
+          "name": "uuid",
           "in": "path",
           "required": true
         }
@@ -267,37 +234,91 @@
       "product": {
         "title": "product",
         "type": "object",
+        "x-examples": {},
         "properties": {
-          "id": {
-            "type": "integer",
-            "minimum": 0
+          "uuid": {
+            "type": "string",
+            "format": "uuid"
           },
           "name": {
             "type": "string"
           },
           "quantity": {
             "type": "integer",
-            "minimum": 0
+            "minimum": 0,
+            "format": "int32"
           },
           "price": {
-            "type": "integer",
+            "type": "number",
+            "format": "float",
             "minimum": 0
           },
           "discount": {
             "type": "integer",
-            "minimum": 0
+            "minimum": 0,
+            "maximum": 100,
+            "format": "int32"
           },
           "description": {
             "type": "string"
           },
-          "image": {}
+          "image": {
+            "type": "string",
+            "format": "uri"
+          }
         },
         "required": [
-          "id",
           "name",
           "quantity",
           "price"
         ]
+      },
+      "products": {
+        "title": "products",
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/product"
+        }
+      },
+      "review": {
+        "title": "review",
+        "type": "object",
+        "x-examples": {},
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "uuidProduct": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "content": {
+            "type": "string"
+          },
+          "rating": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5
+          },
+          "published": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "content",
+          "published",
+          "uuid",
+          "uuidProduct"
+        ]
+      },
+      "reviews": {
+        "title": "reviews",
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/review"
+        }
       }
     },
     "securitySchemes": {}
