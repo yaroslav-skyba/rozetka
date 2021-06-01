@@ -241,6 +241,7 @@
           }
         },
         "required": [
+          "uuid",
           "name",
           "quantity",
           "price"
