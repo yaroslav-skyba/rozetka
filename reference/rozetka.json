@@ -1,0 +1,299 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "rozetka",
+    "version": "1.0",
+    "contact": {},
+    "description": "Online-shopping"
+  },
+  "servers": [
+    {
+      "url": "https://pigeon-inc.stoplight.io"
+    },
+    {
+      "url": "http://localhost:8080",
+      "description": ""
+    }
+  ],
+  "paths": {
+    "/products": {
+      "get": {
+        "summary": "Get products",
+        "tags": [],
+        "operationId": "getProducts",
+        "description": "Show all products on main page",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/products"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "name",
+            "description": "Get specific product by itself name"
+          }
+        ]
+      },
+      "parameters": []
+    },
+    "/products/{uuid}": {
+      "parameters": [
+        {
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": "uuid",
+          "in": "path",
+          "required": true
+        }
+      ],
+      "get": {
+        "summary": "Get product",
+        "tags": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/product"
+                },
+                "examples": {}
+              }
+            }
+          }
+        },
+        "operationId": "getProduct",
+        "description": "Show specific product on seperate page"
+      }
+    },
+    "/products/{uuid}/reviews": {
+      "parameters": [
+        {
+          "schema": {
+            "type": "string",
+            "format": "email"
+          },
+          "name": "uuid",
+          "in": "path",
+          "required": true
+        }
+      ],
+      "get": {
+        "summary": "Get reviews",
+        "tags": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/reviews"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getProductReviews",
+        "description": "Show product reviews"
+      }
+    },
+    "/products/{uuidProduct}/reviews{uuidReview}": {
+      "parameters": [
+        {
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": "uuidProduct",
+          "in": "path",
+          "required": true
+        },
+        {
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": "uuidReview",
+          "in": "path",
+          "required": true
+        }
+      ],
+      "get": {
+        "summary": "Get review",
+        "tags": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/review"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getProductReview",
+        "description": "Get specific product review"
+      },
+      "post": {
+        "summary": "Post review",
+        "operationId": "postProductReview",
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "description": "Post specific product review",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/review"
+              }
+            }
+          }
+        },
+        "tags": []
+      },
+      "put": {
+        "summary": "Update review",
+        "operationId": "putProductReview",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "description": "Update specific product review",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/review"
+              }
+            }
+          }
+        },
+        "tags": []
+      },
+      "delete": {
+        "summary": "Delete review",
+        "operationId": "deleteProductReview",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "description": "Delete specific product review",
+        "tags": []
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "product": {
+        "title": "product",
+        "type": "object",
+        "x-examples": {},
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "integer",
+            "minimum": 0,
+            "format": "int32"
+          },
+          "price": {
+            "type": "number",
+            "format": "float",
+            "minimum": 0
+          },
+          "discount": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100,
+            "format": "int32"
+          },
+          "description": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string",
+            "format": "uri"
+          }
+        },
+        "required": [
+          "name",
+          "quantity",
+          "price"
+        ]
+      },
+      "products": {
+        "title": "products",
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/product"
+        }
+      },
+      "review": {
+        "title": "review",
+        "type": "object",
+        "x-examples": {},
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "uuidProduct": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "content": {
+            "type": "string"
+          },
+          "rating": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5
+          },
+          "published": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "content",
+          "published",
+          "uuid",
+          "uuidProduct"
+        ]
+      },
+      "reviews": {
+        "title": "reviews",
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/review"
+        }
+      }
+    },
+    "securitySchemes": {}
+  }
+}
