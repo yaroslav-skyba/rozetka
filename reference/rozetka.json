@@ -281,10 +281,10 @@
           }
         },
         "required": [
-          "content",
-          "published",
           "uuid",
-          "uuidProduct"
+          "uuidProduct",
+          "content",
+          "published"
         ]
       },
       "reviews": {
