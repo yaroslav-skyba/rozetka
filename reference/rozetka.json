@@ -18,20 +18,17 @@
   "paths": {
     "/products": {
       "get": {
-        "summary": "Show products",
+        "summary": "Get products",
         "tags": [],
-        "operationId": "get-products",
-        "description": "Show all products",
+        "operationId": "getProducts",
+        "description": "Show all products on main page",
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/product"
-                  }
+                  "$ref": "#/components/schemas/products"
                 }
               }
             }
@@ -44,29 +41,9 @@
             },
             "in": "query",
             "name": "name",
-            "description": "Product name query param for searching tool"
+            "description": "Get specific product by itself name"
           }
         ]
-      },
-      "post": {
-        "summary": "Add product",
-        "tags": [],
-        "responses": {
-          "201": {
-            "description": "Created"
-          }
-        },
-        "operationId": "post",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/product"
-              }
-            }
-          }
-        },
-        "description": "Add product on main page"
       },
       "parameters": []
     },
@@ -74,7 +51,8 @@
       "parameters": [
         {
           "schema": {
-            "type": "integer"
+            "type": "string",
+            "format": "uuid"
           },
           "name": "uuid",
           "in": "path",
@@ -82,7 +60,7 @@
         }
       ],
       "get": {
-        "summary": "Show product info",
+        "summary": "Get product",
         "tags": [],
         "responses": {
           "200": {
@@ -97,58 +75,129 @@
             }
           }
         },
-        "operationId": "get-product-productid",
-        "description": "Show info about product on seperate page"
+        "operationId": "getProduct",
+        "description": "Show specific product on seperate page"
+      }
+    },
+    "/products/{uuid}/reviews": {
+      "parameters": [
+        {
+          "schema": {
+            "type": "string",
+            "format": "email"
+          },
+          "name": "uuid",
+          "in": "path",
+          "required": true
+        }
+      ],
+      "get": {
+        "summary": "Get reviews",
+        "tags": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/reviews"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getProductReviews",
+        "description": "Show product reviews"
+      }
+    },
+    "/products/{uuidProduct}/reviews{uuidReview}": {
+      "parameters": [
+        {
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": "uuidProduct",
+          "in": "path",
+          "required": true
+        },
+        {
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": "uuidReview",
+          "in": "path",
+          "required": true
+        }
+      ],
+      "get": {
+        "summary": "Get review",
+        "tags": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/review"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getProductReview",
+        "description": "Get specific product review"
       },
       "post": {
-        "summary": "Post reviews",
-        "tags": [],
+        "summary": "Post review",
+        "operationId": "postProductReview",
         "responses": {
           "201": {
             "description": "Created"
           }
         },
-        "operationId": "post-product-productid",
+        "description": "Post specific product review",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/product"
+                "$ref": "#/components/schemas/review"
               }
             }
           }
         },
-        "description": "Post reviews on product page"
-      },
-      "delete": {
-        "summary": "Remove product info",
-        "operationId": "delete-products-id",
-        "responses": {
-          "204": {
-            "description": "No Content"
-          }
-        },
-        "description": "Remove product info",
         "tags": []
       },
       "put": {
-        "summary": "Update product info",
-        "operationId": "put-products-id",
+        "summary": "Update review",
+        "operationId": "putProductReview",
         "responses": {
           "200": {
             "description": "OK"
           }
         },
-        "description": "Update product info on itself page",
+        "description": "Update specific product review",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/product"
+                "$ref": "#/components/schemas/review"
               }
             }
           }
         },
+        "tags": []
+      },
+      "delete": {
+        "summary": "Delete review",
+        "operationId": "deleteProductReview",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "description": "Delete specific product review",
         "tags": []
       }
     }
