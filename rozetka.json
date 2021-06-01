@@ -241,6 +241,7 @@
           }
         },
         "required": [
+          "uuid",
           "name",
           "quantity",
           "price"
@@ -280,10 +281,10 @@
           }
         },
         "required": [
-          "content",
-          "published",
           "uuid",
-          "uuidProduct"
+          "uuidProduct",
+          "content",
+          "published"
         ]
       },
       "reviews": {
