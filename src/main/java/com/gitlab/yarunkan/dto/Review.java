@@ -5,28 +5,32 @@ import org.hibernate.annotations.OnDeleteAction;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.sql.Timestamp;
 import java.util.Objects;
 import java.util.UUID;
 
 @Entity
 @Table(name = "o2n_review")
-public class Review {
+public class Review extends AbstractDto {
     @Id
-    @Column(name = "uuid_review")
-    @GeneratedValue
-    private UUID uuidReview;
+    @Column(name = "id_product")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer idReview;
+
+    @NotNull
+    @Column(name = "uuid", nullable = false, unique = true)
+    private UUID uuid;
 
     @NotNull
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "uuid_product")
+    @JoinColumn(name = "id_product")
     private Product product;
 
     @NotNull
@@ -36,16 +40,12 @@ public class Review {
     @Size(min = 1, max = 5)
     private Integer rating;
 
-    @NotNull
-    @Column(name = "published", nullable = false)
-    private Timestamp published;
-
-    public UUID getUuidReview() {
-        return uuidReview;
+    public UUID getUuid() {
+        return uuid;
     }
 
-    public void setUuidReview(UUID uuidReview) {
-        this.uuidReview = uuidReview;
+    public void setUuid(UUID uuidReview) {
+        this.uuid = uuidReview;
     }
 
     public Product getProduct() {
@@ -72,12 +72,12 @@ public class Review {
         this.rating = rating;
     }
 
-    public Timestamp getPublished() {
-        return published;
+    public Integer getIdReview() {
+        return idReview;
     }
 
-    public void setPublished(Timestamp published) {
-        this.published = published;
+    public void setIdReview(Integer idReview) {
+        this.idReview = idReview;
     }
 
     @Override
@@ -85,23 +85,23 @@ public class Review {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Review review = (Review) o;
-        return  uuidReview.equals(review.uuidReview) && product.equals(review.product) && content.equals(review.content) &&
-                Objects.equals(rating, review.rating) && published.equals(review.published);
+        return  idReview.equals(review.idReview) && uuid.equals(review.uuid) && product.equals(review.product) &&
+                content.equals(review.content) && Objects.equals(rating, review.rating);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuidReview, product, content, rating, published);
+        return Objects.hash(idReview, uuid, product, content, rating);
     }
 
     @Override
     public String toString() {
-        return  "Review{" +
-                "uuidReview=" + uuidReview +
+        return "Review{" +
+                "idReview=" + idReview +
+                ", uuid=" + uuid +
                 ", product=" + product +
                 ", content='" + content + '\'' +
                 ", rating=" + rating +
-                ", published=" + published +
                 '}';
     }
 }

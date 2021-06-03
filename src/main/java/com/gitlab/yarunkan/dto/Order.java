@@ -3,41 +3,33 @@ package com.gitlab.yarunkan.dto;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import java.sql.Timestamp;
 import java.util.Objects;
 import java.util.UUID;
 
 @Entity
 @Table(name = "obj_order")
-public class Order {
+public class Order extends AbstractDto {
     @Id
-    @Column(name = "uuid_order")
-    @GeneratedValue
-    private UUID uuidOrder;
+    @Column(name = "id_order")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer idOrder;
 
     @NotNull
-    @Column(name = "created", nullable = false)
-    private Timestamp created;
+    @Column(name = "uuid", nullable = false, unique = true)
+    private UUID uuid;
 
     private String description;
 
-    public UUID getUuidOrder() {
-        return uuidOrder;
+    public UUID getUuid() {
+        return uuid;
     }
 
-    public void setUuidOrder(UUID uuidOrder) {
-        this.uuidOrder = uuidOrder;
-    }
-
-    public Timestamp getCreated() {
-        return created;
-    }
-
-    public void setCreated(Timestamp created) {
-        this.created = created;
+    public void setUuid(UUID uuidOrder) {
+        this.uuid = uuidOrder;
     }
 
     public String getDescription() {
@@ -48,24 +40,32 @@ public class Order {
         this.description = description;
     }
 
+    public Integer getIdOrder() {
+        return idOrder;
+    }
+
+    public void setIdOrder(Integer idOrder) {
+        this.idOrder = idOrder;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Order order = (Order) o;
-        return uuidOrder.equals(order.uuidOrder) && created.equals(order.created) && Objects.equals(description, order.description);
+        return idOrder.equals(order.idOrder) && uuid.equals(order.uuid) && Objects.equals(description, order.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuidOrder, created, description);
+        return Objects.hash(idOrder, uuid, description);
     }
 
     @Override
     public String toString() {
         return "Order{" +
-                "uuidOrder=" + uuidOrder +
-                ", created=" + created +
+                "idOrder=" + idOrder +
+                ", uuidOrder=" + uuid +
                 ", description='" + description + '\'' +
                 '}';
     }

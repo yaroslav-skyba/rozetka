@@ -3,6 +3,7 @@ package com.gitlab.yarunkan.dto;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -12,11 +13,15 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "obj_product")
-public class Product {
+public class Product extends AbstractDto {
     @Id
-    @Column(name = "uuid_product")
-    @GeneratedValue
-    private UUID uuidProduct;
+    @Column(name = "id_product")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer idProduct;
+
+    @NotNull
+    @Column(name = "uuid", nullable = false, unique = true)
+    private UUID uuid;
 
     @NotNull
     @Column(name = "name_product", nullable = false)
@@ -37,12 +42,20 @@ public class Product {
 
     private String description;
 
-    public UUID getUuidProduct() {
-        return uuidProduct;
+    public Integer getIdProduct() {
+        return idProduct;
     }
 
-    public void setUuidProduct(UUID uuidProduct) {
-        this.uuidProduct = uuidProduct;
+    public void setIdProduct(Integer idProduct) {
+        this.idProduct = idProduct;
+    }
+
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(UUID uuidProduct) {
+        this.uuid = uuidProduct;
     }
 
     public String getNameProduct() {
@@ -90,20 +103,21 @@ public class Product {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
-        return  uuidProduct.equals(product.uuidProduct) && nameProduct.equals(product.nameProduct) && quantity.equals(product.quantity) &&
-                price.equals(product.price) && Objects.equals(discount, product.discount) &&
+        return  idProduct.equals(product.idProduct) && uuid.equals(product.uuid) && nameProduct.equals(product.nameProduct) &&
+                quantity.equals(product.quantity) && price.equals(product.price) && Objects.equals(discount, product.discount) &&
                 Objects.equals(description, product.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuidProduct, nameProduct, quantity, price, discount, description);
+        return Objects.hash(idProduct, uuid, nameProduct, quantity, price, discount, description);
     }
 
     @Override
     public String toString() {
-        return  "Product{" +
-                "uuidProduct=" + uuidProduct +
+        return "Product{" +
+                "idProduct=" + idProduct +
+                ", uuid=" + uuid +
                 ", nameProduct='" + nameProduct + '\'' +
                 ", quantity=" + quantity +
                 ", price=" + price +

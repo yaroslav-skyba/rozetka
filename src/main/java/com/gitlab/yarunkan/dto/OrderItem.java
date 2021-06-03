@@ -5,6 +5,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -16,22 +17,26 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "o2n_order_item")
-public class OrderItem {
+public class OrderItem extends AbstractDto {
     @Id
-    @Column(name = "uuid_order_item")
-    @GeneratedValue
-    private UUID uuidOrderItem;
+    @Column(name = "id_order_item")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer idOrderItem;
+
+    @NotNull
+    @Column(name = "uuid", nullable = false, unique = true)
+    private UUID uuid;
 
     @NotNull
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "uuid_product")
+    @JoinColumn(name = "id_product")
     private Product product;
 
     @NotNull
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "uuid_order")
+    @JoinColumn(name = "id_order")
     private Order order;
 
     @NotNull
@@ -44,12 +49,12 @@ public class OrderItem {
     @Column(name = "price", nullable = false)
     private Float price;
 
-    public UUID getUuidOrderItem() {
-        return uuidOrderItem;
+    public UUID getUuid() {
+        return uuid;
     }
 
-    public void setUuidOrderItem(UUID uuidOrderItem) {
-        this.uuidOrderItem = uuidOrderItem;
+    public void setUuid(UUID uuidOrderItem) {
+        this.uuid = uuidOrderItem;
     }
 
     public Product getProduct() {
@@ -84,24 +89,33 @@ public class OrderItem {
         this.price = price;
     }
 
+    public Integer getIdOrderItem() {
+        return idOrderItem;
+    }
+
+    public void setIdOrderItem(Integer idOrderItem) {
+        this.idOrderItem = idOrderItem;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         OrderItem orderItem = (OrderItem) o;
-        return  uuidOrderItem.equals(orderItem.uuidOrderItem) && product.equals(orderItem.product) && order.equals(orderItem.order) &&
-                quantity.equals(orderItem.quantity) && price.equals(orderItem.price);
+        return  idOrderItem.equals(orderItem.idOrderItem) && uuid.equals(orderItem.uuid) && product.equals(orderItem.product) &&
+                order.equals(orderItem.order) && quantity.equals(orderItem.quantity) && price.equals(orderItem.price);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuidOrderItem, product, order, quantity, price);
+        return Objects.hash(idOrderItem, uuid, product, order, quantity, price);
     }
 
     @Override
     public String toString() {
-        return  "OrderItem{" +
-                "uuidOrderItem=" + uuidOrderItem +
+        return "OrderItem{" +
+                "idOrderItem=" + idOrderItem +
+                ", uuid=" + uuid +
                 ", product=" + product +
                 ", order=" + order +
                 ", quantity=" + quantity +
