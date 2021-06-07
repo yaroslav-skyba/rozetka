@@ -6,6 +6,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Objects;
@@ -24,20 +26,22 @@ public class Product extends AbstractDto {
     private UUID uuid;
 
     @NotNull
+    @Size(min = 1, max = 255)
     @Column(name = "name_product", nullable = false)
     private String nameProduct;
 
     @NotNull
-    @Size
+    @Min(0)
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
 
     @NotNull
-    @Size
+    @Min(0)//I am not sure that this will work for float
     @Column(name = "price", nullable = false)
     private Float price;
 
-    @Size(max = 100)
+    @Min(0)
+    @Max(100)
     private Integer discount;
 
     private String description;

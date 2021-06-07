@@ -4,14 +4,15 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -28,24 +29,23 @@ public class OrderItem extends AbstractDto {
     private UUID uuid;
 
     @NotNull
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "id_product")
     private Product product;
 
     @NotNull
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "id_order")
     private Order order;
 
     @NotNull
-    @Size
+    @Min(0)
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
 
-    @NotNull
-    @Size
+    @Min(0)//I am not sure that this will work for float
     @Column(name = "price", nullable = false)
     private Float price;
 

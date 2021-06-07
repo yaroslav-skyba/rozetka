@@ -4,12 +4,15 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Objects;
@@ -19,7 +22,7 @@ import java.util.UUID;
 @Table(name = "o2n_review")
 public class Review extends AbstractDto {
     @Id
-    @Column(name = "id_product")
+    @Column(name = "id_review")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idReview;
 
@@ -28,16 +31,18 @@ public class Review extends AbstractDto {
     private UUID uuid;
 
     @NotNull
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "id_product")
     private Product product;
 
     @NotNull
+    @Size(min = 1, max = 255)
     @Column(name = "content", nullable = false)
     private String content;
 
-    @Size(min = 1, max = 5)
+    @Min(1)
+    @Max(5)
     private Integer rating;
 
     public UUID getUuid() {
