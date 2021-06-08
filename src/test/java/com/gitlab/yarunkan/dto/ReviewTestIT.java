@@ -9,12 +9,14 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
+import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import javax.validation.ConstraintViolationException;
 
 @Rollback
+@Transactional
 @ContextConfiguration(classes = {PersistenceTestConfig.class})
 public class ReviewTestIT extends AbstractTestNGSpringContextTests {
     @Autowired
@@ -41,6 +43,7 @@ public class ReviewTestIT extends AbstractTestNGSpringContextTests {
     }
 
     @Rollback
+    @Transactional
     @Test(groups = {"integration-tests"}, expectedExceptions = ConstraintViolationException.class)
     public void testReviewIsNotSavedWithEmptyContent() {
         review1.setContent("");
@@ -48,6 +51,7 @@ public class ReviewTestIT extends AbstractTestNGSpringContextTests {
     }
 
     @Rollback
+    @Transactional
     @Test(groups = {"integration-tests"}, expectedExceptions = DataIntegrityViolationException.class)
     public void testReviewIsNotSavedWithNullContent() {
         review1.setContent(null);
@@ -55,6 +59,7 @@ public class ReviewTestIT extends AbstractTestNGSpringContextTests {
     }
 
     @Rollback
+    @Transactional
     @Test(groups = {"integration-tests"}, expectedExceptions = ConstraintViolationException.class)
     public void testReviewIsNotSavedWithRatingLessThanOne() {
         review1.setRating(0);
@@ -62,6 +67,7 @@ public class ReviewTestIT extends AbstractTestNGSpringContextTests {
     }
 
     @Rollback
+    @Transactional
     @Test(groups = {"integration-tests"}, expectedExceptions = ConstraintViolationException.class)
     public void testReviewIsNotSavedWithRatingMoreThanFive() {
         review1.setRating(6);
@@ -69,6 +75,7 @@ public class ReviewTestIT extends AbstractTestNGSpringContextTests {
     }
 
     @Rollback
+    @Transactional
     @Test(groups = {"integration-tests"}, expectedExceptions = DataIntegrityViolationException.class)
     public void testReviewIsNotSavedWithNullUUID() {
         review1.setUuid(null);
@@ -76,6 +83,7 @@ public class ReviewTestIT extends AbstractTestNGSpringContextTests {
     }
 
     @Rollback
+    @Transactional
     @Test(groups = {"integration-tests"}, expectedExceptions = DataIntegrityViolationException.class)
     public void testReviewIsNotSavedWithUniqueUUID() {
         reviewRepository.save(review1);

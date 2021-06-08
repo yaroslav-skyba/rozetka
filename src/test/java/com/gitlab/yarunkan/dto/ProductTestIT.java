@@ -8,12 +8,14 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
+import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import javax.validation.ConstraintViolationException;
 
 @Rollback
+@Transactional
 @ContextConfiguration(classes = {PersistenceTestConfig.class})
 public class ProductTestIT extends AbstractTestNGSpringContextTests {
     @Autowired
@@ -34,6 +36,7 @@ public class ProductTestIT extends AbstractTestNGSpringContextTests {
     }
 
     @Rollback
+    @Transactional
     @Test(groups = {"integration-tests"}, expectedExceptions = ConstraintViolationException.class)
     public void testProductIsNotSavedWithDiscountLessThanZero() {
         product1.setDiscount(-1);
@@ -41,6 +44,7 @@ public class ProductTestIT extends AbstractTestNGSpringContextTests {
     }
 
     @Rollback
+    @Transactional
     @Test(groups = {"integration-tests"}, expectedExceptions = ConstraintViolationException.class)
     public void testProductIsNotSavedWithDiscountMoreThanHundred() {
         product1.setDiscount(101);
@@ -48,6 +52,7 @@ public class ProductTestIT extends AbstractTestNGSpringContextTests {
     }
 
     @Rollback
+    @Transactional
     @Test(groups = {"integration-tests"}, expectedExceptions = ConstraintViolationException.class)
     public void testProductIsNotSavedWithEmptyName() {
         product1.setNameProduct("");
@@ -55,6 +60,7 @@ public class ProductTestIT extends AbstractTestNGSpringContextTests {
     }
 
     @Rollback
+    @Transactional
     @Test(groups = {"integration-tests"}, expectedExceptions = DataIntegrityViolationException.class)
     public void testProductIsNotSavedWithNullName() {
         product1.setNameProduct(null);
@@ -62,6 +68,7 @@ public class ProductTestIT extends AbstractTestNGSpringContextTests {
     }
 
     @Rollback
+    @Transactional
     @Test(groups = {"integration-tests"}, expectedExceptions = ConstraintViolationException.class)
     public void testProductIsNotSavedWithPriceLessThanZero() {
         product1.setPrice(-1f);
@@ -69,6 +76,7 @@ public class ProductTestIT extends AbstractTestNGSpringContextTests {
     }
 
     @Rollback
+    @Transactional
     @Test(groups = {"integration-tests"}, expectedExceptions = DataIntegrityViolationException.class)
     public void testProductIsNotSavedNullPrice() {
         product1.setPrice(null);
@@ -76,6 +84,7 @@ public class ProductTestIT extends AbstractTestNGSpringContextTests {
     }
 
     @Rollback
+    @Transactional
     @Test(groups = {"integration-tests"}, expectedExceptions = ConstraintViolationException.class)
     public void testProductIsNotSavedWithQuantityLessThanZero() {
         product1.setQuantity(-1);
@@ -83,6 +92,7 @@ public class ProductTestIT extends AbstractTestNGSpringContextTests {
     }
 
     @Rollback
+    @Transactional
     @Test(groups = {"integration-tests"}, expectedExceptions = DataIntegrityViolationException.class)
     public void testProductIsNotSavedWithNullQuantity() {
         product1.setQuantity(null);
@@ -90,6 +100,7 @@ public class ProductTestIT extends AbstractTestNGSpringContextTests {
     }
 
     @Rollback
+    @Transactional
     @Test(groups = {"integration-tests"}, expectedExceptions = DataIntegrityViolationException.class)
     public void testProductIsNotSavedWithNullUUID() {
         product1.setUuid(null);
@@ -97,6 +108,7 @@ public class ProductTestIT extends AbstractTestNGSpringContextTests {
     }
 
     @Rollback
+    @Transactional
     @Test(groups = {"integration-tests"}, expectedExceptions = DataIntegrityViolationException.class)
     public void testProductIsNotSavedWithUniqueUUID() {
         productRepository.save(product1);

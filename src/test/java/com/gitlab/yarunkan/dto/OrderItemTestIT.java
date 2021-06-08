@@ -10,12 +10,14 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
+import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import javax.validation.ConstraintViolationException;
 
 @Rollback
+@Transactional
 @ContextConfiguration(classes = {PersistenceTestConfig.class})
 public class OrderItemTestIT extends AbstractTestNGSpringContextTests {
     @Autowired
@@ -47,6 +49,7 @@ public class OrderItemTestIT extends AbstractTestNGSpringContextTests {
     }
 
     @Rollback
+    @Transactional
     @Test(groups = {"integration-tests"}, expectedExceptions = ConstraintViolationException.class)
     public void testOrderItemIsNotSavedWithPriceLessThanZero() {
         orderItem1.setPrice(-1f);
@@ -54,6 +57,7 @@ public class OrderItemTestIT extends AbstractTestNGSpringContextTests {
     }
 
     @Rollback
+    @Transactional
     @Test(groups = {"integration-tests"}, expectedExceptions = DataIntegrityViolationException.class)
     public void testOrderItemIsNotSavedWithNullPrice() {
         orderItem1.setPrice(null);
@@ -61,6 +65,7 @@ public class OrderItemTestIT extends AbstractTestNGSpringContextTests {
     }
 
     @Rollback
+    @Transactional
     @Test(groups = {"integration-tests"}, expectedExceptions = ConstraintViolationException.class)
     public void testOrderItemIsNotSavedWithQuantityLessThanZero() {
         orderItem1.setQuantity(-1);
@@ -68,6 +73,7 @@ public class OrderItemTestIT extends AbstractTestNGSpringContextTests {
     }
 
     @Rollback
+    @Transactional
     @Test(groups = {"integration-tests"}, expectedExceptions = DataIntegrityViolationException.class)
     public void testOrderItemIsNotSavedWithNullQuantity() {
         orderItem1.setQuantity(null);
@@ -75,6 +81,7 @@ public class OrderItemTestIT extends AbstractTestNGSpringContextTests {
     }
 
     @Rollback
+    @Transactional
     @Test(groups = {"integration-tests"}, expectedExceptions = DataIntegrityViolationException.class)
     public void testOrderItemIsNotSavedWithNullUUID() {
         orderItem1.setUuid(null);
@@ -82,6 +89,7 @@ public class OrderItemTestIT extends AbstractTestNGSpringContextTests {
     }
 
     @Rollback
+    @Transactional
     @Test(groups = {"integration-tests"}, expectedExceptions = DataIntegrityViolationException.class)
     public void testOrderItemIsNotSavedWithUniqueUUID() {
         orderItemRepository.save(orderItem1);

@@ -8,11 +8,13 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
+import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @Rollback
+@Transactional
 @ContextConfiguration(classes = {PersistenceTestConfig.class})
 public class OrderTestIT extends AbstractTestNGSpringContextTests {
     @Autowired
@@ -33,6 +35,7 @@ public class OrderTestIT extends AbstractTestNGSpringContextTests {
     }
 
     @Rollback
+    @Transactional
     @Test(groups = {"integration-tests"}, expectedExceptions = DataIntegrityViolationException.class)
     public void testOrderIsNotSavedWithNullUUID() {
         order1.setUuid(null);
@@ -40,6 +43,7 @@ public class OrderTestIT extends AbstractTestNGSpringContextTests {
     }
 
     @Rollback
+    @Transactional
     @Test(groups = {"integration-tests"}, expectedExceptions = DataIntegrityViolationException.class)
     public void testOrderIsNotSavedWithUniqueUUID() {
         orderRepository.save(order1);
