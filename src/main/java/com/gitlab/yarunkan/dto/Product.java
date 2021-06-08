@@ -9,6 +9,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 import java.util.Objects;
 import java.util.UUID;
@@ -31,12 +32,12 @@ public class Product extends AbstractDto {
     private String nameProduct;
 
     @NotNull
-    @Min(0)
+    @PositiveOrZero
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
 
     @NotNull
-    @Min(0)//I am not sure that this will work for float
+    @PositiveOrZero
     @Column(name = "price", nullable = false)
     private Float price;
 

@@ -11,8 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -41,11 +41,11 @@ public class OrderItem extends AbstractDto {
     private Order order;
 
     @NotNull
-    @Min(0)
+    @PositiveOrZero
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
 
-    @Min(0)//I am not sure that this will work for float
+    @PositiveOrZero
     @Column(name = "price", nullable = false)
     private Float price;
 
