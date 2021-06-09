@@ -26,8 +26,8 @@ public class ProductTestIT extends AbstractTestNGSpringContextTests {
 
     @BeforeMethod(groups = {"integration-tests"})
     public void setUp() {
-        product1 = ITCreateEntityUtil.getProduct();
-        product2 = ITCreateEntityUtil.getProduct();
+        product1 = ITCreateEntityUtil.createProduct();
+        product2 = ITCreateEntityUtil.createProduct();
     }
 
     @AfterMethod(groups = {"integration-tests"})

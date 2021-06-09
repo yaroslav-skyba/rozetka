@@ -13,7 +13,7 @@ public class ITCreateEntityUtil {
 
     private static final int MAX_STRING_LENGTH = 255;
 
-    public static Order getOrder() {
+    public static Order createOrder() {
         final var order = new Order();
         order.setDescription(RandomString.make(MAX_STRING_LENGTH));
         order.setUuid(UUID.randomUUID());
@@ -21,7 +21,7 @@ public class ITCreateEntityUtil {
         return order;
     }
 
-    public static OrderItem getOrderItem(Order order, Product product) {
+    public static OrderItem createOrderItem(Order order, Product product) {
         final var random = new Random();
         final int max = 101;
 
@@ -35,7 +35,7 @@ public class ITCreateEntityUtil {
         return orderItem;
     }
 
-    public static Product getProduct() {
+    public static Product createProduct() {
         final Random random = new Random();
         final int maxNumber = 101;
 
@@ -50,7 +50,7 @@ public class ITCreateEntityUtil {
         return product;
     }
 
-    public static Review getReview(Product product) {
+    public static Review createReview(Product product) {
 
         final Review review = new Review();
         review.setContent(RandomString.make(MAX_STRING_LENGTH));

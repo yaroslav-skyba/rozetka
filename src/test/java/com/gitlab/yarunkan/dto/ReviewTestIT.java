@@ -29,11 +29,11 @@ public class ReviewTestIT extends AbstractTestNGSpringContextTests {
 
     @BeforeMethod(groups = {"integration-tests"})
     public void setUp() {
-        final Product product = ITCreateEntityUtil.getProduct();
+        final Product product = ITCreateEntityUtil.createProduct();
         productRepository.save(product);
 
-        review1 = ITCreateEntityUtil.getReview(product);
-        review2 = ITCreateEntityUtil.getReview(product);
+        review1 = ITCreateEntityUtil.createReview(product);
+        review2 = ITCreateEntityUtil.createReview(product);
     }
 
     @AfterMethod(groups = {"integration-tests"})

@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -22,6 +23,7 @@ public class Order extends AbstractDto {
     @Column(name = "uuid", nullable = false, unique = true)
     private UUID uuid;
 
+    @Size(max = 1024)
     private String description;
 
     public UUID getUuid() {

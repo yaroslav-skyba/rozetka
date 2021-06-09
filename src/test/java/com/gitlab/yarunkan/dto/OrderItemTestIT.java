@@ -32,13 +32,13 @@ public class OrderItemTestIT extends AbstractTestNGSpringContextTests {
 
     @BeforeMethod(groups = {"integration-tests"})
     public void setUp() {
-        final Order order = ITCreateEntityUtil.getOrder();
+        final Order order = ITCreateEntityUtil.createOrder();
         orderRepository.save(order);
-        final Product product = ITCreateEntityUtil.getProduct();
+        final Product product = ITCreateEntityUtil.createProduct();
         productRepository.save(product);
 
-        orderItem1 = ITCreateEntityUtil.getOrderItem(order, product);
-        orderItem2 = ITCreateEntityUtil.getOrderItem(order, product);
+        orderItem1 = ITCreateEntityUtil.createOrderItem(order, product);
+        orderItem2 = ITCreateEntityUtil.createOrderItem(order, product);
     }
 
     @AfterMethod(groups = {"integration-tests"})

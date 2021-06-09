@@ -27,7 +27,7 @@ public class Product extends AbstractDto {
     private UUID uuid;
 
     @NotNull
-    @Size(min = 1, max = 255)
+    @Size(min = 1, max = 1024)
     @Column(name = "name_product", nullable = false)
     private String nameProduct;
 
@@ -45,6 +45,7 @@ public class Product extends AbstractDto {
     @Max(100)
     private Integer discount;
 
+    @Size(max = 1024)
     private String description;
 
     public Integer getIdProduct() {

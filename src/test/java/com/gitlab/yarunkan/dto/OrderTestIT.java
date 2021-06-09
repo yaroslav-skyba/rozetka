@@ -25,8 +25,8 @@ public class OrderTestIT extends AbstractTestNGSpringContextTests {
 
     @BeforeMethod(groups = {"integration-tests"})
     public void setUp() {
-        order1 = ITCreateEntityUtil.getOrder();
-        order2 = ITCreateEntityUtil.getOrder();
+        order1 = ITCreateEntityUtil.createOrder();
+        order2 = ITCreateEntityUtil.createOrder();
     }
 
     @AfterMethod(groups = {"integration-tests"})
