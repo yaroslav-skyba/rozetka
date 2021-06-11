@@ -11,7 +11,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class ITCreateEntityUtil {
 
-    private static final int MAX_STRING_LENGTH = 255;
+    private static final int MAX_STRING_LENGTH = 1024;
 
     public static Order createOrder() {
         final var order = new Order();

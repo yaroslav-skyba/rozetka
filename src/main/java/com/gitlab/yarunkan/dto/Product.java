@@ -1,16 +1,20 @@
 package com.gitlab.yarunkan.dto;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -25,6 +29,12 @@ public class Product extends AbstractDto {
     @NotNull
     @Column(name = "uuid", nullable = false, unique = true)
     private UUID uuid;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private final List<OrderItem> orderItemList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private final List<Review> reviewList = new ArrayList<>();
 
     @NotNull
     @Size(min = 1, max = 1024)
@@ -102,6 +112,34 @@ public class Product extends AbstractDto {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public List<OrderItem> getOrderItemList() {
+        return orderItemList;
+    }
+
+    public List<Review> getReviewList() {
+        return reviewList;
+    }
+
+    public void addOrderItem(OrderItem orderItem) {
+        orderItem.setProduct(this);
+        orderItemList.add(orderItem);
+    }
+
+    public void removeOrderItem(OrderItem orderItem) {
+        orderItem.setProduct(null);
+        orderItemList.remove(orderItem);
+    }
+
+    public void addReview(Review review) {
+        review.setProduct(this);
+        reviewList.add(review);
+    }
+
+    public void removeReview(Review review) {
+        review.setProduct(null);
+        reviewList.remove(review);
     }
 
     @Override

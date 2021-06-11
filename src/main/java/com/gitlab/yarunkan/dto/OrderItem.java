@@ -1,7 +1,5 @@
 package com.gitlab.yarunkan.dto;
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -30,14 +28,12 @@ public class OrderItem extends AbstractDto {
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "id_product")
+    @JoinColumn(name = "id_product", nullable = false)
     private Product product;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "id_order")
+    @JoinColumn(name = "id_order", nullable = false)
     private Order order;
 
     @NotNull

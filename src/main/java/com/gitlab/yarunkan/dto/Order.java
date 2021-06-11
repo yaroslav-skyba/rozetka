@@ -1,13 +1,17 @@
 package com.gitlab.yarunkan.dto;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -22,6 +26,9 @@ public class Order extends AbstractDto {
     @NotNull
     @Column(name = "uuid", nullable = false, unique = true)
     private UUID uuid;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private final List<OrderItem> orderItemList = new ArrayList<>();
 
     @Size(max = 1024)
     private String description;
@@ -48,6 +55,20 @@ public class Order extends AbstractDto {
 
     public void setIdOrder(Integer idOrder) {
         this.idOrder = idOrder;
+    }
+
+    public List<OrderItem> getOrderItemList() {
+        return orderItemList;
+    }
+
+    public void addOrderItem(OrderItem orderItem) {
+        orderItem.setOrder(this);
+        orderItemList.add(orderItem);
+    }
+
+    public void removeOrderItem(OrderItem orderItem) {
+        orderItem.setOrder(null);
+        orderItemList.remove(orderItem);
     }
 
     @Override

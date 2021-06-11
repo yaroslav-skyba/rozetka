@@ -1,7 +1,5 @@
 package com.gitlab.yarunkan.dto;
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -32,7 +30,6 @@ public class Review extends AbstractDto {
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "id_product")
     private Product product;
 
