@@ -38,7 +38,7 @@ public class Product extends AbstractDto {
 
     @NotNull
     @Size(min = 1, max = 1024)
-    @Column(name = "name_product", nullable = false)
+    @Column(name = "name_product", nullable = false, length = 1024)
     private String nameProduct;
 
     @NotNull
@@ -56,6 +56,7 @@ public class Product extends AbstractDto {
     private Integer discount;
 
     @Size(max = 1024)
+    @Column(name = "description", length = 1024)
     private String description;
 
     public Integer getIdProduct() {

@@ -37,6 +37,8 @@ public class ReviewServiceImpl implements ReviewService {
             review.setRating(rating);
             review.setUuid(UUID.randomUUID());
 
+            product.addReview(review);
+
             return reviewRepository.saveAndFlush(review);
         } catch (Exception e) {
             throw new OrderServiceException("An error occurred while creating a review", e);

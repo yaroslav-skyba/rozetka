@@ -31,6 +31,7 @@ public class Order extends AbstractDto {
     private final List<OrderItem> orderItemList = new ArrayList<>();
 
     @Size(max = 1024)
+    @Column(name = "description", length = 1024)
     private String description;
 
     public UUID getUuid() {

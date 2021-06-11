@@ -35,7 +35,7 @@ public class Review extends AbstractDto {
 
     @NotNull
     @Size(min = 1, max = 1024)
-    @Column(name = "content", nullable = false)
+    @Column(name = "content", nullable = false, length = 1024)
     private String content;
 
     @Min(1)

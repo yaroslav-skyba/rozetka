@@ -29,6 +29,8 @@ public class OrderItemServiceImpl implements OrderItemService {
             orderItem.setQuantity(quantity);
             orderItem.setUuid(UUID.randomUUID());
 
+            order.addOrderItem(orderItem);
+
             return orderItemRepository.saveAndFlush(orderItem);
         } catch (Exception e) {
             throw new OrderItemServiceException("An error occurred while saving an order item", e);
