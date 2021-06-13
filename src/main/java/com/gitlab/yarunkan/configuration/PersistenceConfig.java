@@ -1,11 +1,8 @@
-package com.gitlab.yarunkan.configutation;
+package com.gitlab.yarunkan.configuration;
 
-import javax.persistence.EntityManagerFactory;
-import javax.sql.DataSource;
-import java.util.Properties;
-import com.gitlab.yarunkan.configuration.AuditorAwareImpl;
 import org.apache.tomcat.dbcp.dbcp2.BasicDataSource;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -16,13 +13,17 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
+import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement
 @EnableJpaAuditing(auditorAwareRef = "auditorAware")
 @EnableJpaRepositories(basePackages = {"com.gitlab.yarunkan.repository"})
+@ComponentScan(value = {"com.gitlab.yarunkan.service"})
 @PropertySource({"classpath:integration.properties"})
-public class PersistenceTestConfig {
+public class PersistenceConfig {
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(Environment environment) {
         final var entityManagerFactory = new LocalContainerEntityManagerFactoryBean();

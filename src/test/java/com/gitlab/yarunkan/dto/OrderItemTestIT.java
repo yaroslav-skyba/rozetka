@@ -1,6 +1,6 @@
 package com.gitlab.yarunkan.dto;
 
-import com.gitlab.yarunkan.configutation.PersistenceTestConfig;
+import com.gitlab.yarunkan.configuration.PersistenceConfig;
 import com.gitlab.yarunkan.repository.OrderItemRepository;
 import com.gitlab.yarunkan.repository.OrderRepository;
 import com.gitlab.yarunkan.repository.ProductRepository;
@@ -15,11 +15,10 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import javax.validation.ConstraintViolationException;
-import java.util.List;
 
 @Rollback
 @Transactional
-@ContextConfiguration(classes = {PersistenceTestConfig.class})
+@ContextConfiguration(classes = {PersistenceConfig.class})
 public class OrderItemTestIT extends AbstractTestNGSpringContextTests {
     @Autowired
     private OrderRepository orderRepository;

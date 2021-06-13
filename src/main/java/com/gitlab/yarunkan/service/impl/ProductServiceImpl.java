@@ -6,6 +6,9 @@ import com.gitlab.yarunkan.repository.ProductRepository;
 import com.gitlab.yarunkan.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.List;
 import java.util.UUID;
 
@@ -50,6 +53,15 @@ public class ProductServiceImpl implements ProductService {
             return productRepository.saveAndFlush(product);
         } catch (Exception e) {
             throw new OrderServiceException("An error occurred while creating an product", e);
+        }
+    }
+
+    @Override
+    public BufferedImage getImageByUuidProduct(UUID uuidProduct) {
+        try {
+            return ImageIO.read(new File("../resources/" + uuidProduct + ".png"));
+        } catch (Exception e) {
+            throw new OrderServiceException("An error occurred while getting an product image", e);
         }
     }
 }

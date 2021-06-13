@@ -1,6 +1,6 @@
 package com.gitlab.yarunkan.dto;
 
-import com.gitlab.yarunkan.configutation.PersistenceTestConfig;
+import com.gitlab.yarunkan.configuration.PersistenceConfig;
 import com.gitlab.yarunkan.repository.ProductRepository;
 import com.gitlab.yarunkan.util.ITCreateEntityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ import javax.validation.ConstraintViolationException;
 
 @Rollback
 @Transactional
-@ContextConfiguration(classes = {PersistenceTestConfig.class})
+@ContextConfiguration(classes = {PersistenceConfig.class})
 public class ProductTestIT extends AbstractTestNGSpringContextTests {
     @Autowired
     private ProductRepository productRepository;
