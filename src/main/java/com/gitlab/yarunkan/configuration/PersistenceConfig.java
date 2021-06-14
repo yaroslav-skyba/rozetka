@@ -2,7 +2,6 @@ package com.gitlab.yarunkan.configuration;
 
 import org.apache.tomcat.dbcp.dbcp2.BasicDataSource;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -21,8 +20,7 @@ import java.util.Properties;
 @EnableTransactionManagement
 @EnableJpaAuditing(auditorAwareRef = "auditorAware")
 @EnableJpaRepositories(basePackages = {"com.gitlab.yarunkan.repository"})
-@ComponentScan(value = {"com.gitlab.yarunkan.service"})
-@PropertySource({"classpath:integration.properties"})
+@PropertySource({"classpath:application.properties"})
 public class PersistenceConfig {
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(Environment environment) {
@@ -41,9 +39,9 @@ public class PersistenceConfig {
     public DataSource dataSource(Environment environment) {
         final var basicDataSource = new BasicDataSource();
         basicDataSource.setDriverClassName(environment.getProperty("jdbc.driverClassName"));
-        basicDataSource.setUrl(environment.getProperty("jdbc.url"));
-        basicDataSource.setUsername(environment.getProperty("jdbc.user"));
-        basicDataSource.setPassword(environment.getProperty("jdbc.pass"));
+        basicDataSource.setUrl(System.getenv("ROZETKA_DB_URL"));
+        basicDataSource.setUsername(System.getenv("ROZETKA_DB_USER"));
+        basicDataSource.setPassword(System.getenv("ROZETKA_DB_PASS"));
 
         return basicDataSource;
     }
@@ -51,6 +49,7 @@ public class PersistenceConfig {
     final Properties getAdditionalProperties(Environment environment) {
         final var properties = new Properties();
         properties.setProperty("hibernate.hbm2ddl.auto", environment.getProperty("hibernate.hbm2ddl.auto"));
+        properties.setProperty("hibernate.dialect", environment.getProperty("hibernate.dialect"));
 
         return properties;
     }
