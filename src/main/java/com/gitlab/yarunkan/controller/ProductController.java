@@ -1,5 +1,6 @@
 package com.gitlab.yarunkan.controller;
 
+import com.gitlab.yarunkan.controller.util.MediaType;
 import com.gitlab.yarunkan.dto.Product;
 import com.gitlab.yarunkan.dto.Review;
 import com.gitlab.yarunkan.service.ProductService;
@@ -29,33 +30,33 @@ public class ProductController {
         this.reviewService = reviewService;
     }
 
-    @GetMapping(value = "/products", produces = "application/json")
+    @GetMapping(value = "/products", produces = MediaType.PRODUCT_LIST)
     public ResponseEntity<List<Product>> getProductList() {
         return ResponseEntity.status(HttpStatus.OK).body(productService.getProductList());
     }
 
-    @GetMapping(value = "/products/{uuid}", produces = "application/json")
+    @GetMapping(value = "/products/{uuid}", produces = MediaType.PRODUCT)
     public ResponseEntity<Product> getProduct(@PathVariable UUID uuid) {
         return ResponseEntity.status(HttpStatus.OK).body(productService.getProductByUuid(uuid));
     }
 
-    @GetMapping(value = "/products/{uuid}/reviews", produces = "application/json")
+    @GetMapping(value = "/products/{uuid}/reviews", produces = MediaType.REVIEW_LIST)
     public ResponseEntity<List<Review>> getReviewList(@PathVariable UUID uuid) {
         return ResponseEntity.status(HttpStatus.OK).body(reviewService.getReviewList());
     }
 
-    @PostMapping(value = "/products/{uuid}/reviews", consumes = "application/json")
+    @PostMapping(value = "/products/{uuid}/reviews", consumes = MediaType.REVIEW)
     public ResponseEntity<Review> addReview(@PathVariable UUID uuid, @RequestBody Review review) {
         final Review createdReview = reviewService.createReview(review.getProduct(), review.getContent(), review.getRating());
         return ResponseEntity.status(HttpStatus.CREATED).body(createdReview);
     }
 
-    @GetMapping(value = "/products/{uuidProduct}/reviews/{uuidReview}", produces = "application/json")
+    @GetMapping(value = "/products/{uuidProduct}/reviews/{uuidReview}", produces = MediaType.REVIEW)
     public ResponseEntity<Review> getReview(@PathVariable UUID uuidProduct, @PathVariable UUID uuidReview) {
         return ResponseEntity.status(HttpStatus.OK).body(reviewService.getByUuid(uuidReview));
     }
 
-    @PutMapping(value = "/products/{uuidProduct}/reviews/{uuidReview}", consumes = "application/json")
+    @PutMapping(value = "/products/{uuidProduct}/reviews/{uuidReview}", consumes = MediaType.REVIEW)
     public ResponseEntity<Review> updateReview(@PathVariable UUID uuidProduct, @PathVariable UUID uuidReview, @RequestBody Review review) {
         return ResponseEntity.status(HttpStatus.OK).body(reviewService.updateByUuid(uuidReview, review));
     }

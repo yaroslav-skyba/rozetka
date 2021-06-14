@@ -1,5 +1,6 @@
 package com.gitlab.yarunkan.controller;
 
+import com.gitlab.yarunkan.controller.util.MediaType;
 import com.gitlab.yarunkan.dto.Order;
 import com.gitlab.yarunkan.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +22,12 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @PostMapping(value = "/orders", consumes = "application/json")
+    @PostMapping(value = "/orders", consumes = MediaType.ORDER)
     public ResponseEntity<Order> addOrder(@RequestBody Order order) {
         return ResponseEntity.status(HttpStatus.CREATED).body(orderService.create(order.getDescription()));
     }
 
-    @GetMapping(value = "orders/{uuid}", produces = "application/json")
+    @GetMapping(value = "orders/{uuid}", produces = MediaType.ORDER)
     public ResponseEntity<Order> getOrder(@PathVariable UUID uuid) {
         return ResponseEntity.status(HttpStatus.OK).body(orderService.getByUuid(uuid));
     }

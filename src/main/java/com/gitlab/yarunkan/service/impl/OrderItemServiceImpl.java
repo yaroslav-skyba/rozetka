@@ -8,9 +8,12 @@ import com.gitlab.yarunkan.repository.OrderItemRepository;
 import com.gitlab.yarunkan.service.OrderItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @Service
+@Transactional
 public class OrderItemServiceImpl implements OrderItemService {
     private final OrderItemRepository orderItemRepository;
 
@@ -20,6 +23,8 @@ public class OrderItemServiceImpl implements OrderItemService {
     }
 
     @Override
+    @Transactional
+    @NotNull
     public OrderItem create(Product product, Order order, Integer quantity, Float price) throws OrderItemServiceException {
         try {
             final OrderItem orderItem = new OrderItem();

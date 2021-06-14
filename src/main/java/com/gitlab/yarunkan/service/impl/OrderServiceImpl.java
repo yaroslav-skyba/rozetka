@@ -7,9 +7,13 @@ import com.gitlab.yarunkan.repository.OrderRepository;
 import com.gitlab.yarunkan.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @Service
+@Transactional
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
 
@@ -19,6 +23,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public Order create(String description) {
         try {
             final Order order = new Order();
@@ -32,6 +37,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
+    @NotNull
     public Order getByUuid(UUID uuid) throws OrderServiceException {
         try {
             return orderRepository.findByUuid(uuid);
