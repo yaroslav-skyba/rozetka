@@ -1,4 +1,4 @@
-package com.gitlab.yarunkan.dto;
+package com.gitlab.yarunkan.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,6 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Objects;
@@ -18,7 +19,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "o2n_review")
-public class Review extends AbstractDto {
+public class Review extends AbstractModel {
     @Id
     @Column(name = "id_review")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,8 +34,8 @@ public class Review extends AbstractDto {
     @JoinColumn(name = "id_product")
     private Product product;
 
-    @NotNull
-    @Size(min = 1, max = 1024)
+    @Size(max = 1024)
+    @NotEmpty
     @Column(name = "content", nullable = false, length = 1024)
     private String content;
 

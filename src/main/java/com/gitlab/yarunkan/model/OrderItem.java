@@ -1,4 +1,4 @@
-package com.gitlab.yarunkan.dto;
+package com.gitlab.yarunkan.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,7 +16,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "o2n_order_item")
-public class OrderItem extends AbstractDto {
+public class OrderItem extends AbstractModel {
     @Id
     @Column(name = "id_order_item")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,11 +35,6 @@ public class OrderItem extends AbstractDto {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_order", nullable = false)
     private Order order;
-
-    @NotNull
-    @PositiveOrZero
-    @Column(name = "quantity", nullable = false)
-    private Integer quantity;
 
     @PositiveOrZero
     @Column(name = "price", nullable = false)
@@ -69,14 +64,6 @@ public class OrderItem extends AbstractDto {
         this.order = order;
     }
 
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
-
     public Float getPrice() {
         return price;
     }
@@ -99,12 +86,12 @@ public class OrderItem extends AbstractDto {
         if (o == null || getClass() != o.getClass()) return false;
         OrderItem orderItem = (OrderItem) o;
         return  idOrderItem.equals(orderItem.idOrderItem) && uuid.equals(orderItem.uuid) && product.equals(orderItem.product) &&
-                order.equals(orderItem.order) && quantity.equals(orderItem.quantity) && price.equals(orderItem.price);
+                order.equals(orderItem.order) && price.equals(orderItem.price);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idOrderItem, uuid, product, order, quantity, price);
+        return Objects.hash(idOrderItem, uuid, product, order, price);
     }
 
     @Override
@@ -114,7 +101,6 @@ public class OrderItem extends AbstractDto {
                 ", uuid=" + uuid +
                 ", product=" + product +
                 ", order=" + order +
-                ", quantity=" + quantity +
                 ", price=" + price +
                 '}';
     }

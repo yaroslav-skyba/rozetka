@@ -12,6 +12,8 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
+
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.Properties;
@@ -26,7 +28,7 @@ public class PersistenceConfig {
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(Environment environment) {
         final var entityManagerFactory = new LocalContainerEntityManagerFactoryBean();
         entityManagerFactory.setDataSource(dataSource(environment));
-        entityManagerFactory.setPackagesToScan("com.gitlab.yarunkan.dto");
+        entityManagerFactory.setPackagesToScan("com.gitlab.yarunkan.model");
 
         final var hibernateJpaVendorAdapter = new HibernateJpaVendorAdapter();
         entityManagerFactory.setJpaVendorAdapter(hibernateJpaVendorAdapter);

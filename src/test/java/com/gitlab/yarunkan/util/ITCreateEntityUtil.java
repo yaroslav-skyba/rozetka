@@ -1,9 +1,9 @@
 package com.gitlab.yarunkan.util;
 
-import com.gitlab.yarunkan.dto.Order;
-import com.gitlab.yarunkan.dto.OrderItem;
-import com.gitlab.yarunkan.dto.Product;
-import com.gitlab.yarunkan.dto.Review;
+import com.gitlab.yarunkan.model.Order;
+import com.gitlab.yarunkan.model.OrderItem;
+import com.gitlab.yarunkan.model.Product;
+import com.gitlab.yarunkan.model.Review;
 import net.bytebuddy.utility.RandomString;
 import java.util.Random;
 import java.util.UUID;
@@ -29,7 +29,6 @@ public class ITCreateEntityUtil {
         orderItem.setOrder(order);
         orderItem.setPrice(random.nextFloat() * max);
         orderItem.setProduct(product);
-        orderItem.setQuantity(random.nextInt(max));
         orderItem.setUuid(UUID.randomUUID());
 
         return orderItem;

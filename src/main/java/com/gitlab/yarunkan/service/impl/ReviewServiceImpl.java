@@ -1,15 +1,16 @@
 package com.gitlab.yarunkan.service.impl;
 
-import com.gitlab.yarunkan.dto.Product;
-import com.gitlab.yarunkan.dto.Review;
+import com.gitlab.yarunkan.dto.ReviewDto;
+import com.gitlab.yarunkan.model.Review;
 import com.gitlab.yarunkan.exception.ReviewServiceException;
+import com.gitlab.yarunkan.repository.ProductRepository;
 import com.gitlab.yarunkan.repository.ReviewRepository;
 import com.gitlab.yarunkan.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,17 +18,26 @@ import java.util.UUID;
 @Transactional
 public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
+    private final ProductRepository productRepository;
 
     @Autowired
-    public ReviewServiceImpl(ReviewRepository reviewRepository) {
+    public ReviewServiceImpl(ReviewRepository reviewRepository, ProductRepository productRepository) {
         this.reviewRepository = reviewRepository;
+        this.productRepository = productRepository;
     }
 
     @Override
     @Transactional
-    public List<Review> getReviewList() {
+    public List<ReviewDto> getReviewList() {
         try {
-            return reviewRepository.findAll();
+            final List<Review> reviewList = reviewRepository.findAll();
+            final List<ReviewDto> reviewDtoList = new ArrayList<>();
+
+            for (var review : reviewList) {
+                reviewDtoList.add(getByUuid(review.getUuid()));
+            }
+
+            return reviewDtoList;
         } catch (Exception e) {
             throw new ReviewServiceException("An error occurred while getting review list", e);
         }
@@ -35,17 +45,18 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional
-    public Review createReview(@NotNull Product product, @NotNull String content, Integer rating) {
+    @NotNull
+    public ReviewDto createReview(ReviewDto reviewDto) {
         try {
             final Review review = new Review();
-            review.setContent(content);
-            review.setProduct(product);
-            review.setRating(rating);
+            review.setContent(reviewDto.getContent());
+            review.setProduct(productRepository.findByUuid(reviewDto.getUuidProduct()));
+            review.setRating(reviewDto.getRating());
             review.setUuid(UUID.randomUUID());
 
-            product.addReview(review);
+            reviewRepository.saveAndFlush(review);
 
-            return reviewRepository.saveAndFlush(review);
+            return new ReviewDto(review.getUuid(), review.getProduct().getUuid(), review.getContent(), review.getRating());
         } catch (Exception e) {
             throw new ReviewServiceException("An error occurred while creating a review", e);
         }
@@ -54,9 +65,11 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     @Transactional
     @NotNull
-    public Review getByUuid(UUID uuid) {
+    public ReviewDto getByUuid(UUID uuid) {
         try {
-            return reviewRepository.findByUuid(uuid);
+            final Review review = reviewRepository.findByUuid(uuid);
+
+            return new ReviewDto(review.getUuid(), review.getProduct().getUuid(), review.getContent(), review.getRating());
         } catch (Exception e) {
             throw new ReviewServiceException("An error occurred while getting a review", e);
         }
@@ -65,14 +78,16 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     @Transactional
     @NotNull
-    public Review updateByUuid(UUID uuid, Review review) {
+    public ReviewDto updateByUuid(UUID uuid, ReviewDto reviewDto) {
         try {
-            final Review actualReview = getByUuid(uuid);
-            actualReview.setContent(review.getContent());
-            actualReview.setProduct(review.getProduct());
-            actualReview.setRating(review.getRating());
+            final Review review = reviewRepository.findByUuid(uuid);
+            review.setContent(reviewDto.getContent());
+            review.setProduct(productRepository.findByUuid(reviewDto.getUuidProduct()));
+            review.setRating(reviewDto.getRating());
 
-            return reviewRepository.saveAndFlush(actualReview);
+            reviewRepository.saveAndFlush(review);
+
+            return new ReviewDto(review.getUuid(), review.getProduct().getUuid(), review.getContent(), review.getRating());
         } catch (Exception e) {
             throw new ReviewServiceException("An error occurred while updating a review", e);
         }
@@ -83,7 +98,8 @@ public class ReviewServiceImpl implements ReviewService {
     @NotNull
     public void deleteByUuid(UUID uuid) {
         try {
-            reviewRepository.deleteByUuid(uuid);
+            final Review review = reviewRepository.findByUuid(uuid);
+            reviewRepository.deleteById(review.getIdReview());
         } catch (Exception e) {
             throw new ReviewServiceException("An error occurred while deleting a review", e);
         }

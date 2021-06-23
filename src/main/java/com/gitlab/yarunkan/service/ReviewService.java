@@ -1,14 +1,13 @@
 package com.gitlab.yarunkan.service;
 
-import com.gitlab.yarunkan.dto.Product;
-import com.gitlab.yarunkan.dto.Review;
+import com.gitlab.yarunkan.dto.ReviewDto;
 import java.util.List;
 import java.util.UUID;
 
 public interface ReviewService {
-    List<Review> getReviewList();
-    Review createReview(Product product, String content, Integer rating);
-    Review getByUuid(UUID uuid);
-    Review updateByUuid(UUID uuid, Review review);
+    List<ReviewDto> getReviewList();
+    ReviewDto createReview(ReviewDto reviewDto);
+    ReviewDto getByUuid(UUID uuid);
+    ReviewDto updateByUuid(UUID uuid, ReviewDto reviewDto);
     void deleteByUuid(UUID uuid);
 }

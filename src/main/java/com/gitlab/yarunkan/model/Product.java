@@ -1,4 +1,4 @@
-package com.gitlab.yarunkan.dto;
+package com.gitlab.yarunkan.model;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -20,7 +20,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "obj_product")
-public class Product extends AbstractDto {
+public class Product extends AbstractModel {
     @Id
     @Column(name = "id_product")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

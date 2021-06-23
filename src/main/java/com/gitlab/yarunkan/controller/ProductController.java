@@ -1,8 +1,8 @@
 package com.gitlab.yarunkan.controller;
 
 import com.gitlab.yarunkan.controller.util.MediaType;
-import com.gitlab.yarunkan.dto.Product;
-import com.gitlab.yarunkan.dto.Review;
+import com.gitlab.yarunkan.dto.ProductDto;
+import com.gitlab.yarunkan.dto.ReviewDto;
 import com.gitlab.yarunkan.service.ProductService;
 import com.gitlab.yarunkan.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,44 +30,62 @@ public class ProductController {
         this.reviewService = reviewService;
     }
 
-    @GetMapping(value = "/products", produces = MediaType.PRODUCT_LIST)
-    public ResponseEntity<List<Product>> getProductList() {
-        return ResponseEntity.status(HttpStatus.OK).body(productService.getProductList());
+    @GetMapping(value = "/api/v1/products", produces = MediaType.PRODUCT_LIST)
+    public ResponseEntity<List<ProductDto>> getProductList(@RequestParam(required = false) String name) {
+        final List<ProductDto> productDtoList;
+
+        if (name != null) {
+            productDtoList = productService.getProductListByName(name);
+        } else {
+            productDtoList = productService.getProductList();
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).header("Access-Control-Allow-Origin", "*").body(productDtoList);
     }
 
-    @GetMapping(value = "/products/{uuid}", produces = MediaType.PRODUCT)
-    public ResponseEntity<Product> getProduct(@PathVariable UUID uuid) {
-        return ResponseEntity.status(HttpStatus.OK).body(productService.getProductByUuid(uuid));
+    @GetMapping(value = "/api/v1/products/{uuid}", produces = MediaType.PRODUCT)
+    public ResponseEntity<ProductDto> getProduct(@PathVariable UUID uuid) {
+        if (!productService.isProductExistByUuid(uuid)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).header("Access-Control-Allow-Origin", "*").body(productService.getProductDtoByUuid(uuid));
     }
 
-    @GetMapping(value = "/products/{uuid}/reviews", produces = MediaType.REVIEW_LIST)
-    public ResponseEntity<List<Review>> getReviewList(@PathVariable UUID uuid) {
-        return ResponseEntity.status(HttpStatus.OK).body(reviewService.getReviewList());
+    @GetMapping(value = "/api/v1/products/{uuid}/reviews", produces = MediaType.REVIEW_LIST)
+    public ResponseEntity<List<ReviewDto>> getReviewList(@PathVariable UUID uuid) {
+        return ResponseEntity.status(HttpStatus.OK).header("Access-Control-Allow-Origin", "*").body(reviewService.getReviewList());
     }
 
-    @PostMapping(value = "/products/{uuid}/reviews", consumes = MediaType.REVIEW)
-    public ResponseEntity<Review> addReview(@PathVariable UUID uuid, @RequestBody Review review) {
-        final Review createdReview = reviewService.createReview(review.getProduct(), review.getContent(), review.getRating());
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdReview);
+    @PostMapping(value = "/api/v1/products/{uuid}/reviews", consumes = MediaType.REVIEW)
+    public ResponseEntity<ReviewDto> addReview(@PathVariable UUID uuid, @RequestBody ReviewDto reviewDto) {
+        final ReviewDto createdReview = reviewService.createReview(reviewDto);
+
+        return ResponseEntity.status(HttpStatus.CREATED).header("Access-Control-Allow-Origin", "*").body(createdReview);
     }
 
-    @GetMapping(value = "/products/{uuidProduct}/reviews/{uuidReview}", produces = MediaType.REVIEW)
-    public ResponseEntity<Review> getReview(@PathVariable UUID uuidProduct, @PathVariable UUID uuidReview) {
-        return ResponseEntity.status(HttpStatus.OK).body(reviewService.getByUuid(uuidReview));
+    @GetMapping(value = "/api/v1/products/{uuidProduct}/reviews/{uuidReview}", produces = MediaType.REVIEW)
+    public ResponseEntity<ReviewDto> getReview(@PathVariable UUID uuidProduct, @PathVariable UUID uuidReview) {
+        return ResponseEntity.status(HttpStatus.OK).header("Access-Control-Allow-Origin", "*").body(reviewService.getByUuid(uuidReview));
     }
 
-    @PutMapping(value = "/products/{uuidProduct}/reviews/{uuidReview}", consumes = MediaType.REVIEW)
-    public ResponseEntity<Review> updateReview(@PathVariable UUID uuidProduct, @PathVariable UUID uuidReview, @RequestBody Review review) {
-        return ResponseEntity.status(HttpStatus.OK).body(reviewService.updateByUuid(uuidReview, review));
+    @PutMapping(value = "/api/v1/products/{uuidProduct}/reviews/{uuidReview}", consumes = MediaType.REVIEW)
+    public ResponseEntity<ReviewDto> updateReview(@PathVariable UUID uuidProduct, @PathVariable UUID uuidReview, @RequestBody ReviewDto reviewDto) {
+        final var status = ResponseEntity.status(HttpStatus.OK);
+
+        return status.header("Access-Control-Allow-Origin", "*").body(reviewService.updateByUuid(uuidReview, reviewDto));
     }
 
-    @DeleteMapping(value = "/products/{uuidProduct}/reviews/{uuidReview}")
+    @DeleteMapping(value = "/api/v1/products/{uuidProduct}/reviews/{uuidReview}")
     public ResponseEntity<Void> deleteReview(@PathVariable UUID uuidProduct, @PathVariable UUID uuidReview) {
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        reviewService.deleteByUuid(uuidReview);
+        return ResponseEntity.noContent().header("Access-Control-Allow-Origin", "*").build();
     }
 
-    @GetMapping(value = "/products/{uuidProduct}/image", produces = "image/png")
-    public ResponseEntity<BufferedImage> getImage(@PathVariable UUID uuidProduct) {
-        return ResponseEntity.status(HttpStatus.OK).body(productService.getImageByUuidProduct(uuidProduct));
+    @GetMapping(value = "/api/v1/products/{uuidProduct}/image", produces = "image/png")
+    public ResponseEntity<String> getImage(@PathVariable UUID uuidProduct) {
+        final var status = ResponseEntity.status(HttpStatus.OK);
+
+        return status.header("Access-Control-Allow-Origin", "*").body(productService.getImageByUuidProduct(uuidProduct));
     }
 }

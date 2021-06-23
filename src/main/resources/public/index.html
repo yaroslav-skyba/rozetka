@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Rozetka</title>
+
+        <style>
+            .search {
+                margin-left: 21%;
+                width: 50%;
+            }
+
+            #logoImg {
+                float: left;
+                width: 4%;
+            }
+
+            #cartImg {
+                float: right;
+                width: 4%;
+            }
+        </style>
+    </head>
+    <body>
+        <a><img src="img/rozetka.jpg" alt="rozetka" id="logoImg"></a>
+        <span class="search">Searching tool<br></span>
+        <label for="searchTB"></label><input id="searchTB" class="search">
+        <label for="searchButton"></label><input type="button" value="Search" id="searchButton" class="search">
+        <a href="cart"><img src="img/cart.jpg" alt="cart" id="cartImg"></a>
+
+        <div id="productListDiv"></div>
+
+        <script>
+            const xmlHttpRequest = new XMLHttpRequest();
+            const host = "http://localhost"
+            const port = 8080;
+
+            document.getElementsByTagName("body")[0].onload = function () {
+                sendRequest('GET', '/api/v1/products');
+            }
+
+            document.getElementById("logoImg").onclick = function () {
+                window.location = host + ":" + port;
+            }
+            
+            document.getElementById("searchButton").onclick = function () {
+                const value = document.getElementById('searchTB').value;
+
+                if (value !== "") {
+                    sendRequest('GET', '/api/v1/products?name=' + value);
+                }
+            }
+
+            xmlHttpRequest.onreadystatechange = function () {
+                if (xmlHttpRequest.readyState === 4 && xmlHttpRequest.status === 200) {
+                    if (xmlHttpRequest.responseURL === host + ":" + port + "/api/v1/products") {
+                        displayProductList();
+                    } else if (xmlHttpRequest.responseURL === host + ":" + port + "/api/v1/products?name=" + document.getElementById('searchTB').value) {
+                        document.getElementById("productListDiv").innerHTML = "";
+                        displayProductList();
+                    }
+                }
+
+                function displayProductList() {
+                    const productListDiv = document.getElementById("productListDiv");
+                    const productListJson = JSON.parse(xmlHttpRequest.responseText);
+
+                    for (let i = 0; i < productListJson.length; i++) {
+                        displayProductName(productListJson[i], productListDiv);
+                        displayProductField(productListJson[i], "quantity", productListDiv);
+                        displayProductField(productListJson[i], "price", productListDiv);
+                        displayProductField(productListJson[i], "discount", productListDiv);
+                        displayProductField(productListJson[i], "description", productListDiv);
+
+                        productListDiv.appendChild(document.createElement("br"));
+                    }
+                }
+
+                function displayProductName(productJson, productListDiv) {
+                    const nameProductTN = document.createTextNode(productJson.name);
+
+                    const nameProductLink = document.createElement("a");
+                    nameProductLink.href = "product.html?uuid=" + productJson.uuid;
+                    nameProductLink.appendChild(nameProductTN);
+
+                    const nameProductParagraph = document.createElement("p");
+                    nameProductParagraph.setAttribute("style", "margin-left: 50%");
+                    nameProductParagraph.appendChild(nameProductLink);
+
+                    productListDiv.appendChild(nameProductParagraph);
+                }
+
+                function displayProductField(productJson, productFieldName, productListDiv) {
+                    let productField;
+
+                    if (productJson[productFieldName] == null) {
+                        productField = document.createTextNode(productFieldName + ": -");
+                    } else {
+                        productField = document.createTextNode(productFieldName + ": " + productJson[productFieldName]);
+                    }
+
+                    const productFieldParagraph = document.createElement("p");
+                    productFieldParagraph.setAttribute("style", "margin-left: 50%");
+                    productFieldParagraph.appendChild(productField);
+
+                    productListDiv.appendChild(productFieldParagraph);
+                }
+            }
+
+            function sendRequest(httpMethod, endpoint) {
+                xmlHttpRequest.open(httpMethod, host + ":" + port + endpoint);
+                xmlHttpRequest.send();
+            }
+        </script>
+    </body>
+</html>

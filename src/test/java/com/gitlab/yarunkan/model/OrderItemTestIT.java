@@ -1,4 +1,4 @@
-package com.gitlab.yarunkan.dto;
+package com.gitlab.yarunkan.model;
 
 import com.gitlab.yarunkan.configuration.PersistenceConfig;
 import com.gitlab.yarunkan.repository.OrderItemRepository;
@@ -68,7 +68,6 @@ public class OrderItemTestIT extends AbstractTestNGSpringContextTests {
     @Transactional
     @Test(groups = {"integration-tests"}, expectedExceptions = ConstraintViolationException.class)
     public void testOrderItemIsNotSavedWithQuantityLessThanZero() {
-        orderItem1.setQuantity(-1);
         orderItemRepository.save(orderItem1);
     }
 
@@ -76,7 +75,6 @@ public class OrderItemTestIT extends AbstractTestNGSpringContextTests {
     @Transactional
     @Test(groups = {"integration-tests"}, expectedExceptions = DataIntegrityViolationException.class)
     public void testOrderItemIsNotSavedWithNullQuantity() {
-        orderItem1.setQuantity(null);
         orderItemRepository.save(orderItem1);
     }
 

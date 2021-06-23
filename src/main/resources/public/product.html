@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Product</title>
+
+        <style>
+            #logoImg {
+                float: left;
+                width: 4%;
+            }
+
+            #cartImg {
+                float: right;
+                width: 4%;
+            }
+        </style>
+    </head>
+
+    <body onload="productUuid = getQueryVariable('uuid'); sendRequest('GET', '/api/v1/products/' + productUuid, null)">
+        <a><img src="img/rozetka.jpg" alt="rozetka" id="logoImg"></a>
+        <a href="cart"><img src="img/cart.jpg" alt="cart" id="cartImg"></a>
+
+        <div id="productDiv"></div>
+
+        <script>
+            const xmlHttpRequest = new XMLHttpRequest();
+            const host = "http://localhost"
+            const port = 8080;
+            let productUuid = null;
+            let httpMethod = "GET";
+
+            document.getElementById("logoImg").onclick = function () {
+                window.location = host + ":" + port;
+            }
+
+            xmlHttpRequest.onreadystatechange = function () {
+                if (xmlHttpRequest.readyState === 4) {
+                    if (xmlHttpRequest.status === 200) {
+                        if (xmlHttpRequest.responseURL === host + ":" + port + "/api/v1/products/" + productUuid) {
+                            const productDiv = document.getElementById("productDiv");
+                            const productJson = JSON.parse(xmlHttpRequest.responseText);
+
+                            displayProductName(productJson, productDiv);
+                            displayProductField(productJson, "quantity", productDiv);
+                            displayProductField(productJson, "price", productDiv);
+                            displayProductField(productJson, "discount", productDiv);
+                            displayProductField(productJson, "description", productDiv);
+                            productDiv.appendChild(document.createElement("br"));
+
+                            httpMethod = "GET";
+                            sendRequest('GET', '/api/v1/products/' + productUuid + '/image', null);
+                        } else if (xmlHttpRequest.responseURL === host + ":" + port + "/api/v1/products/" + productUuid + "/image") {
+                            const productDiv = document.getElementById("productDiv");
+
+                            const productImg = document.createElement("img");
+                            productImg.src = "data:image/png;base64," + xmlHttpRequest.response;
+                            productImg.setAttribute("style", "margin-left: 40%; width: 25%;");
+                            productDiv.appendChild(productImg);
+
+                            addProductToCart();
+
+                            productDiv.appendChild(document.createElement("br"));
+
+                            httpMethod = "GET";
+                            sendRequest("GET", "/api/v1/products/" + productUuid + "/reviews", null);
+                        }else if(xmlHttpRequest.responseURL===host + ":" + port + "/api/v1/products/" + productUuid + "/reviews" && httpMethod === 'GET') {
+                            const productDiv = document.getElementById("productDiv");
+
+                            const reviewTN = document.createTextNode("Write your own review!")
+                            const reviewParagraph = document.createElement("p");
+                            reviewParagraph.setAttribute("style", "margin-left: 50%");
+                            reviewParagraph.appendChild(reviewTN);
+                            productDiv.appendChild(reviewParagraph);
+
+                            const reviewContentTN = document.createTextNode("Content:");
+                            const reviewContentParagraph = document.createElement("p");
+                            reviewContentParagraph.setAttribute("style", "margin-left: 40%; width: 25%");
+                            reviewContentParagraph.appendChild(reviewContentTN);
+                            productDiv.appendChild(reviewContentParagraph);
+                            const reviewContentInput = document.createElement("input");
+                            reviewContentInput.setAttribute("style", "margin-left: 40%; width: 25%");
+                            productDiv.appendChild(reviewContentInput);
+
+                            const reviewRatingTN = document.createTextNode("Rating:");
+                            const reviewRatingParagraph = document.createElement("p");
+                            reviewRatingParagraph.setAttribute("style", "margin-left: 40%; width: 25%");
+                            reviewRatingParagraph.appendChild(reviewRatingTN);
+                            productDiv.appendChild(reviewRatingParagraph);
+                            for (let i = 1; i < 6; i++) {
+                                displayRatingRB(i);
+                            }
+                            const submitReviewButton = document.createElement("button");
+                            submitReviewButton.innerHTML = "Post review";
+                            submitReviewButton.setAttribute("style", "margin-left: 40%; width: 25%;");
+                            submitReviewButton.addEventListener("click", function() {
+                                let reviewContent = reviewContentInput.value;
+
+                                if (reviewContent === "") {
+                                    alert("A review content can not be empty");
+                                    return;
+                                }
+
+                                let reviewJson = '{' +
+                                    '"uuidProduct":"' + productUuid + '",' +
+                                    '"content":"' + reviewContent + '"';
+                                const reviewRating = document.querySelector("input[name='ratingRB']:checked");
+
+                                if (reviewRating) {
+                                    const reviewRatingValue = reviewRating.value;
+                                    reviewJson += ',"rating":"' + reviewRatingValue + '"';
+                                }
+
+                                reviewJson += "}";
+
+                                httpMethod = "POST";
+                                sendRequest("POST", "/api/v1/products/" + productUuid + "/reviews", reviewJson);
+                            });
+                            productDiv.appendChild(submitReviewButton);
+
+                            productDiv.appendChild(document.createElement("br"));
+
+                            const productReviewTN = document.createTextNode("REVIEWS");
+                            const productReviewParagraph = document.createElement("p");
+                            productReviewParagraph.setAttribute("style", "margin-left: 50%");
+                            productReviewParagraph.appendChild(productReviewTN);
+                            productDiv.appendChild(productReviewParagraph);
+                            productDiv.appendChild(document.createElement("br"));
+
+                            const productReviewListJson = JSON.parse(xmlHttpRequest.responseText);
+                            for (let i = 0; i < productReviewListJson.length; i++) {
+                                displayProductField(productReviewListJson[i], "content");
+                                displayProductField(productReviewListJson[i], "rating");
+                                productDiv.appendChild(document.createElement("br"));
+                            }
+                        }
+                    } else if (xmlHttpRequest.status === 400 || xmlHttpRequest.status === 404) {
+                        window.location.href = "/404";
+                    }
+                }
+
+                function displayRatingRB(value) {
+                    const productDiv = document.getElementById("productDiv");
+
+                    const reviewRatingInput = document.createElement("input");
+                    reviewRatingInput.type = "radio";
+                    reviewRatingInput.name = "ratingRB";
+                    reviewRatingInput.id = "ratingRB" + value;
+                    reviewRatingInput.value = value;
+                    reviewRatingInput.setAttribute("style", "margin-left: 40%; width: 25%");
+                    productDiv.appendChild(reviewRatingInput);
+
+                    const reviewRatingLabel = document.createElement("label");
+                    reviewRatingLabel.for = "ratingRB";
+                    reviewRatingLabel.innerHTML = value;
+                    productDiv.appendChild(reviewRatingLabel);
+                }
+
+                function displayProductName(productJson, productListDiv) {
+                    document.title = "Rozetka | " + productJson.name;
+
+                    const nameProductTN = document.createTextNode(productJson.name);
+
+                    const nameProductH1 = document.createElement("h1");
+                    nameProductH1.appendChild(nameProductTN);
+
+                    const nameProductBold = document.createElement("b");
+                    nameProductBold.appendChild(nameProductH1);
+
+                    const nameProductParagraph = document.createElement("p");
+                    nameProductParagraph.setAttribute("style", "margin-left: 50%");
+                    nameProductParagraph.appendChild(nameProductBold);
+
+                    productListDiv.appendChild(nameProductParagraph);
+                }
+
+                function displayProductField(productJson, productFieldName) {
+                    let productField;
+
+                    if (productJson[productFieldName] == null) {
+                        productField = document.createTextNode(productFieldName + ": -");
+                    } else {
+                        productField = document.createTextNode(productFieldName + ": " + productJson[productFieldName]);
+                    }
+
+                    const productFieldParagraph = document.createElement("p");
+                    productFieldParagraph.setAttribute("style", "margin-left: 50%");
+                    productFieldParagraph.appendChild(productField);
+
+                    document.getElementById("productDiv").appendChild(productFieldParagraph);
+                }
+            }
+
+            function addProductToCart() {
+                const addProductButton = document.createElement("button");
+                addProductButton.textContent = "Add to cart";
+                addProductButton.addEventListener("click", function () {
+                    const cartItems = localStorage.getItem("cart");
+
+                    if (cartItems == null) {
+                        localStorage.setItem("cart", productUuid);
+                    } else {
+                        const uuids = cartItems.split(',');
+
+                        for (let i = 0; i < uuids.length; i++) {
+                            if (uuids[i] === productUuid) {
+                                alert("This product has already been added to your cart");
+
+                                return;
+                            }
+                        }
+
+                        localStorage.setItem("cart", cartItems + "," + productUuid);
+                    }
+                });
+
+                const addProductParagraph = document.createElement("p");
+                addProductParagraph.setAttribute("style", "margin-left: 50%");
+                addProductParagraph.appendChild(addProductButton);
+
+                document.getElementById("productDiv").appendChild(addProductParagraph);
+            }
+
+            function getQueryVariable(variable) {
+                const query = window.location.search.substring(1);
+                const vars = query.split('&');
+
+                for (let i = 0; i < vars.length; i++) {
+                    const pair = vars[i].split('=');
+
+                    if (pair[1] === undefined) {
+                        window.location.href = "/404";
+                    } else if (decodeURIComponent(pair[1]) === "") {
+                        window.location.href = "index.html";
+                    }
+
+                    if (decodeURIComponent(pair[0]) === variable) {
+                        return decodeURIComponent(pair[1]);
+                    }
+                }
+
+                window.location.href = "/404";
+            }
+
+            function sendRequest(httpMethod, endpoint, body) {
+                xmlHttpRequest.open(httpMethod, host + ":" + port + endpoint);
+
+                if (httpMethod === "POST" || httpMethod === "PUT") {
+                    xmlHttpRequest.setRequestHeader("Content-Type", "application/vnd.rozetka.review+json")
+                }
+
+                xmlHttpRequest.send(body);
+            }
+        </script>
+    </body>
+</html>
