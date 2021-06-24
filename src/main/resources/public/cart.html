@@ -1,10 +1,145 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Cart</title>
-</head>
-<body>
 
-</body>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Cart</title>
+
+        <style>
+            #logoImg {
+                float: left;
+                width: 4%;
+            }
+        </style>
+    </head>
+    <body>
+        <a><img onclick="window.location = host + ':' + port" src="img/rozetka.jpg" alt="logo" id="logoImg"></a>
+        <h1 style="margin-left: 50%">Cart</h1>
+
+        <div id="productListDiv" style="margin-left: 50%"></div>
+
+        <script>
+            const xmlHttpRequest = new XMLHttpRequest();
+            const host = "http://localhost"
+            const port = 8080;
+            const cartItems = localStorage.getItem("cart").split(",");
+            const cartItemsPriceDiscounts = [];
+            let productRequestCount = 0;
+            let overallPrice = 0;
+
+            document.getElementsByTagName("body")[0].onload = function () {
+                const cartItemsString = localStorage.getItem("cart");
+
+                if (cartItemsString == null) {
+                    return;
+                }
+
+                const cartItems = cartItemsString.split(",");
+                sendRequest("GET", "/api/v1/products/" + cartItems[productRequestCount++]);
+            }
+
+            xmlHttpRequest.onreadystatechange = function () {
+                if (xmlHttpRequest.readyState === 4) {
+                    if (xmlHttpRequest.status === 200) {
+                        const productJson = JSON.parse(xmlHttpRequest.responseText);
+
+                        const productDiv = document.createElement("div");
+                        productDiv.appendChild(document.createTextNode("Name: " + productJson.name));
+                        productDiv.appendChild(document.createElement("br"));
+                        productDiv.appendChild(document.createTextNode("Price: " + productJson["price"]));
+                        productDiv.appendChild(document.createElement("br"));
+                        let discountPrice;
+                        if (productJson["discount"] != null) {
+                            productDiv.appendChild(document.createTextNode("Discount: " + productJson["discount"]));
+                            discountPrice = productJson["price"] * productJson["discount"] / 100;
+                        } else {
+                            productDiv.appendChild(document.createTextNode("Discount: -"));
+                            discountPrice = productJson["price"];
+                        }
+                        overallPrice += discountPrice;
+                        cartItemsPriceDiscounts[productRequestCount - 1] = discountPrice;
+                        productDiv.appendChild(document.createElement("br"));
+                        productDiv.appendChild(document.createTextNode("Price with discount: " + discountPrice));
+                        productDiv.appendChild(document.createElement("br"));
+                        const removeProductButton = document.createElement("button");
+                        removeProductButton.textContent = "Remove this product from your cart";
+                        removeProductButton.addEventListener("click", function () {
+                            if (localStorage.getItem("cart") === null) {
+                                return;
+                            }
+
+                            productDiv.remove();
+
+                            const newCartItems = cartItems;
+                            newCartItems.splice(newCartItems.indexOf(productJson.uuid), 1);
+                            localStorage.setItem("cart", newCartItems.join());
+
+                            if (localStorage.getItem("cart") === "") {
+                                localStorage.removeItem("cart");
+                            }
+                        });
+                        productDiv.appendChild(removeProductButton);
+                        productDiv.appendChild(document.createElement("br"));
+
+                        productDiv.appendChild(document.createElement("br"));
+
+                        const productListDiv = document.getElementById("productListDiv");
+                        productListDiv.appendChild(productDiv);
+
+                        if (productRequestCount < cartItems.length) {
+                            sendRequest("GET", "/api/v1/products/" + cartItems[productRequestCount++]);
+                        } else {
+                            productDiv.appendChild(document.createTextNode("Overall: " + overallPrice));
+                            productDiv.appendChild(document.createElement("br"));
+                            const postOrderButton = document.createElement("button");
+                            postOrderButton.textContent = "Post your order";
+                            postOrderButton.addEventListener("click", function () {
+                                sendPostRequest("/api/v1/orders", "order", "{}");
+                            });
+                            productListDiv.appendChild(postOrderButton)
+                        }
+                    } else if (xmlHttpRequest.status === 201) {
+                        const responseJson = JSON.parse(xmlHttpRequest.responseText);
+
+                        if (xmlHttpRequest.responseURL === host + ":" + port + "/api/v1/orders") {
+
+                            let orderItemsJsonString = '[' +
+                                '{' +
+                                '"productUuid":"' + cartItems[0] + '",' +
+                                '"orderUuid":"' + responseJson.uuid + '",' +
+                                '"price":"' + cartItemsPriceDiscounts[0] + '"' +
+                                '}';
+                            for (let i = 1; i < cartItems.length; i++) {
+                                orderItemsJsonString += ',{' +
+                                    '"productUuid":"' + cartItems[i] + '",' +
+                                    '"orderUuid":"' + responseJson.uuid + '",' +
+                                    '"price":"' + cartItemsPriceDiscounts[i] + '"' +
+                                    '}';
+                            }
+                            orderItemsJsonString += ']'
+
+                            sendPostRequest("/api/v1/orders/" + responseJson.uuid + "/items", "orderItemList", orderItemsJsonString);
+                        } else if (xmlHttpRequest.responseURL === host + ":" + port + "/api/v1/orders/" + responseJson[0]["orderUuid"] + "/items") {
+                            localStorage.removeItem("cart");
+                            document.getElementById("productListDiv").remove();
+                            alert("Your order was successfully posted");
+                        }
+                    } else {
+                        alert("Some errors occurred while posting your order");
+                    }
+                }
+            }
+
+            function sendRequest(httpMethod, endpoint) {
+                xmlHttpRequest.open(httpMethod, host + ":" + port + endpoint);
+                xmlHttpRequest.send();
+            }
+
+            function sendPostRequest(endpoint, mediaType, body) {
+                xmlHttpRequest.open("POST", host + ":" + port + endpoint);
+                xmlHttpRequest.setRequestHeader("Content-Type", "application/vnd.rozetka." + mediaType + "+json");
+                xmlHttpRequest.send(body);
+            }
+        </script>
+    </body>
 </html>

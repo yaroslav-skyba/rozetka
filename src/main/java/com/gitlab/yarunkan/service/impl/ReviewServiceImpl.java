@@ -44,6 +44,22 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    public List<ReviewDto> getReviewListByProductUuid(UUID uuidProduct) {
+        try {
+            final var reviewList = reviewRepository.findByProductUuid(uuidProduct);
+            final List<ReviewDto> reviewDtoList = new ArrayList<>();
+
+            for (var review : reviewList) {
+                reviewDtoList.add(getByUuid(review.getUuid()));
+            }
+
+            return reviewDtoList;
+        } catch (Exception e) {
+            throw new ReviewServiceException("An error occurred while getting review list by product uuid", e);
+        }
+    }
+
+    @Override
     @Transactional
     @NotNull
     public ReviewDto createReview(ReviewDto reviewDto) {

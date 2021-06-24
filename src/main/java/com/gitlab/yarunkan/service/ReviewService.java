@@ -6,6 +6,7 @@ import java.util.UUID;
 
 public interface ReviewService {
     List<ReviewDto> getReviewList();
+    List<ReviewDto> getReviewListByProductUuid(UUID uuidProduct);
     ReviewDto createReview(ReviewDto reviewDto);
     ReviewDto getByUuid(UUID uuid);
     ReviewDto updateByUuid(UUID uuid, ReviewDto reviewDto);

@@ -54,7 +54,8 @@ public class ProductController {
 
     @GetMapping(value = "/api/v1/products/{uuid}/reviews", produces = MediaType.REVIEW_LIST)
     public ResponseEntity<List<ReviewDto>> getReviewList(@PathVariable UUID uuid) {
-        return ResponseEntity.status(HttpStatus.OK).header("Access-Control-Allow-Origin", "*").body(reviewService.getReviewList());
+        final var status = ResponseEntity.status(HttpStatus.OK);
+        return status.header("Access-Control-Allow-Origin","*").body(reviewService.getReviewListByProductUuid(uuid));
     }
 
     @PostMapping(value = "/api/v1/products/{uuid}/reviews", consumes = MediaType.REVIEW)
