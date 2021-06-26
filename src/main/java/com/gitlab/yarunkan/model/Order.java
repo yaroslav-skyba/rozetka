@@ -1,4 +1,4 @@
-package com.gitlab.yarunkan.dto;
+package com.gitlab.yarunkan.model;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -17,7 +17,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "obj_order")
-public class Order extends AbstractDto {
+public class Order extends AbstractModel {
     @Id
     @Column(name = "id_order")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -77,19 +77,23 @@ public class Order extends AbstractDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Order order = (Order) o;
-        return idOrder.equals(order.idOrder) && uuid.equals(order.uuid) && Objects.equals(description, order.description);
+        return  idOrder.equals(order.idOrder) &&
+                uuid.equals(order.uuid) &&
+                orderItemList.equals(order.orderItemList) &&
+                Objects.equals(description, order.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idOrder, uuid, description);
+        return Objects.hash(idOrder, uuid, orderItemList, description);
     }
 
     @Override
     public String toString() {
         return "Order{" +
                 "idOrder=" + idOrder +
-                ", uuidOrder=" + uuid +
+                ", uuid=" + uuid +
+                ", orderItemList=" + orderItemList +
                 ", description='" + description + '\'' +
                 '}';
     }

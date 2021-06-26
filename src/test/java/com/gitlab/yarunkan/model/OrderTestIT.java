@@ -1,4 +1,4 @@
-package com.gitlab.yarunkan.dto;
+package com.gitlab.yarunkan.model;
 
 import com.gitlab.yarunkan.configuration.PersistenceConfig;
 import com.gitlab.yarunkan.repository.OrderRepository;

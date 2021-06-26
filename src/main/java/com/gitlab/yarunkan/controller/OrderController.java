@@ -1,7 +1,9 @@
 package com.gitlab.yarunkan.controller;
 
 import com.gitlab.yarunkan.controller.util.MediaType;
-import com.gitlab.yarunkan.dto.Order;
+import com.gitlab.yarunkan.dto.OrderDto;
+import com.gitlab.yarunkan.dto.OrderItemDto;
+import com.gitlab.yarunkan.service.OrderItemService;
 import com.gitlab.yarunkan.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,24 +13,37 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
 public class OrderController {
     private final OrderService orderService;
+    private final OrderItemService orderItemService;
 
     @Autowired
-    public OrderController(OrderService orderService) {
+    public OrderController(OrderService orderService, OrderItemService orderItemService) {
         this.orderService = orderService;
+        this.orderItemService = orderItemService;
     }
 
-    @PostMapping(value = "/orders", consumes = MediaType.ORDER)
-    public ResponseEntity<Order> addOrder(@RequestBody Order order) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.create(order.getDescription()));
+    @PostMapping(value = "/api/v1/orders", consumes = MediaType.ORDER)
+    public ResponseEntity<OrderDto> addOrder(@RequestBody OrderDto orderDto) {
+        final var status = ResponseEntity.status(HttpStatus.CREATED);
+
+        return status.header("Access-Control-Allow-Origin", "*").body(orderService.create(orderDto));
     }
 
-    @GetMapping(value = "orders/{uuid}", produces = MediaType.ORDER)
-    public ResponseEntity<Order> getOrder(@PathVariable UUID uuid) {
-        return ResponseEntity.status(HttpStatus.OK).body(orderService.getByUuid(uuid));
+    @GetMapping(value = "/api/v1/orders/{uuid}", produces = MediaType.ORDER)
+    public ResponseEntity<OrderDto> getOrder(@PathVariable UUID uuid) {
+        return ResponseEntity.status(HttpStatus.OK).header("Access-Control-Allow-Origin", "*").body(orderService.getByUuid(uuid));
+    }
+
+
+    @PostMapping(value = "/api/v1/orders/{uuid}/items", consumes = MediaType.ORDER_ITEM_LIST)
+    public ResponseEntity<List<OrderItemDto>> addOrderItemList(@PathVariable UUID uuid, @RequestBody List<OrderItemDto> orderItemDtoList) {
+        final var status = ResponseEntity.status(HttpStatus.CREATED);
+
+        return status.header("Access-Control-Allow-Origin", "*").body(orderItemService.createList(orderItemDtoList));
     }
 }

@@ -25,6 +25,8 @@
         <version.tomcat.dbcp>10.0.5</version.tomcat.dbcp>
 
         <version.testng>7.0.0</version.testng>
+
+        <version.commons.io>2.6</version.commons.io>
     </properties>
 
     <dependencies>
@@ -80,6 +82,13 @@
             <artifactId>testng</artifactId>
             <version>${version.testng}</version>
             <scope>test</scope>
+        </dependency>
+
+        <!--Other-->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${version.commons.io}</version>
         </dependency>
     </dependencies>
 </project>

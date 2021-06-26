@@ -1,13 +1,14 @@
 package com.gitlab.yarunkan.service;
 
-import com.gitlab.yarunkan.dto.Product;
-import java.awt.image.BufferedImage;
+import com.gitlab.yarunkan.dto.ProductDto;
 import java.util.List;
 import java.util.UUID;
 
 public interface ProductService {
-    List<Product> getProductList();
-    Product getProductByUuid(UUID uuid);
-    Product createProduct(String description, Integer discount, String nameProduct, Float price, Integer quantity);
-    BufferedImage getImageByUuidProduct(UUID uuidProduct);
+    List<ProductDto> getProductList();
+    ProductDto getProductDtoByUuid(UUID uuid);
+    ProductDto createProduct(ProductDto productDto);
+    String getImageByUuidProduct(UUID uuidProduct);
+    List<ProductDto> getProductListByName(String name);
+    boolean isProductExistByUuid(UUID uuid);
 }
