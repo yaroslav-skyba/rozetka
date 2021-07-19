@@ -1,7 +1,7 @@
 # **Rozetka**
 
 **Concept:**
-- A prototype of an online shopping service.
+- A prototype of online shopping service.
 
 **Key features:**
 - UUIDs for front-end and Ids for back-end
