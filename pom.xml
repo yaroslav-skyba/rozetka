@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.gitlab.yarunkan</groupId>
+    <groupId>com.gitlab.yaroslavskyba</groupId>
     <artifactId>rozetka</artifactId>
     <version>1.0-SNAPSHOT</version>
 
@@ -13,20 +13,15 @@
         <maven.compiler.target>11</maven.compiler.target>
 
         <version.spring.boot.starter.data.jpa>2.5.0</version.spring.boot.starter.data.jpa>
-        <spring.boot.starter.web>2.5.0</spring.boot.starter.web>
-        <version.spring.test>5.3.6</version.spring.test>
-
-        <version.validation.api>2.0.1.Final</version.validation.api>
-
-        <version.postgresql>42.2.20.jre7</version.postgresql>
-
+        <version.spring.boot.starter.web>2.5.0</version.spring.boot.starter.web>
+        <version.spring.boot.starter.security>2.5.0</version.spring.boot.starter.security>
+        <version.spring.test>5.3.14</version.spring.test>
+        <version.quarkus.hibernate.validator>2.6.1.Final</version.quarkus.hibernate.validator>
+        <version.postgresql>42.3.1</version.postgresql>
         <version.hibernate.core>6.0.0.Alpha8</version.hibernate.core>
-
-        <version.tomcat.dbcp>10.0.5</version.tomcat.dbcp>
-
-        <version.testng>7.0.0</version.testng>
-
-        <version.commons.io>2.6</version.commons.io>
+        <version.tomcat.dbcp>10.0.14</version.tomcat.dbcp>
+        <version.testng>7.4.0</version.testng>
+        <version.commons.io>2.11.0</version.commons.io>
     </properties>
 
     <dependencies>
@@ -39,7 +34,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-            <version>${spring.boot.starter.web}</version>
+            <version>${version.spring.boot.starter.web}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+            <version>${version.spring.boot.starter.security}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -48,11 +48,11 @@
             <scope>test</scope>
         </dependency>
 
-        <!--Validation-->
+        <!--Quarkus-->
         <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-            <version>${version.validation.api}</version>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-hibernate-validator</artifactId>
+            <version>${version.quarkus.hibernate.validator}</version>
         </dependency>
 
         <!--PostgreSQL-->
@@ -76,7 +76,7 @@
             <version>${version.tomcat.dbcp}</version>
         </dependency>
 
-        <!--Testing-->
+        <!--TestNG-->
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
@@ -84,7 +84,7 @@
             <scope>test</scope>
         </dependency>
 
-        <!--Other-->
+        <!--Commons-->
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
