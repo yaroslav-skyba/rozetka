@@ -13,7 +13,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -62,7 +62,7 @@ public class User extends AbstractModel {
 
     @NotNull
     @Column(name = "birthday", nullable = false)
-    private Date birthday;
+    private Timestamp birthday;
 
     public Long getIdUser() {
         return idUser;
@@ -128,11 +128,11 @@ public class User extends AbstractModel {
         this.lastName = lastName;
     }
 
-    public Date getBirthday() {
+    public Timestamp getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(Date birthday) {
+    public void setBirthday(Timestamp birthday) {
         this.birthday = birthday;
     }
 

@@ -28,9 +28,7 @@ public class OrderController {
 
     @PostMapping(value = "/api/v1/orders", consumes = MediaType.ORDER)
     public ResponseEntity<OrderDto> addOrder(@RequestBody OrderDto orderDto) {
-        final var status = ResponseEntity.status(HttpStatus.CREATED);
-
-        return status.header("Access-Control-Allow-Origin", "*").body(orderService.create(orderDto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.create(orderDto));
     }
 
     @GetMapping(value = "/api/v1/orders/{uuid}", produces = MediaType.ORDER)

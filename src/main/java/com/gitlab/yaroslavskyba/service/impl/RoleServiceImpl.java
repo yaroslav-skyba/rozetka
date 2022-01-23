@@ -34,7 +34,7 @@ public class RoleServiceImpl implements RoleService {
     public RoleDto createRole(RoleDto roleDto) {
         try {
             final Role role = new Role();
-            role.setUuid(roleDto.getUuid());
+            role.setUuid(UUID.randomUUID());
             role.setNameRole(roleDto.getNameRole());
 
             roleRepository.saveAndFlush(role);

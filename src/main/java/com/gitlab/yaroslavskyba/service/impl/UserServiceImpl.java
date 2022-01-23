@@ -20,18 +20,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getByLogin(String login) {
         try {
-            final User user = userRepository.findByLogin(login);
-
-            return new UserDto(
-                    user.getUuid(),
-                    user.getRole().getUuid(),
-                    user.getLogin(),
-                    user.getPasswordUser(),
-                    user.getEmail(),
-                    user.getFirstName(),
-                    user.getLastName(),
-                    user.getBirthday()
-            );
+            final User user = userRepository.findByLogin(login).orElseThrow(() -> new UserServiceException("A user was not found"));
+            return new UserDto(user.getUuid(),
+                               user.getRole().getUuid(),
+                               user.getLogin(),
+                               user.getPasswordUser(),
+                               user.getEmail(),
+                               user.getFirstName(),
+                               user.getLastName(),
+                               user.getBirthday());
         } catch (Exception e) {
             throw new UserServiceException("An error occurred while getting a user by login", e);
         }
