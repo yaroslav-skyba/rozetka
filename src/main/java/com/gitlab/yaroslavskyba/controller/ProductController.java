@@ -1,5 +1,6 @@
 package com.gitlab.yaroslavskyba.controller;
 
+import com.gitlab.yaroslavskyba.MediaType;
 import com.gitlab.yaroslavskyba.dto.ProductDto;
 import com.gitlab.yaroslavskyba.dto.ReviewDto;
 import com.gitlab.yaroslavskyba.service.ProductService;

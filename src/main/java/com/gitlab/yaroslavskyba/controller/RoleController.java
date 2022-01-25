@@ -1,5 +1,6 @@
 package com.gitlab.yaroslavskyba.controller;
 
+import com.gitlab.yaroslavskyba.MediaType;
 import com.gitlab.yaroslavskyba.dto.RoleDto;
 import com.gitlab.yaroslavskyba.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;

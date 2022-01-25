@@ -1,48 +1,45 @@
 package com.gitlab.yaroslavskyba.controller;
 
 import com.gitlab.yaroslavskyba.AuthRequest;
-import com.gitlab.yaroslavskyba.repository.UserRepository;
+import com.gitlab.yaroslavskyba.MediaType;
+import com.gitlab.yaroslavskyba.dto.UserDto;
+import com.gitlab.yaroslavskyba.exception.UserServiceException;
 import com.gitlab.yaroslavskyba.security.JwtTokenUtil;
 import com.gitlab.yaroslavskyba.service.UserService;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-
 @RestController
+@RequestMapping("api/v1")
 public class AuthController {
-    private final AuthenticationManager authenticationManager;
     private final JwtTokenUtil jwtTokenUtil;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
-    public AuthController(AuthenticationManager authenticationManager, JwtTokenUtil jwtTokenUtil, UserRepository userRepository) {
-        this.authenticationManager = authenticationManager;
+    public AuthController(JwtTokenUtil jwtTokenUtil, UserService userService) {
         this.jwtTokenUtil = jwtTokenUtil;
-        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
-    @PostMapping("/api/v1/login")
-    public ResponseEntity<AuthRequest> login(@RequestBody @Valid AuthRequest request) {
+    @PostMapping(value = "logins", consumes = MediaType.AUTH_REQUEST)
+    public ResponseEntity<String> login(@RequestBody AuthRequest authRequest) {
         try {
-            Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-            return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, jwtTokenUtil.generateAccessToken(userRepository.findByLogin(((UserDetails)authenticate.getPrincipal()).getUsername()).orElseThrow())).body(request);
-        } catch (BadCredentialsException ex) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.ok(jwtTokenUtil.generateAccessToken(userService.getByLogin(authRequest.getUsername())));
+        } catch (AuthenticationException authenticationException) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("An incorrect login or password");
         }
     }
 
-    /*@PostMapping("register")
-    public UserView register(@RequestBody @Valid CreateUserRequest request) {
-        return userService.create(request);
-    }*/
-
+    @PostMapping(value = "registers", consumes = MediaType.USER)
+    public ResponseEntity<UserDto> register(@RequestBody UserDto userDto) {
+        try {
+            return ResponseEntity.status(HttpStatus.CREATED).body(userService.create(userDto));
+        } catch (UserServiceException userServiceException) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(userDto);
+        }
+    }
 }

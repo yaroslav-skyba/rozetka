@@ -1,4 +1,4 @@
-package com.gitlab.yaroslavskyba.controller;
+package com.gitlab.yaroslavskyba;
 
 public class MediaType {
     public static final String ROZETKA = "application/vnd.rozetka";
@@ -12,6 +12,7 @@ public class MediaType {
     public static final String ROLE_LIST = ROZETKA + ".roleList+json";
     public static final String USER = ROZETKA + ".user+json";
     public static final String USER_LIST = ROZETKA + ".userList+json";
+    public static final String AUTH_REQUEST = ROZETKA + ".authRequest+json";
 
     private MediaType() {}
 }
