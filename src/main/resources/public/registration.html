@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Registration</title>
+
+        <style>
+            body {
+                font-family: Arial,
+                Helvetica, sans-serif;
+            }
+
+            form {
+                border: 3px solid #f1f1f1;
+            }
+
+            input {
+                width: 100%;
+                padding: 12px 20px;
+                margin: 8px 0;
+                display: inline-block;
+                border: 1px solid #ccc;
+                box-sizing: border-box;
+            }
+
+            button {
+                background-color: #04AA6D;
+                color: white;
+                padding: 14px 20px;
+                margin: 8px 0;
+                border: none;
+                cursor: pointer;
+                width: 100%;
+            }
+
+            button:hover {
+                opacity: 0.8;
+            }
+
+            .form {
+                padding: 16px;
+            }
+        </style>
+    </head>
+
+    <body>
+        <h2>Registration</h2>
+
+        <div class="form">
+            <label for="username"><b>Username</b></label>
+            <input placeholder="Enter a username" id="username">
+
+            <label for="password"><b>Password</b></label>
+            <input type="password" placeholder="Enter a password" id="password">
+
+            <label for="passwordConfirmation"><b>Password confirmation</b></label>
+            <input type="password" placeholder="Enter the password again" id="passwordConfirmation">
+
+            <label for="email"><b>Email</b></label>
+            <input type="email" placeholder="An email" id="email">
+
+            <label for="firstName"><b>First name</b></label>
+            <input placeholder="A first name" id="firstName">
+
+            <label for="lastName"><b>Second name</b></label>
+            <input placeholder="A second name" id="lastName">
+
+            <label for="birthday"><b>Birthday</b></label>
+            <input type="date" id="birthday">
+
+            <button id="register">Register</button>
+            <button id="login">Or login</button>
+        </div>
+
+        <script>
+            const xmlHttpRequest = new XMLHttpRequest();
+
+            document.getElementById("register").onclick = function () {
+                const username = document.getElementById("username").value.trim();
+                const password = document.getElementById("password").value.trim();
+                const passwordConfirmation = document.getElementById("passwordConfirmation").value.trim();
+                const email = document.getElementById("email").value.trim();
+                const firstName = document.getElementById("firstName").value.trim();
+                const lastName = document.getElementById("lastName").value.trim();
+                const birthday = document.getElementById("birthday").value.trim();
+
+                if (!username || !password || !passwordConfirmation || !email || !firstName || !lastName || !birthday) {
+                    alert("Any fields should not be blank");
+                    return;
+                }
+
+                if (password !== passwordConfirmation) {
+                    alert("The passwords do not match");
+                    return;
+                }
+
+                xmlHttpRequest.open("POST", "http://localhost:8080/api/v1/registrations");
+                xmlHttpRequest.setRequestHeader("Content-Type", "application/vnd.rozetka.user+json");
+                xmlHttpRequest.send(JSON.stringify({
+                    uuid:null,
+                    roleUuid:null,
+                    login:username,
+                    passwordUser:password,
+                    email:email,
+                    firstName:firstName,
+                    lastName:lastName,
+                    birthday:birthday
+                }));
+            }
+
+            document.getElementById("login").onclick = function () {
+                location.href = "login.html";
+            }
+
+            xmlHttpRequest.onreadystatechange = function () {
+                if (xmlHttpRequest.readyState === 4) {
+                    alert(xmlHttpRequest.responseText);
+
+                    if (xmlHttpRequest.status === 201) {
+                        location.href = "login.html";
+                    } else if (xmlHttpRequest.status === 409) {
+                    }
+                }
+            }
+        </script>
+    </body>
+</html>
