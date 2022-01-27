@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +26,8 @@ public class AuthController {
     private final RoleService roleService;
     private final AuthenticationManager authenticationManager;
 
-    public AuthController(JwtTokenUtil jwtTokenUtil, UserService userService, RoleService roleService, AuthenticationManager authenticationManager) {
+    public AuthController(JwtTokenUtil jwtTokenUtil, UserService userService, RoleService roleService,
+                          AuthenticationManager authenticationManager) {
         this.jwtTokenUtil = jwtTokenUtil;
         this.userService = userService;
         this.roleService = roleService;
@@ -37,13 +37,10 @@ public class AuthController {
     @PostMapping(value = "logins", consumes = MediaType.AUTH_REQUEST)
     public ResponseEntity<String> login(@RequestBody AuthRequest authRequest) {
         try {
-            return ResponseEntity.ok(
-                jwtTokenUtil.generateAccessToken(
-                    userService.getByLogin(
-                        ((UserDetails)authenticationManager.authenticate(
-                            new UsernamePasswordAuthenticationToken(
-                                authRequest.getUsername(), authRequest.getPassword())).getPrincipal()).getUsername())));
+            final String username = authRequest.getUsername();
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, authRequest.getPassword()));
 
+            return ResponseEntity.ok(jwtTokenUtil.generateAccessToken(userService.getByLogin(username)));
         } catch (RuntimeException runtimeException) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("An incorrect login or password");
         }

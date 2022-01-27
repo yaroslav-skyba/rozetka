@@ -23,9 +23,9 @@
         <version.testng>7.4.0</version.testng>
         <version.commons.io>2.11.0</version.commons.io>
         <version.jjwt>0.9.1</version.jjwt>
-        <version.auth0>1.35.0</version.auth0>
-        <version.auth0.spring.security.api>1.4.1</version.auth0.spring.security.api>
-        <version.mvc.auth.commons>1.8.0</version.mvc.auth.commons>
+        <version.jackson.core>2.12.3</version.jackson.core>
+        <version.jackson.databind>2.12.3</version.jackson.databind>
+        <version.jackson.annotations>2.12.3</version.jackson.annotations>
     </properties>
 
     <dependencies>
@@ -102,20 +102,21 @@
             <version>${version.jjwt}</version>
         </dependency>
 
+        <!--Jackson-->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
-            <version>2.12.3</version>
+            <version>${version.jackson.core}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.12.3</version>
+            <version>${version.jackson.databind}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
-            <version>2.12.3</version>
+            <version>${version.jackson.annotations}</version>
         </dependency>
     </dependencies>
 </project>
