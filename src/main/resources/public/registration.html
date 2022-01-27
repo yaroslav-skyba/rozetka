@@ -7,8 +7,7 @@
 
         <style>
             body {
-                font-family: Arial,
-                Helvetica, sans-serif;
+                font-family: Arial, Helvetica, sans-serif;
             }
 
             form {
@@ -58,7 +57,7 @@
             <input type="password" placeholder="Enter the password again" id="passwordConfirmation">
 
             <label for="email"><b>Email</b></label>
-            <input type="email" placeholder="An email" id="email">
+            <input placeholder="An email" id="email">
 
             <label for="firstName"><b>First name</b></label>
             <input placeholder="A first name" id="firstName">
@@ -75,18 +74,34 @@
 
         <script>
             const xmlHttpRequest = new XMLHttpRequest();
+            const maxInputLength = 255;
+            const usernameInput = document.getElementById("username");
+            const emailInput = document.getElementById("email");
 
             document.getElementById("register").onclick = function () {
-                const username = document.getElementById("username").value.trim();
+                const username = usernameInput.value.trim();
                 const password = document.getElementById("password").value.trim();
                 const passwordConfirmation = document.getElementById("passwordConfirmation").value.trim();
-                const email = document.getElementById("email").value.trim();
+                const email = emailInput.value.trim();
                 const firstName = document.getElementById("firstName").value.trim();
                 const lastName = document.getElementById("lastName").value.trim();
                 const birthday = document.getElementById("birthday").value.trim();
 
                 if (!username || !password || !passwordConfirmation || !email || !firstName || !lastName || !birthday) {
-                    alert("Any fields should not be blank");
+                    alert("Some fields are blank");
+                    return;
+                }
+
+                if (username.length > maxInputLength || password.length > maxInputLength || passwordConfirmation.length > maxInputLength ||
+                    email.length > maxInputLength || firstName.length > maxInputLength || lastName.length > maxInputLength ||
+                    birthday.length > maxInputLength) {
+
+                    alert("Fields cannot be longer than 255 symbols");
+                    return;
+                }
+
+                if (!email.toLowerCase().match(/[A-Za-z0-9.]+@[A-Za-z0-9.]+/)) {
+                    alert("An email should only contain A-Z, a-z, 0-9, or dot symbols between the @ char");
                     return;
                 }
 
@@ -98,13 +113,7 @@
                 xmlHttpRequest.open("POST", "http://localhost:8080/api/v1/registrations");
                 xmlHttpRequest.setRequestHeader("Content-Type", "application/vnd.rozetka.user+json");
                 xmlHttpRequest.send(JSON.stringify({
-                    uuid:null,
-                    roleUuid:null,
-                    login:username,
-                    passwordUser:password,
-                    email:email,
-                    firstName:firstName,
-                    lastName:lastName,
+                    uuid:null, roleUuid:null, login:username, passwordUser:password, email:email, firstName:firstName, lastName:lastName,
                     birthday:birthday
                 }));
             }
@@ -120,6 +129,8 @@
                     if (xmlHttpRequest.status === 201) {
                         location.href = "login.html";
                     } else if (xmlHttpRequest.status === 409) {
+                        usernameInput.value = "";
+                        emailInput.value = "";
                     }
                 }
             }

@@ -27,10 +27,7 @@ public class AuthController {
     private final RoleService roleService;
     private final AuthenticationManager authenticationManager;
 
-    public AuthController(JwtTokenUtil jwtTokenUtil,
-                          UserService userService,
-                          RoleService roleService,
-                          AuthenticationManager authenticationManager) {
+    public AuthController(JwtTokenUtil jwtTokenUtil, UserService userService, RoleService roleService, AuthenticationManager authenticationManager) {
         this.jwtTokenUtil = jwtTokenUtil;
         this.userService = userService;
         this.roleService = roleService;
@@ -57,10 +54,11 @@ public class AuthController {
         try {
             userDto.setUuid(UUID.randomUUID());
             userDto.setRoleUuid(roleService.getByName("user").getUuid());
+            userService.create(userDto);
 
             return ResponseEntity.status(HttpStatus.CREATED).body("You were successfully registered");
         } catch (UserServiceException userServiceException) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(userServiceException.getMessage());
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("A user with such a username or password already exists");
         }
     }
 }

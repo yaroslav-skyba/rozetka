@@ -60,10 +60,12 @@
 
         <script>
             const xmlHttpRequest = new XMLHttpRequest();
+            const usernameInput = document.getElementById("username");
+            const passwordInput = document.getElementById("password");
 
             document.getElementById("login").onclick = function () {
-                const username = document.getElementById("username").value.trim();
-                const password = document.getElementById("password").value.trim();
+                const username = usernameInput.value.trim();
+                const password = passwordInput.value.trim();
 
                 if (!username || !password) {
                     alert("A login or password should not be blank");
@@ -89,6 +91,8 @@
                         location.href = "/";
                     } else if (xmlHttpRequest.status === 401) {
                         alert(xmlHttpRequest.responseText);
+                        usernameInput.value = "";
+                        passwordInput.value = "";
                     }
                 }
             }
