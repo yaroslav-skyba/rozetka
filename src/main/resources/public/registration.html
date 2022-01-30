@@ -74,11 +74,13 @@
 
         <script>
             const xmlHttpRequest = new XMLHttpRequest();
-            const maxInputLength = 255;
+
             const usernameInput = document.getElementById("username");
             const emailInput = document.getElementById("email");
 
             document.getElementById("register").onclick = function () {
+                const maxInputLength = 255;
+
                 const username = usernameInput.value.trim();
                 const password = document.getElementById("password").value.trim();
                 const passwordConfirmation = document.getElementById("passwordConfirmation").value.trim();

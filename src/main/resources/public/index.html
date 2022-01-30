@@ -6,38 +6,82 @@
         <title>Rozetka</title>
 
         <style>
-            .search {
-                margin-left: 21%;
-                width: 50%;
+            body {
+                font-family: Arial, Helvetica, sans-serif;
+            }
+
+            input {
+                padding: 1% 1%;
+                border: 1px solid #ccc;
+                box-sizing: border-box;
+                width: 100%;
+            }
+
+            #searchButton, nav {
+                background-color: #04AA6D;
+                color: white;
+                padding: 1% 0;
+                margin: 1% 0;
+                border: none;
+                cursor: pointer;
+                width: 100%;
+            }
+
+            button:hover {
+                opacity: 0.8;
             }
 
             #logoImg {
-                float: left;
-                width: 4%;
+                padding-left: 1%;
             }
 
             #cartImg {
                 float: right;
-                width: 4%;
+                padding-right: 1%;
             }
         </style>
     </head>
+
     <body>
-        <a><img src="img/rozetka.jpg" alt="rozetka" id="logoImg"></a>
-        <span class="search">Searching tool<br></span>
-        <label for="searchTB"></label><input id="searchTB" class="search">
-        <label for="searchButton"></label><input type="button" value="Search" id="searchButton" class="search">
-        <a href="cart.html"><img src="img/cart.jpg" alt="cart" id="cartImg"></a>
+        <nav>
+            <img src="img/rozetka.jpg" alt="Rozetka" width="50" height="50" id="logoImg">
+            <span id="controlSpan"></span>
+            <img src="img/cart.jpg" alt="Cart" width="50" height="50" id="cartImg">
+        </nav>
+
+        <label for="searchTextInput"><b>Search</b></label>
+        <input placeholder="Search products" id="searchTextInput">
+
+        <button id="searchButton">Search</button>
 
         <div id="productListDiv"></div>
 
         <script>
-            const xmlHttpRequest = new XMLHttpRequest();
-            const host = "http://localhost"
+            const host = "http://localhost";
             const port = 8080;
+            const tokenKey = "token";
+            const xmlHttpRequest = new XMLHttpRequest();
+            const controlSpan = document.getElementById("controlSpan");
 
-            document.getElementsByTagName("body")[0].onload = function () {
+            onload = function () {
                 sendRequest('GET', '/api/v1/products');
+
+                if (localStorage.getItem(tokenKey)) {
+                    createControlButton("profile", function () {
+                        location.href = "profile.html";
+                    }, controlSpan);
+                    createControlButton("logout", function () {
+                        localStorage.removeItem(tokenKey);
+                        location.reload();
+                    }, controlSpan);
+                } else {
+                    createControlButton("login", function () {
+                        location.href = "login.html";
+                    }, controlSpan);
+                    createControlButton("register", function () {
+                        location.href = "registration.html";
+                    }, controlSpan);
+                }
             }
 
             document.getElementById("logoImg").onclick = function () {
@@ -111,6 +155,14 @@
             function sendRequest(httpMethod, endpoint) {
                 xmlHttpRequest.open(httpMethod, host + ":" + port + endpoint);
                 xmlHttpRequest.send();
+            }
+
+            function createControlButton(innerHTML, onclick, controlSpan) {
+                const button = document.createElement("button");
+                button.innerHTML = innerHTML;
+                button.onclick = onclick;
+
+                controlSpan.append(button);
             }
         </script>
     </body>
