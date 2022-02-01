@@ -1,7 +1,6 @@
 package com.gitlab.yaroslavskyba.security;
 
-import com.gitlab.yaroslavskyba.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -9,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -16,52 +16,44 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-
-import static java.util.List.of;
-import static java.util.Optional.ofNullable;
-import static org.springframework.util.StringUtils.isEmpty;
+import java.util.List;
+import java.util.Optional;
 
 @Component
 public class JwtTokenFilter extends OncePerRequestFilter {
     private final JwtTokenUtil jwtTokenUtil;
-    private final UserRepository userRepository;
     private final UserDetailsService userDetailsService;
 
-    @Autowired
-    public JwtTokenFilter(JwtTokenUtil jwtTokenUtil, UserRepository userRepository, UserDetailsService userDetailsService) {
+    public JwtTokenFilter(JwtTokenUtil jwtTokenUtil, UserDetailsService userDetailsService) {
         this.jwtTokenUtil = jwtTokenUtil;
-        this.userRepository = userRepository;
         this.userDetailsService = userDetailsService;
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain chain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain chain)
+        throws ServletException, IOException {
         final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-        if (isEmpty(header) || !header.startsWith("Bearer ")) {
+        if (StringUtils.hasLength(header) || !header.startsWith("Bearer ")) {
             chain.doFilter(request, response);
             return;
         }
 
-        // Get jwt token and validate
         final String token = header.split(" ")[1].trim();
+
         if (!jwtTokenUtil.validate(token)) {
             chain.doFilter(request, response);
             return;
         }
 
         final UserDetails userDetails = userDetailsService.loadUserByUsername(jwtTokenUtil.getUsername(token));
-        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+        final UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
             userDetails, null,
-            ofNullable(userDetails).map(UserDetails::getAuthorities).orElse(of())
+            Optional.ofNullable(userDetails).map(UserDetails::getAuthorities).orElse(List.of())
         );
 
-        authentication
-            .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+        SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
         chain.doFilter(request, response);
     }
 }

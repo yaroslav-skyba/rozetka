@@ -40,7 +40,7 @@ public class AuthController {
             final String username = authRequest.getUsername();
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, authRequest.getPassword()));
 
-            return ResponseEntity.ok(jwtTokenUtil.generateAccessToken(userService.getByLogin(username)));
+            return ResponseEntity.ok(jwtTokenUtil.generateAccessToken(userService.getUserByLogin(username)));
         } catch (RuntimeException runtimeException) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("An incorrect login or password");
         }
@@ -50,8 +50,8 @@ public class AuthController {
     public ResponseEntity<String> register(@RequestBody UserDto userDto) {
         try {
             userDto.setUuid(UUID.randomUUID());
-            userDto.setRoleUuid(roleService.getByName("user").getUuid());
-            userService.create(userDto);
+            userDto.setRoleUuid(roleService.getRoleByName("user").getUuid());
+            userService.createUser(userDto);
 
             return ResponseEntity.status(HttpStatus.CREATED).body("You were successfully registered");
         } catch (UserServiceException userServiceException) {

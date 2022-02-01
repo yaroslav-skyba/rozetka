@@ -28,10 +28,9 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public List<ReviewDto> getReviewList() {
         try {
-            final List<Review> reviewList = reviewRepository.findAll();
             final List<ReviewDto> reviewDtoList = new ArrayList<>();
 
-            for (var review : reviewList) {
+            for (Review review : reviewRepository.findAll()) {
                 reviewDtoList.add(getByUuid(review.getUuid()));
             }
 

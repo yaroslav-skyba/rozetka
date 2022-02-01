@@ -1,5 +1,6 @@
 package com.gitlab.yaroslavskyba.security;
 
+import com.gitlab.yaroslavskyba.Main;
 import com.gitlab.yaroslavskyba.dto.UserDto;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -15,7 +16,7 @@ public class JwtTokenUtil {
     public String generateAccessToken(UserDto userDto) {
         return Jwts.builder()
             .setSubject(userDto.getLogin())
-            .setIssuer("com.gitlab.yaroslavskyba")
+            .setIssuer(Main.class.getPackageName())
             .setIssuedAt(new Date())
             .setExpiration(new Date(System.currentTimeMillis() + 10_000_000))
             .signWith(SignatureAlgorithm.HS512, JWT_SECRET)
@@ -30,7 +31,7 @@ public class JwtTokenUtil {
         try {
             Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(token);
             return true;
-        } catch (SignatureException ex) {
+        } catch (SignatureException signatureException) {
             return false;
         }
     }

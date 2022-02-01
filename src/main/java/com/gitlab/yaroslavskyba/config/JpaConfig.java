@@ -29,9 +29,7 @@ public class JpaConfig {
         final var entityManagerFactory = new LocalContainerEntityManagerFactoryBean();
         entityManagerFactory.setDataSource(dataSource(environment));
         entityManagerFactory.setPackagesToScan("com.gitlab.yaroslavskyba.model");
-
-        final var hibernateJpaVendorAdapter = new HibernateJpaVendorAdapter();
-        entityManagerFactory.setJpaVendorAdapter(hibernateJpaVendorAdapter);
+        entityManagerFactory.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
         entityManagerFactory.setJpaProperties(getAdditionalProperties(environment));
 
         return entityManagerFactory;

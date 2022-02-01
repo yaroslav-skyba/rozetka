@@ -7,7 +7,6 @@ import com.gitlab.yaroslavskyba.repository.OrderItemRepository;
 import com.gitlab.yaroslavskyba.repository.OrderRepository;
 import com.gitlab.yaroslavskyba.repository.ProductRepository;
 import com.gitlab.yaroslavskyba.service.OrderItemService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,8 +21,8 @@ public class OrderItemServiceImpl implements OrderItemService {
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
 
-    @Autowired
-    public OrderItemServiceImpl(OrderItemRepository orderItemRepository, OrderRepository orderRepository, ProductRepository productRepository) {
+    public OrderItemServiceImpl(OrderItemRepository orderItemRepository, OrderRepository orderRepository,
+                                ProductRepository productRepository) {
         this.orderItemRepository = orderItemRepository;
         this.orderRepository = orderRepository;
         this.productRepository = productRepository;
@@ -56,7 +55,7 @@ public class OrderItemServiceImpl implements OrderItemService {
         try {
             final List<OrderItemDto> orderItemDtoListResponse = new ArrayList<>();
 
-            for (var orderItemDto : orderItemDtoList) {
+            for (OrderItemDto orderItemDto : orderItemDtoList) {
                 orderItemDtoListResponse.add(create(orderItemDto));
             }
 
