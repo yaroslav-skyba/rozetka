@@ -3,6 +3,7 @@ package com.gitlab.yaroslavskyba.controller;
 import com.gitlab.yaroslavskyba.MediaType;
 import com.gitlab.yaroslavskyba.dto.OrderDto;
 import com.gitlab.yaroslavskyba.dto.OrderItemDto;
+import com.gitlab.yaroslavskyba.exception.OrderItemServiceException;
 import com.gitlab.yaroslavskyba.service.OrderItemService;
 import com.gitlab.yaroslavskyba.service.OrderService;
 import org.springframework.http.HttpStatus;
@@ -39,6 +40,10 @@ public class OrderController {
 
     @PostMapping(value = "orders/{uuid}/items", consumes = MediaType.ORDER_ITEM_LIST)
     public ResponseEntity<List<OrderItemDto>> addOrderItemList(@PathVariable UUID uuid, @RequestBody List<OrderItemDto> orderItemDtoList) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(orderItemService.createList(orderItemDtoList));
+        try {
+            return ResponseEntity.status(HttpStatus.CREATED).body(orderItemService.createList(orderItemDtoList));
+        } catch (OrderItemServiceException orderItemServiceException) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(List.of());
+        }
     }
 }

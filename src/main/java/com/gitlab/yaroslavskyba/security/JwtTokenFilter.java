@@ -34,7 +34,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         throws ServletException, IOException {
         final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-        if (StringUtils.hasLength(header) || !header.startsWith("Bearer ")) {
+        if (!StringUtils.hasLength(header) || !header.startsWith("Bearer ")) {
             chain.doFilter(request, response);
             return;
         }

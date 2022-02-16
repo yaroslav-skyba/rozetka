@@ -27,7 +27,6 @@ public class ITCreateEntityUtil {
 
         final var orderItem = new OrderItem();
         orderItem.setOrder(order);
-        orderItem.setPrice(random.nextFloat() * max);
         orderItem.setProduct(product);
         orderItem.setUuid(UUID.randomUUID());
 

@@ -6,7 +6,6 @@ import com.gitlab.yaroslavskyba.exception.ReviewServiceException;
 import com.gitlab.yaroslavskyba.repository.ProductRepository;
 import com.gitlab.yaroslavskyba.repository.ReviewRepository;
 import com.gitlab.yaroslavskyba.service.ReviewService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +18,6 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
     private final ProductRepository productRepository;
 
-    @Autowired
     public ReviewServiceImpl(ReviewRepository reviewRepository, ProductRepository productRepository) {
         this.reviewRepository = reviewRepository;
         this.productRepository = productRepository;
@@ -36,23 +34,22 @@ public class ReviewServiceImpl implements ReviewService {
 
             return reviewDtoList;
         } catch (Exception e) {
-            throw new ReviewServiceException("An error occurred while getting review list", e);
+            throw new ReviewServiceException("An error occurred while getting a review list", e);
         }
     }
 
     @Override
     public List<ReviewDto> getReviewListByProductUuid(UUID uuidProduct) {
         try {
-            final var reviewList = reviewRepository.findByProductUuid(uuidProduct);
             final List<ReviewDto> reviewDtoList = new ArrayList<>();
 
-            for (var review : reviewList) {
+            for (var review : reviewRepository.findByProductUuid(uuidProduct)) {
                 reviewDtoList.add(getByUuid(review.getUuid()));
             }
 
             return reviewDtoList;
         } catch (Exception e) {
-            throw new ReviewServiceException("An error occurred while getting review list by product uuid", e);
+            throw new ReviewServiceException("An error occurred while getting a review list by a product uuid", e);
         }
     }
 
@@ -78,7 +75,6 @@ public class ReviewServiceImpl implements ReviewService {
     public ReviewDto getByUuid(UUID uuid) {
         try {
             final Review review = reviewRepository.findByUuid(uuid);
-
             return new ReviewDto(review.getUuid(), review.getProduct().getUuid(), review.getContent(), review.getRating());
         } catch (Exception e) {
             throw new ReviewServiceException("An error occurred while getting a review", e);
@@ -106,8 +102,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional
     public void deleteByUuid(UUID uuid) {
         try {
-            final Review review = reviewRepository.findByUuid(uuid);
-            reviewRepository.deleteById(review.getIdReview());
+            reviewRepository.deleteById(reviewRepository.findByUuid(uuid).getIdReview());
         } catch (Exception e) {
             throw new ReviewServiceException("An error occurred while deleting a review", e);
         }

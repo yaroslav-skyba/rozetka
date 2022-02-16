@@ -7,6 +7,7 @@ import com.gitlab.yaroslavskyba.model.User;
 import com.gitlab.yaroslavskyba.repository.RoleRepository;
 import com.gitlab.yaroslavskyba.repository.UserRepository;
 import com.gitlab.yaroslavskyba.service.UserService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,10 +19,12 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     public final RoleRepository roleRepository;
+    public final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository) {
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -32,7 +35,7 @@ public class UserServiceImpl implements UserService {
             user.setUuid(UUID.randomUUID());
             user.setRole(roleRepository.findByUuid(userDto.getRoleUuid()));
             user.setLogin(userDto.getLogin());
-            user.setPasswordUser(userDto.getPasswordUser());
+            user.setPasswordUser(passwordEncoder.encode(userDto.getPasswordUser()));
             user.setEmail(userDto.getEmail());
             user.setFirstName(userDto.getFirstName());
             user.setLastName(userDto.getLastName());
@@ -57,7 +60,7 @@ public class UserServiceImpl implements UserService {
 
             return userDtoList;
         } catch (Exception exception) {
-            throw new ReviewServiceException("An error occurred while getting user list", exception);
+            throw new ReviewServiceException("An error occurred while getting a user list", exception);
         }
     }
 

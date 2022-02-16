@@ -10,7 +10,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PositiveOrZero;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -36,10 +35,6 @@ public class OrderItem extends AbstractModel {
     @JoinColumn(name = "id_order", nullable = false)
     private Order order;
 
-    @PositiveOrZero
-    @Column(name = "price", nullable = false)
-    private Float price;
-
     public UUID getUuid() {
         return uuid;
     }
@@ -64,14 +59,6 @@ public class OrderItem extends AbstractModel {
         this.order = order;
     }
 
-    public Float getPrice() {
-        return price;
-    }
-
-    public void setPrice(Float price) {
-        this.price = price;
-    }
-
     public Integer getIdOrderItem() {
         return idOrderItem;
     }
@@ -85,13 +72,13 @@ public class OrderItem extends AbstractModel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         OrderItem orderItem = (OrderItem) o;
-        return  idOrderItem.equals(orderItem.idOrderItem) && uuid.equals(orderItem.uuid) && product.equals(orderItem.product) &&
-                order.equals(orderItem.order) && price.equals(orderItem.price);
+        return idOrderItem.equals(orderItem.idOrderItem) && uuid.equals(orderItem.uuid) && product.equals(orderItem.product) &&
+               order.equals(orderItem.order);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idOrderItem, uuid, product, order, price);
+        return Objects.hash(idOrderItem, uuid, product, order);
     }
 
     @Override
@@ -101,7 +88,6 @@ public class OrderItem extends AbstractModel {
                 ", uuid=" + uuid +
                 ", product=" + product +
                 ", order=" + order +
-                ", price=" + price +
                 '}';
     }
 }

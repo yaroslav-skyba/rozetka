@@ -48,7 +48,7 @@ public class RoleServiceImpl implements RoleService {
 
             return roleDtoList;
         } catch (Exception exception) {
-            throw new ReviewServiceException("An error occurred while getting roles list", exception);
+            throw new ReviewServiceException("An error occurred while getting a role list", exception);
         }
     }
 

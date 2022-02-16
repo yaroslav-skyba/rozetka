@@ -3,6 +3,7 @@ package com.gitlab.yaroslavskyba.service.impl;
 import com.gitlab.yaroslavskyba.dto.OrderItemDto;
 import com.gitlab.yaroslavskyba.model.OrderItem;
 import com.gitlab.yaroslavskyba.exception.OrderItemServiceException;
+import com.gitlab.yaroslavskyba.model.Product;
 import com.gitlab.yaroslavskyba.repository.OrderItemRepository;
 import com.gitlab.yaroslavskyba.repository.OrderRepository;
 import com.gitlab.yaroslavskyba.repository.ProductRepository;
@@ -32,19 +33,26 @@ public class OrderItemServiceImpl implements OrderItemService {
     public OrderItemDto create(OrderItemDto orderItemDto) {
         try {
             final UUID orderUuid = orderItemDto.getOrderUuid();
-            final Float price = orderItemDto.getPrice();
             final UUID productUuid = orderItemDto.getProductUuid();
             final UUID uuid = UUID.randomUUID();
 
+            final Product product = productRepository.findByUuid(productUuid);
+            //Do not remove this variable
+            final Integer productQuantity = product.getQuantity();
+            final int orderItemProductQuantity = 1;
+            product.setQuantity(orderItemProductQuantity);
+
             final OrderItem orderItem = new OrderItem();
             orderItem.setOrder(orderRepository.findByUuid(orderUuid));
-            orderItem.setPrice(price);
-            orderItem.setProduct(productRepository.findByUuid(productUuid));
+            orderItem.setProduct(product);
             orderItem.setUuid(uuid);
 
             orderItemRepository.saveAndFlush(orderItem);
 
-            return new OrderItemDto(uuid, productUuid, orderUuid, price);
+            product.setQuantity(productQuantity - orderItemProductQuantity);
+            productRepository.saveAndFlush(product);
+
+            return new OrderItemDto(uuid, productUuid, orderUuid);
         } catch (Exception e) {
             throw new OrderItemServiceException("An error occurred while saving an order item", e);
         }

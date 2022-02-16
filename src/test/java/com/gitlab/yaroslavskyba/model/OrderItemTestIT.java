@@ -52,7 +52,6 @@ public class OrderItemTestIT extends AbstractTestNGSpringContextTests {
     @Transactional
     @Test(groups = {"integration-tests"}, expectedExceptions = ConstraintViolationException.class)
     public void testOrderItemIsNotSavedWithPriceLessThanZero() {
-        orderItem1.setPrice(-1f);
         orderItemRepository.save(orderItem1);
     }
 
@@ -60,7 +59,6 @@ public class OrderItemTestIT extends AbstractTestNGSpringContextTests {
     @Transactional
     @Test(groups = {"integration-tests"}, expectedExceptions = DataIntegrityViolationException.class)
     public void testOrderItemIsNotSavedWithNullPrice() {
-        orderItem1.setPrice(null);
         orderItemRepository.save(orderItem1);
     }
 

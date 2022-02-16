@@ -6,7 +6,6 @@ import com.gitlab.yaroslavskyba.model.Product;
 import com.gitlab.yaroslavskyba.repository.ProductRepository;
 import com.gitlab.yaroslavskyba.service.ProductService;
 import org.apache.commons.io.FileUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +19,6 @@ import java.util.UUID;
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
 
-    @Autowired
     public ProductServiceImpl(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
@@ -31,24 +29,22 @@ public class ProductServiceImpl implements ProductService {
             final List<Product> productList = productRepository.findAll();
             final List<ProductDto> productDtoList = new ArrayList<>();
 
-            for (var product : productList) {
+            for (Product product : productList) {
                 productDtoList.add(getProductDtoByUuid(product.getUuid()));
             }
 
             return productDtoList;
         } catch (Exception e) {
-            throw new ProductServiceException("An error occurred while getting product list", e);
+            throw new ProductServiceException("An error occurred while getting a product list", e);
         }
     }
 
     @Override
     public ProductDto getProductDtoByUuid(UUID uuid) {
         try {
-            final Product product = productRepository.findByUuid(uuid);
-
-            return createProductDto(product, uuid);
+            return createProductDto(productRepository.findByUuid(uuid), uuid);
         } catch (Exception e) {
-            throw new ProductServiceException("An error occurred while getting an product", e);
+            throw new ProductServiceException("An error occurred while getting a product", e);
         }
     }
 
@@ -70,28 +66,17 @@ public class ProductServiceImpl implements ProductService {
 
             return createProductDto(product, uuid);
         } catch (Exception e) {
-            throw new ProductServiceException("An error occurred while creating an product", e);
+            throw new ProductServiceException("An error occurred while creating a product", e);
         }
-    }
-
-    private ProductDto createProductDto(Product product, UUID uuid) {
-        final String name = product.getNameProduct();
-        final Integer dtoQuantity = product.getQuantity();
-        final Float dtoPrice = product.getPrice();
-        final Integer dtoDiscount = product.getDiscount();
-        final String dtoDescription = product.getDescription();
-
-        return new ProductDto(uuid, name, dtoQuantity, dtoPrice, dtoDiscount, dtoDescription);
     }
 
     @Override
     public String getImageByUuidProduct(UUID uuidProduct) {
         try {
-            final String imagePath = "C:\\Projects\\IdeaProjects\\PetProjects\\Rozetka\\src\\main\\resources\\" + uuidProduct + ".png";
-
-            return Base64.getEncoder().encodeToString(FileUtils.readFileToByteArray(new File(imagePath)));
+            return Base64.getEncoder().encodeToString(FileUtils.readFileToByteArray(
+                new File("C:\\Projects\\IdeaProjects\\PetProjects\\Rozetka\\src\\main\\resources\\" + uuidProduct + ".png")));
         } catch (Exception e) {
-            throw new ProductServiceException("An error occurred while getting an product image", e);
+            throw new ProductServiceException("An error occurred while getting a product image", e);
         }
     }
 
@@ -107,7 +92,7 @@ public class ProductServiceImpl implements ProductService {
 
             return productDtoList;
         } catch (Exception e) {
-            throw new ProductServiceException("An error occurred while getting an product dto list by name", e);
+            throw new ProductServiceException("An error occurred while getting a product list by a name", e);
         }
     }
 
@@ -116,7 +101,12 @@ public class ProductServiceImpl implements ProductService {
         try {
             return productRepository.existsByUuid(uuid);
         } catch (Exception e) {
-            throw new ProductServiceException("An error occurred while checking product existence by uuid", e);
+            throw new ProductServiceException("An error occurred while checking a product existence by uuid", e);
         }
+    }
+
+    private ProductDto createProductDto(Product product, UUID uuid) {
+        return new ProductDto(uuid, product.getNameProduct(), product.getQuantity(), product.getPrice(), product.getDiscount(),
+                              product.getDescription());
     }
 }
