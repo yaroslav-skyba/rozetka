@@ -74,4 +74,15 @@ public class UserServiceImpl implements UserService {
             throw new UserServiceException("An error occurred while getting a user by login", exception);
         }
     }
+
+    @Override
+    @Transactional
+    public void deleteByUuid(UUID uuid) {
+        try {
+            userRepository.deleteById(
+                userRepository.findByUuid(uuid).orElseThrow(() -> new UserServiceException("A user was not found")).getIdUser());
+        } catch (Exception e) {
+            throw new UserServiceException("An error occurred while deleting a user", e);
+        }
+    }
 }

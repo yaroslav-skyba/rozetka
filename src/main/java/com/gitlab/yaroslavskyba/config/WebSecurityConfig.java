@@ -32,14 +32,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         final String adminRoleName = "admin";
+        final String userRoleName = "user";
 
         http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and().authorizeRequests()
             .antMatchers(HttpMethod.GET, "/api/v1/products/**").permitAll()
             .antMatchers("/api/v1/logins", "/api/v1/registrations").permitAll()
-            .antMatchers("/api/v1/orders/**").hasAnyAuthority("user", adminRoleName)
-            .antMatchers("/api/v1/**", "/profile/admin/**").hasAuthority(adminRoleName)
+            .antMatchers("/api/v1/orders/**").hasAnyAuthority(userRoleName, adminRoleName)
+            .antMatchers("/api/v1/**").hasAuthority(adminRoleName)
             .antMatchers("/**").permitAll()
             .anyRequest().authenticated()
             .and().exceptionHandling().authenticationEntryPoint((request, response, authException) -> response.sendRedirect("/"))

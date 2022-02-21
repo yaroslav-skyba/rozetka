@@ -2,17 +2,21 @@
 
 <html lang="en">
     <head>
-        <meta charset="UTF-8">
+        <meta charset="UTF-8"/>
         <title>Admin</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-              integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+              integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous"/>
     </head>
 
     <body>
         <header id="header"></header>
 
         <main id="main">
-            <a id="createA" class="my-auto">Add new user</a>
+            <div class="text-white py-3">Welcome, <span id="userName"></span></div>
+
+            <button class="btn btn-dark btn-outline-success mb-3" type="button" onclick="location.href = 'creation.html'">
+                Create a user
+            </button>
 
             <table class="table-dark bg-dark" style="width: 100%">
                 <caption>List of users</caption>
@@ -32,6 +36,8 @@
 
                 <tbody id="tableContent"></tbody>
             </table>
+
+            <div id="alert"></div>
         </main>
 
         <div id="footer"></div>
