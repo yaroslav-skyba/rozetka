@@ -33,7 +33,7 @@ function setNavigation(brandHref, brandImgSrc, cartHref, aboutHref, loginHref, r
         const navItem1 = document.getElementById("navItem1");
         const navItem2 = document.getElementById("navItem2");
 
-        if (localStorage.getItem(jwtKey) == null) {
+        if (localStorage.getItem(jwtStorageKey) == null) {
             navItem1.innerHTML = "Login";
             navItem1.href = loginHref;
 
@@ -42,7 +42,7 @@ function setNavigation(brandHref, brandImgSrc, cartHref, aboutHref, loginHref, r
         } else {
             navItem1.innerHTML = "Profile";
 
-            const roleName = localStorage.getItem(currentUserRoleNameKey);
+            const roleName = localStorage.getItem(currentUserRoleNameStorageKey);
 
             if (roleName === "admin") {
                 navItem1.href = adminHref;
@@ -55,8 +55,8 @@ function setNavigation(brandHref, brandImgSrc, cartHref, aboutHref, loginHref, r
             navItem2.innerHTML = "Logout";
             navItem2.href = loginHref;
             navItem2.onclick = function () {
-                localStorage.removeItem(jwtKey);
-                localStorage.removeItem(currentUserRoleNameKey);
+                localStorage.removeItem(jwtStorageKey);
+                localStorage.removeItem(currentUserRoleNameStorageKey);
             }
         }
     });

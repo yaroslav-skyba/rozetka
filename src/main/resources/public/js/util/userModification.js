@@ -8,7 +8,7 @@ function setUserModification() {
                             <div class="card-body p-5">
                                 <h2 class="text-uppercase text-center mb-5" id="headline"></h2>
     
-                                <form id="form" novalidate>
+                                <div id="form">
                                     <div class="form-outline mb-4">
                                         <input id="firstName" class="form-control form-control-lg" required/>
                                         <label class="form-label" for="firstName">A first name</label>
@@ -50,7 +50,9 @@ function setUserModification() {
                                     <div class="d-flex justify-content-center">
                                         <button class="btn btn-success btn-lg custom-gradient-2 text-body" id="submit"></button>
                                     </div>
-                                </form>
+                                </div>
+                                
+                                <div id="alert"></div>
                             </div>
                         </div>
                     </div>

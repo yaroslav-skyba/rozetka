@@ -1,8 +1,22 @@
-const jwtKey = "jwt";
-const currentUserRoleNameKey = "roleName";
-const currentUserKey = "currentUser";
-const rolesKey = "roles";
+const jwtStorageKey = "jwt";
+const currentUserRoleNameStorageKey = "roleName";
+const currentUserStorageKey = "currentUser";
+const rolesStorageKey = "roles";
+
 const userToEditQueryParamKey = "login";
+
+const roleUuidDtoKey = "uuid";
+const roleNameDtoKey = "nameRole";
+const userUuidDtoKey = "uuid";
+const userRoleUuidDtoKey = "roleUuid";
+const userLoginDtoKey = "login";
+const userEmailDtoKey = "email";
+const userFirstNameDtoKey = "firstName";
+const userLastNameDtoKey = "lastName";
+const userBirthdayDtoKey = "birthday";
+
 const authority = "http://localhost:8080/api/v1/";
 const usersApiUrl = authority + "users";
 const rolesApiUrl = authority + "roles";
+
+const buttonClasses = "btn btn-dark btn-outline-success";

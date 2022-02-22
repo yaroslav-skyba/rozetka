@@ -2,25 +2,28 @@ const xmlHttpRequest = new XMLHttpRequest();
 const formControlElements = document.getElementsByClassName("form-control");
 
 onload = function () {
+    if (!localStorage.getItem(rolesStorageKey)) {
+        location.href = "/profile/admin/admin.html";
+    }
+
     setAdminModification();
 
     document.getElementById("headline").innerHTML = "Create an account";
     document.getElementById("submit").innerHTML = "Register";
 
-    for (const element of formControlElements) {
-        element.onchange = function () {
-            localStorage.setItem(element.id, element.value);
+    for (const formControlElement of formControlElements) {
+        formControlElement.onchange = function () {
+            localStorage.setItem(formControlElement.id, formControlElement.value);
         }
 
-        element.value = localStorage.getItem(element.id);
+        formControlElement.value = localStorage.getItem(formControlElement.id);
     }
 
     document.getElementById("submit").onclick = function () {
         const body = {};
-
         const roleValue = document.getElementById("roleValue").value;
 
-        for (const [key, value] of Object.entries(JSON.parse(localStorage.getItem(rolesKey)))) {
+        for (const [key, value] of Object.entries(JSON.parse(localStorage.getItem(rolesStorageKey)))) {
             if (value === roleValue) {
                 body.roleUuid = key;
             }
@@ -41,21 +44,21 @@ onload = function () {
 
         xmlHttpRequest.open("POST", usersApiUrl);
         xmlHttpRequest.setRequestHeader("Content-Type", "application/vnd.rozetka.user+json");
-        xmlHttpRequest.setRequestHeader("Authorization", localStorage.getItem(jwtKey));
+        xmlHttpRequest.setRequestHeader("Authorization", localStorage.getItem(jwtStorageKey));
         xmlHttpRequest.send(JSON.stringify(body));
     }
+}
 
-    xmlHttpRequest.onreadystatechange = function () {
-        if (xmlHttpRequest.readyState === 4) {
-            if (xmlHttpRequest.status === 201) {
-                for (const element of formControlElements) {
-                    localStorage.removeItem(element.id);
-                }
-
-                alert("success", "A user has been successfully created");
-            } else if (xmlHttpRequest.status === 409) {
-                alert("danger", "Some errors occurred while creating a user");
+xmlHttpRequest.onreadystatechange = function () {
+    if (xmlHttpRequest.readyState === 4) {
+        if (xmlHttpRequest.status === 201) {
+            for (const formControlElement of formControlElements) {
+                localStorage.removeItem(formControlElement.id);
             }
+
+            alert("success", "A user has been successfully created");
+        } else if (xmlHttpRequest.status === 409) {
+            alert("danger", "Some errors occurred while creating a user");
         }
     }
 }
