@@ -1,7 +1,4 @@
 const xmlHttpRequest = new XMLHttpRequest();
-const authority = "http://localhost:8080/api/v1/";
-const usersGETUrl = authority + "users";
-const rolesGETUrl = authority + "roles";
 
 let users = null;
 
@@ -9,7 +6,7 @@ onload = function () {
     setNavigation("../../index.html", "../../img/logo.png", "../../cart.html", "../../about.html",
         "../../login.html", "../../registration.html", "admin.html", "../user.html");
 
-    xmlHttpRequest.open("GET", usersGETUrl);
+    xmlHttpRequest.open("GET", usersApiUrl);
     xmlHttpRequest.setRequestHeader("Authorization", localStorage.getItem(jwtKey));
     xmlHttpRequest.send();
 }
@@ -17,22 +14,27 @@ onload = function () {
 xmlHttpRequest.onreadystatechange = function () {
     if (xmlHttpRequest.readyState === 4) {
         if (xmlHttpRequest.status === 200) {
-            if (xmlHttpRequest.responseURL === usersGETUrl) {
+            if (xmlHttpRequest.responseURL === usersApiUrl) {
                 users = JSON.parse(xmlHttpRequest.responseText);
 
-                const currentUser = JSON.parse(localStorage.getItem("user"));
+                const currentUser = JSON.parse(localStorage.getItem(currentUserKey));
                 document.getElementById("userName").innerHTML = currentUser["firstName"] + " " + currentUser["lastName"];
 
-                xmlHttpRequest.open("GET", rolesGETUrl);
+                xmlHttpRequest.open("GET", rolesApiUrl);
                 xmlHttpRequest.setRequestHeader("Authorization", localStorage.getItem(jwtKey));
                 xmlHttpRequest.send();
-            } else if (xmlHttpRequest.responseURL === rolesGETUrl) {
+            } else if (xmlHttpRequest.responseURL === rolesApiUrl) {
                 const roles = JSON.parse(xmlHttpRequest.responseText);
                 const roleNameMap = new Map();
 
                 for (let i = 0; i < roles.length; i++) {
                     roleNameMap.set(roles[i]["uuid"], roles[i]["nameRole"]);
                 }
+
+                localStorage.setItem(rolesKey, JSON.stringify([...roleNameMap].reduce((acc, val) => {
+                    acc[val[0]] = val[1];
+                    return acc;
+                }, {})));
 
                 const tableContent = document.getElementById("tableContent");
 
@@ -53,7 +55,7 @@ xmlHttpRequest.onreadystatechange = function () {
                     editButton.textContent = "Edit";
                     editButton.className = buttonClasses;
                     editButton.onclick = function () {
-                        location.href = "/profile/admin/edit.html?login=" + users[i]["login"];
+                        location.href = "/profile/admin/edit.html?" + userToEditQueryParamKey + "=" + users[i]["login"];
                     }
 
                     const deleteButton = document.createElement("button");
@@ -61,7 +63,7 @@ xmlHttpRequest.onreadystatechange = function () {
                     deleteButton.className = buttonClasses;
                     deleteButton.onclick = function () {
                         if (confirm("Are you sure you want to delete this user?")) {
-                            xmlHttpRequest.open("DELETE", usersGETUrl + "/" + users[i]["uuid"]);
+                            xmlHttpRequest.open("DELETE", usersApiUrl + "/" + users[i]["uuid"]);
                             xmlHttpRequest.setRequestHeader("Authorization", localStorage.getItem(jwtKey));
                             xmlHttpRequest.send();
                         }
@@ -86,15 +88,4 @@ function insertTd(fieldValue, tr) {
     const td = document.createElement("td");
     td.textContent = fieldValue;
     tr.append(td);
-}
-
-function alert(type, message) {
-    const div = document.createElement('div');
-    div.innerHTML =
-        `<div class="alert alert-` + type + ` alert-dismissible" role="alert">
-            ` + message +
-            `<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" onclick="location.reload()"></button>
-        </div>`;
-
-    document.getElementById("alert").append(div);
 }

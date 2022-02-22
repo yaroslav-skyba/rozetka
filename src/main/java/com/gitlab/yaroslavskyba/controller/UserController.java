@@ -27,8 +27,14 @@ public class UserController {
     }
 
     @PostMapping(value = "users", consumes = MediaType.USER)
-    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(userService.createUser(userDto));
+    public ResponseEntity<Void> createUser(@RequestBody UserDto userDto) {
+        try {
+            userService.createUser(userDto);
+        } catch (UserServiceException userServiceException) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping(value = "users", produces = MediaType.USER_LIST)

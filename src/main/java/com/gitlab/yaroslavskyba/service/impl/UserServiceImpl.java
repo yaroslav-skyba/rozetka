@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserDto createUser(UserDto userDto) {
+    public void createUser(UserDto userDto) {
         try {
             final User user = new User();
             user.setUuid(UUID.randomUUID());
@@ -42,8 +42,6 @@ public class UserServiceImpl implements UserService {
             user.setBirthday(userDto.getBirthday());
 
             userRepository.saveAndFlush(user);
-
-            return userDto;
         } catch (Exception exception) {
             throw new UserServiceException("An error occurred while creating a user", exception);
         }

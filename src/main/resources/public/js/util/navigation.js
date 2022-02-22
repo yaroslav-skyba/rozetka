@@ -1,6 +1,3 @@
-const jwtKey = "jwt";
-const roleNameKey = "roleName";
-
 function setNavigation(brandHref, brandImgSrc, cartHref, aboutHref, loginHref, registrationHref, adminHref, userHref) {
     const main = document.getElementById("main");
     main.className = "min-vh-100";
@@ -45,7 +42,7 @@ function setNavigation(brandHref, brandImgSrc, cartHref, aboutHref, loginHref, r
         } else {
             navItem1.innerHTML = "Profile";
 
-            const roleName = localStorage.getItem(roleNameKey);
+            const roleName = localStorage.getItem(currentUserRoleNameKey);
 
             if (roleName === "admin") {
                 navItem1.href = adminHref;
@@ -59,7 +56,7 @@ function setNavigation(brandHref, brandImgSrc, cartHref, aboutHref, loginHref, r
             navItem2.href = loginHref;
             navItem2.onclick = function () {
                 localStorage.removeItem(jwtKey);
-                localStorage.removeItem(roleNameKey);
+                localStorage.removeItem(currentUserRoleNameKey);
             }
         }
     });
