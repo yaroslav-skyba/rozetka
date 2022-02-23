@@ -1,19 +1,17 @@
 function validate() {
-    for (const formControlElement of document.getElementsByClassName("form-control")) {
-        formControlElement.addEventListener('input', () => {
-            formControlElement.setCustomValidity('');
-            formControlElement.checkValidity();
-        });
-    }
+    for (const formOutlineElement of document.getElementsByClassName("form-outline")) {
+        const formControlElement = formOutlineElement.getElementsByClassName("form-control")[0];
 
-    const form = document.getElementById("form");
-
-    form.addEventListener('submit', function (event) {
-        if (!form.checkValidity()) {
-            event.preventDefault();
-            event.stopPropagation();
+        if (!formControlElement.checkValidity()) {
+            alert("danger", formOutlineElement.getElementsByClassName("invalid-feedback")[0].innerHTML);
+            return false;
         }
 
-        form.classList.add('was-validated');
-    }, false);
+        if (formControlElement.value.length > 255) {
+            alert("danger", "A field can't be longer than 255 symbols");
+            return false;
+        }
+    }
+
+    return true;
 }

@@ -30,7 +30,7 @@ function setUserModification() {
                                     <div class="form-outline mb-4">
                                         <input type="email" id="email" class="form-control form-control-lg" required/>
                                         <label class="form-label" for="email">An email</label>
-                                        <div class="invalid-feedback">Please type an email</div>
+                                        <div class="invalid-feedback">Please type an email ([text]@[text])</div>
                                     </div>
                                 
                                     <div class="form-outline mb-4">
@@ -42,7 +42,7 @@ function setUserModification() {
                                     <div class="form-outline mb-4">
                                         <input type="password" id="password" class="form-control form-control-lg" required/>
                                         <label class="form-label" for="password">A password</label>
-                                        <div class="invalid-feedback" id="passwordValidation">Please type a password</div>
+                                        <div class="invalid-feedback">Please type a password</div>
                                     </div>
     
                                     <div id="role"></div>
@@ -52,13 +52,11 @@ function setUserModification() {
                                     </div>
                                 </div>
                                 
-                                <div id="alert"></div>
+                                <div id="alert" class="mt-3"></div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>`;
-
-    validate();
 }

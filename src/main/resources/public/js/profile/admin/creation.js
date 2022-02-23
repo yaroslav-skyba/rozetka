@@ -20,7 +20,13 @@ onload = function () {
     }
 
     document.getElementById("submit").onclick = function () {
+        if (!validate()) {
+            return;
+        }
+
         const body = {};
+        body.uuid = null;
+
         const roleValue = document.getElementById("roleValue").value;
 
         for (const [key, value] of Object.entries(JSON.parse(localStorage.getItem(rolesStorageKey)))) {
@@ -35,12 +41,6 @@ onload = function () {
         body.firstName = document.getElementById("firstName").value;
         body.lastName = document.getElementById("secondName").value;
         body.birthday = document.getElementById("birthday").value;
-
-        if (Object.values(body).filter(value => !value || value.length > 255).length) {
-            return;
-        }
-
-        body.uuid = null;
 
         xmlHttpRequest.open("POST", usersApiUrl);
         xmlHttpRequest.setRequestHeader("Content-Type", "application/vnd.rozetka.user+json");

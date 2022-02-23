@@ -12,6 +12,6 @@ function setAdminModification() {
             </select>
     
             <label class="form-label" for="roleValue">A role</label>
-            <div class="invalid-feedback" id="roleValidation">Please select a role</div>
+            <div class="invalid-feedback">Please select a role</div>
         </div>`;
 }
