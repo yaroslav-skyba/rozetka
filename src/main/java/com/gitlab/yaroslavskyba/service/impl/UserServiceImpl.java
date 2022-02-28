@@ -18,8 +18,10 @@ import java.util.UUID;
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    public final RoleRepository roleRepository;
-    public final PasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    private static final String USER_SERVICE_EXCEPTION_MESSAGE = "A user was not found";
 
     public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
@@ -65,11 +67,32 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getUserByLogin(String login) {
         try {
-            final User user = userRepository.findByLogin(login).orElseThrow(() -> new UserServiceException("A user was not found"));
+            final User user = userRepository.findByLogin(login).orElseThrow(() -> new UserServiceException(USER_SERVICE_EXCEPTION_MESSAGE));
             return new UserDto(user.getUuid(), user.getRole().getUuid(), user.getLogin(), user.getPasswordUser(), user.getEmail(),
                                user.getFirstName(), user.getLastName(), user.getBirthday());
         } catch (Exception exception) {
-            throw new UserServiceException("An error occurred while getting a user by login", exception);
+            throw new UserServiceException("An error occurred while getting a user by a login", exception);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void updateByUuid(UUID uuid, UserDto userDto) {
+        try {
+            final User user = userRepository.findByUuid(uuid).orElseThrow(() -> new UserServiceException(USER_SERVICE_EXCEPTION_MESSAGE));
+
+            user.setUuid(userDto.getUuid());
+            user.setRole(roleRepository.findByUuid(userDto.getRoleUuid()));
+            user.setLogin(userDto.getLogin());
+            user.setPasswordUser(userDto.getPasswordUser());
+            user.setEmail(userDto.getEmail());
+            user.setFirstName(userDto.getFirstName());
+            user.setLastName(userDto.getLastName());
+            user.setBirthday(userDto.getBirthday());
+
+            userRepository.saveAndFlush(user);
+        } catch (Exception exception) {
+            throw new UserServiceException("An error occurred while updating a user", exception);
         }
     }
 
@@ -78,9 +101,9 @@ public class UserServiceImpl implements UserService {
     public void deleteByUuid(UUID uuid) {
         try {
             userRepository.deleteById(
-                userRepository.findByUuid(uuid).orElseThrow(() -> new UserServiceException("A user was not found")).getIdUser());
-        } catch (Exception e) {
-            throw new UserServiceException("An error occurred while deleting a user", e);
+                userRepository.findByUuid(uuid).orElseThrow(() -> new UserServiceException(USER_SERVICE_EXCEPTION_MESSAGE)).getIdUser());
+        } catch (Exception exception) {
+            throw new UserServiceException("An error occurred while deleting a user", exception);
         }
     }
 }

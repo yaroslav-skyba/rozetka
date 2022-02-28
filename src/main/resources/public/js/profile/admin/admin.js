@@ -36,6 +36,7 @@ xmlHttpRequest.onreadystatechange = function () {
 
                     insertTd(i + 1, tr);
                     insertTd(users[i][userLoginDtoKey], tr);
+                    insertTd(users[i][userPasswordDtoKey], tr);
                     insertTd(users[i][userEmailDtoKey], tr);
                     insertTd(users[i][userFirstNameDtoKey], tr);
                     insertTd(users[i][userLastNameDtoKey], tr);

@@ -1,4 +1,4 @@
-package com.gitlab.yaroslavskyba;
+package com.gitlab.yaroslavskyba.util;
 
 public class MediaType {
     public static final String ROZETKA = "application/vnd.rozetka";

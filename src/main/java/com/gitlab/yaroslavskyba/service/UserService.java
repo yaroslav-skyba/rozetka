@@ -9,5 +9,6 @@ public interface UserService {
     void createUser(UserDto userDto);
     List<UserDto> getUserList();
     UserDto getUserByLogin(String login);
+    void updateByUuid(UUID uuid, UserDto userDto);
     void deleteByUuid(UUID uuid);
 }

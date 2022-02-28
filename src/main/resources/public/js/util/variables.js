@@ -3,6 +3,9 @@ const currentUserRoleNameStorageKey = "roleName";
 const currentUserStorageKey = "currentUser";
 const rolesStorageKey = "roles";
 
+const creationStorageKeyPrefix = "creation_";
+const editStorageKeyPrefix = "edit_";
+
 const userToEditQueryParamKey = "login";
 
 const roleUuidDtoKey = "uuid";
@@ -10,6 +13,7 @@ const roleNameDtoKey = "nameRole";
 const userUuidDtoKey = "uuid";
 const userRoleUuidDtoKey = "roleUuid";
 const userLoginDtoKey = "login";
+const userPasswordDtoKey = "passwordUser";
 const userEmailDtoKey = "email";
 const userFirstNameDtoKey = "firstName";
 const userLastNameDtoKey = "lastName";

@@ -1,7 +1,7 @@
 package com.gitlab.yaroslavskyba.controller;
 
 import com.gitlab.yaroslavskyba.AuthRequest;
-import com.gitlab.yaroslavskyba.MediaType;
+import com.gitlab.yaroslavskyba.util.MediaType;
 import com.gitlab.yaroslavskyba.dto.UserDto;
 import com.gitlab.yaroslavskyba.exception.UserServiceException;
 import com.gitlab.yaroslavskyba.security.JwtTokenUtil;
