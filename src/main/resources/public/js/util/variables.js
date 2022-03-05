@@ -1,12 +1,11 @@
 const jwtStorageKey = "jwt";
 const currentUserRoleNameStorageKey = "roleName";
 const currentUserStorageKey = "currentUser";
+const userToEditStorageKey = "userToEdit";
 const rolesStorageKey = "roles";
 
 const creationStorageKeyPrefix = "creation_";
 const editStorageKeyPrefix = "edit_";
-
-const userToEditQueryParamKey = "login";
 
 const roleUuidDtoKey = "uuid";
 const roleNameDtoKey = "nameRole";
@@ -24,3 +23,5 @@ const usersApiUrl = authority + "users";
 const rolesApiUrl = authority + "roles";
 
 const buttonClasses = "btn btn-dark btn-outline-success";
+
+const userMediaType = "application/vnd.rozetka.user+json";

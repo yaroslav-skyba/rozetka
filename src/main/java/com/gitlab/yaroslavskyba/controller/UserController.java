@@ -43,10 +43,10 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserList());
     }
 
-    @PutMapping(value = "users/{uuid}")
+    @PutMapping(value = "users/{uuid}", consumes = MediaType.USER)
     public ResponseEntity<UserDto> deleteUser(@PathVariable UUID uuid, @RequestBody UserDto userDto) {
         try {
-            userService.deleteByUuid(uuid);
+            userService.updateByUuid(uuid, userDto);
         } catch (UserServiceException userServiceException) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }

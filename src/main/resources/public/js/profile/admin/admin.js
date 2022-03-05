@@ -36,7 +36,6 @@ xmlHttpRequest.onreadystatechange = function () {
 
                     insertTd(i + 1, tr);
                     insertTd(users[i][userLoginDtoKey], tr);
-                    insertTd(users[i][userPasswordDtoKey], tr);
                     insertTd(users[i][userEmailDtoKey], tr);
                     insertTd(users[i][userFirstNameDtoKey], tr);
                     insertTd(users[i][userLastNameDtoKey], tr);
@@ -46,7 +45,8 @@ xmlHttpRequest.onreadystatechange = function () {
                     const actionsTd = document.createElement("td");
 
                     createButton("Edit", function () {
-                        location.href = "/profile/admin/edit.html?" + userToEditQueryParamKey + "=" + users[i][userLoginDtoKey];
+                        localStorage.setItem(userToEditStorageKey, JSON.stringify(users[i]));
+                        location.href = "/profile/admin/edit.html";
                     }, actionsTd);
                     actionsTd.append(" ");
                     createButton("Delete", function () {
