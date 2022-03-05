@@ -80,8 +80,12 @@ public class UserServiceImpl implements UserService {
     public void updateByUuid(UUID uuid, UserDto userDto) {
         try {
             final User user = userRepository.findByUuid(uuid).orElseThrow(() -> new UserServiceException(USER_SERVICE_EXCEPTION_MESSAGE));
+            final UUID userUuid = userDto.getUuid();
 
-            user.setUuid(userDto.getUuid());
+            if (userUuid != null) {
+                user.setUuid(userUuid);
+            }
+
             user.setRole(roleRepository.findByUuid(userDto.getRoleUuid()));
             user.setLogin(userDto.getLogin());
 

@@ -1,4 +1,6 @@
 onload = function () {
+    setUserModification();
+    setRole();
     setAdminModification("Create an account", "Create", creationStorageKeyPrefix);
 
     document.getElementById("submit").onclick = function () {
@@ -7,17 +9,7 @@ onload = function () {
         password.required = true;
         document.getElementById("passwordConformation").required = true;
 
-        if (!areInputsValid()) {
-            return;
-        }
-
-        const body = createBody();
-        body[userPasswordDtoKey] = password.value;
-
-        xmlHttpRequest.open("POST", usersApiUrl);
-        xmlHttpRequest.setRequestHeader("Content-Type", userMediaType);
-        xmlHttpRequest.setRequestHeader("Authorization", localStorage.getItem(jwtStorageKey));
-        xmlHttpRequest.send(JSON.stringify(body));
+        sendModificationRequest(password.value, "POST", usersApiUrl);
     }
 }
 

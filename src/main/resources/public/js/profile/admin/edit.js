@@ -5,7 +5,16 @@ onload = function () {
         location.href = "/profile/admin/admin.html";
     }
 
+    setUserModification();
+    setRole();
+
     const userToEditParsed = JSON.parse(userToEdit);
+
+    for (const [key, value] of Object.entries(JSON.parse(localStorage.getItem(rolesStorageKey)))) {
+        if (key === userToEditParsed[userRoleUuidDtoKey]) {
+            localStorage.setItem(editStorageKeyPrefix + document.getElementById("roleValue").id, value.toString());
+        }
+    }
 
     localStorage.setItem(editStorageKeyPrefix + document.getElementById("login").id, userToEditParsed[userLoginDtoKey]);
     localStorage.setItem(editStorageKeyPrefix + document.getElementById("email").id, userToEditParsed[userEmailDtoKey]);
@@ -13,36 +22,21 @@ onload = function () {
     localStorage.setItem(editStorageKeyPrefix + document.getElementById("secondName").id, userToEditParsed[userLastNameDtoKey]);
     localStorage.setItem(editStorageKeyPrefix + document.getElementById("birthday").id, userToEditParsed[userBirthdayDtoKey]);
 
-    setAdminModification("Edit an account", "Edit", editStorageKeyPrefix);
-
-    for (const [key, value] of Object.entries(JSON.parse(localStorage.getItem(rolesStorageKey)))) {
-        if (key === userToEditParsed[userRoleUuidDtoKey]) {
-            localStorage.setItem(editStorageKeyPrefix + document.getElementById("roleValue").id, value);
-        }
-    }
+    setAdminModification("Edit an account", "Save", editStorageKeyPrefix);
 
     document.getElementById("submit").onclick = function () {
-        if (!areInputsValid()) {
-            return;
+        let passwordValue = document.getElementById("password").value;
+
+        if (!passwordValue) {
+            passwordValue = null;
         }
 
-        const body = createBody();
-        const password = document.getElementById("password");
-
-        if (password) {
-            body[userPasswordDtoKey] = password.value;
-        } else {
-            body[userPasswordDtoKey] = null;
-        }
-
-        xmlHttpRequest.open("PUT", usersApiUrl + "/" + userToEditParsed[userUuidDtoKey]);
-        xmlHttpRequest.setRequestHeader("Content-Type", userMediaType);
-        xmlHttpRequest.setRequestHeader("Authorization", localStorage.getItem(jwtStorageKey));
-        xmlHttpRequest.send(JSON.stringify(body));
+        localStorage.removeItem(userToEditStorageKey);
+        sendModificationRequest(passwordValue, "PUT", usersApiUrl + "/" + userToEditParsed[userUuidDtoKey]);
     }
 }
 
 xmlHttpRequest.onreadystatechange = function () {
-    setXmlHttpRequest(201, creationStorageKeyPrefix, "A user has been successfully created",
-        "Some errors occurred while creating a user");
+    setXmlHttpRequest(200, editStorageKeyPrefix, "A user has been successfully edited",
+        "Some errors occurred while editing a user");
 }

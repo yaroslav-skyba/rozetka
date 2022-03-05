@@ -1,6 +1,7 @@
 const xmlHttpRequest = new XMLHttpRequest();
 
 let users = null;
+let userToDeleteUuid = null;
 
 onload = function () {
     setNavigation("../../index.html", "../../img/logo.png", "../../cart.html", "../../about.html",
@@ -32,6 +33,8 @@ xmlHttpRequest.onreadystatechange = function () {
                 }, {})));
 
                 for (let i = 0; i < users.length; i++) {
+                    users[i][userBirthdayDtoKey] = new Date(users[i][userBirthdayDtoKey]).toISOString().split('T')[0];
+
                     const tr = document.createElement("tr");
 
                     insertTd(i + 1, tr);
@@ -51,6 +54,7 @@ xmlHttpRequest.onreadystatechange = function () {
                     actionsTd.append(" ");
                     createButton("Delete", function () {
                         if (confirm("Are you sure you want to delete this user?")) {
+                            userToDeleteUuid = users[i][userUuidDtoKey];
                             sendHttpRequest("DELETE", usersApiUrl + "/" + users[i][userUuidDtoKey]);
                         }
                     }, actionsTd);
@@ -61,6 +65,10 @@ xmlHttpRequest.onreadystatechange = function () {
                 }
             }
         } else if (xmlHttpRequest.status === 204) {
+            if (JSON.parse(localStorage.getItem(userToEditStorageKey))[userUuidDtoKey] === userToDeleteUuid) {
+                localStorage.removeItem(userToEditStorageKey);
+            }
+
             alert("success", "A user has been successfully deleted");
         } else if (xmlHttpRequest.status === 409) {
             alert("danger", "Some errors occurred while deleting a user");
