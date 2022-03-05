@@ -1,5 +1,5 @@
 onload = function () {
-    setAdminModification();
+    setAdminModification("Create an account", "Create", creationStorageKeyPrefix, "POST", usersApiUrl);
 }
 
 xmlHttpRequest.onreadystatechange = function () {
