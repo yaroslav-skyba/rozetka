@@ -95,7 +95,7 @@ function sendModificationRequest(passwordValue, httpMethod, url) {
     xmlHttpRequest.send(JSON.stringify(body));
 }
 
-function setXmlHttpRequest(successStatus, storageKeyPrefix, successMessage, dangerMessage) {
+function setXmlHttpRequest(successStatus, storageKeyPrefix, successMessage) {
     if (xmlHttpRequest.readyState === 4) {
         if (xmlHttpRequest.status === successStatus) {
             for (const formControlElement of formControlElements) {
@@ -104,7 +104,7 @@ function setXmlHttpRequest(successStatus, storageKeyPrefix, successMessage, dang
 
             alert("success", successMessage);
         } else if (xmlHttpRequest.status === 409) {
-            alert("danger", dangerMessage);
+            alert("danger", JSON.parse(xmlHttpRequest.responseText)[userLoginDtoKey]);
         }
     }
 }

@@ -31,11 +31,11 @@ public class UserController {
     public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
         try {
             userService.createUser(userDto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(userDto);
         } catch (UserServiceException userServiceException) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            userDto.setLogin(userServiceException.getMessage());
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(userDto);
         }
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(userDto);
     }
 
     @GetMapping(value = "users", produces = MediaType.USER_LIST)
@@ -47,21 +47,20 @@ public class UserController {
     public ResponseEntity<UserDto> deleteUser(@PathVariable UUID uuid, @RequestBody UserDto userDto) {
         try {
             userService.updateByUuid(uuid, userDto);
+            return ResponseEntity.ok(userDto);
         } catch (UserServiceException userServiceException) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            userDto.setLogin(userServiceException.getMessage());
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(userDto);
         }
-
-        return ResponseEntity.ok(userDto);
     }
 
     @DeleteMapping(value = "users/{uuid}")
-    public ResponseEntity<Void> deleteUser(@PathVariable UUID uuid) {
+    public ResponseEntity<String> deleteUser(@PathVariable UUID uuid) {
         try {
             userService.deleteByUuid(uuid);
+            return ResponseEntity.noContent().build();
         } catch (UserServiceException userServiceException) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(userServiceException.getMessage());
         }
-
-        return ResponseEntity.noContent().build();
     }
 }

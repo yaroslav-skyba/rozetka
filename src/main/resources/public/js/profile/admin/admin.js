@@ -37,13 +37,13 @@ xmlHttpRequest.onreadystatechange = function () {
 
                     const tr = document.createElement("tr");
 
-                    insertTd(i + 1, tr);
-                    insertTd(users[i][userLoginDtoKey], tr);
-                    insertTd(users[i][userEmailDtoKey], tr);
-                    insertTd(users[i][userFirstNameDtoKey], tr);
-                    insertTd(users[i][userLastNameDtoKey], tr);
-                    insertTd(users[i][userBirthdayDtoKey], tr);
-                    insertTd(roleNameMap.get(users[i][userRoleUuidDtoKey]), tr);
+                    createTd(i + 1, tr);
+                    createTd(users[i][userLoginDtoKey], tr);
+                    createTd(users[i][userEmailDtoKey], tr);
+                    createTd(users[i][userFirstNameDtoKey], tr);
+                    createTd(users[i][userLastNameDtoKey], tr);
+                    createTd(users[i][userBirthdayDtoKey], tr);
+                    createTd(roleNameMap.get(users[i][userRoleUuidDtoKey]), tr);
 
                     const actionsTd = document.createElement("td");
 
@@ -71,7 +71,7 @@ xmlHttpRequest.onreadystatechange = function () {
 
             alert("success", "A user has been successfully deleted");
         } else if (xmlHttpRequest.status === 409) {
-            alert("danger", "Some errors occurred while deleting a user");
+            alert("danger", xmlHttpRequest.responseText);
         }
     }
 }
@@ -82,7 +82,7 @@ function sendHttpRequest(method, url) {
     xmlHttpRequest.send();
 }
 
-function insertTd(fieldValue, tr) {
+function createTd(fieldValue, tr) {
     const td = document.createElement("td");
     td.textContent = fieldValue;
     tr.append(td);
