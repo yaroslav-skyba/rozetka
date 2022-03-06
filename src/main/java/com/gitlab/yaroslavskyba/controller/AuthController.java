@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(ControllerPath.LOGINS)
+@RequestMapping(ControllerPath.ROOT)
 public class AuthController {
     private final JwtTokenUtil jwtTokenUtil;
     private final UserService userService;
@@ -35,7 +35,7 @@ public class AuthController {
         this.authenticationManager = authenticationManager;
     }
 
-    @PostMapping(consumes = MediaType.AUTH_REQUEST)
+    @PostMapping(value = ControllerPath.LOGINS, consumes = MediaType.AUTH_REQUEST)
     public ResponseEntity<String> login(@RequestBody AuthRequest authRequest) {
         try {
             final String username = authRequest.getUsername();
@@ -47,7 +47,7 @@ public class AuthController {
         }
     }
 
-    @PostMapping(value = "registrations", consumes = MediaType.USER)
+    @PostMapping(value = ControllerPath.REGISTRATIONS, consumes = MediaType.USER)
     public ResponseEntity<String> register(@RequestBody UserDto userDto) {
         try {
             userDto.setUuid(UUID.randomUUID());

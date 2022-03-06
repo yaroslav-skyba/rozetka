@@ -2,6 +2,7 @@ const xmlHttpRequest = new XMLHttpRequest();
 
 let users = null;
 let userToDeleteUuid = null;
+let userApiUrl = null;
 
 onload = function () {
     setNavigation("../../index.html", "../../img/logo.png", "../../cart.html", "../../about.html",
@@ -55,7 +56,9 @@ xmlHttpRequest.onreadystatechange = function () {
                     createButton("Delete", function () {
                         if (confirm("Are you sure you want to delete this user?")) {
                             userToDeleteUuid = users[i][userUuidDtoKey];
-                            sendHttpRequest("DELETE", usersApiUrl + "/" + users[i][userUuidDtoKey]);
+                            userApiUrl = usersApiUrl + "/" + userToDeleteUuid;
+
+                            sendHttpRequest("DELETE", userApiUrl);
                         }
                     }, actionsTd);
 
@@ -63,15 +66,15 @@ xmlHttpRequest.onreadystatechange = function () {
 
                     document.getElementById("tableContent").append(tr);
                 }
-            }
-        } else if (xmlHttpRequest.status === 204) {
-            const userToEdit = localStorage.getItem(userToEditStorageKey);
+            } else if (xmlHttpRequest.responseURL === userApiUrl) {
+                const userToEdit = localStorage.getItem(userToEditStorageKey);
 
-            if (userToEdit && JSON.parse(userToEdit)[userUuidDtoKey] === userToDeleteUuid) {
-                localStorage.removeItem(userToEditStorageKey);
-            }
+                if (userToEdit && JSON.parse(userToEdit)[userUuidDtoKey] === userToDeleteUuid) {
+                    localStorage.removeItem(userToEditStorageKey);
+                }
 
-            alert("success", "A user has been successfully deleted");
+                alert("success", xmlHttpRequest.responseText);
+            }
         } else if (xmlHttpRequest.status === 409) {
             alert("danger", xmlHttpRequest.responseText);
         }

@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(ControllerPath.USERS)
+@RequestMapping(value = ControllerPath.USERS, produces = org.springframework.http.MediaType.TEXT_PLAIN_VALUE)
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class UserController {
     private final UserService userService;
@@ -31,7 +31,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping(consumes = MediaType.USER, produces = org.springframework.http.MediaType.TEXT_PLAIN_VALUE)
+    @PostMapping(consumes = MediaType.USER)
     public ResponseEntity<String> createUser(@RequestBody UserDto userDto) {
         try {
             userService.createUser(userDto);
@@ -48,13 +48,12 @@ public class UserController {
 
     @PutMapping(value = ControllerPath.UUID, consumes = MediaType.USER)
     @PreAuthorize("#uuid.equals(principal.uuid)")
-    public ResponseEntity<UserDto> updateUser(@PathVariable UUID uuid, @RequestBody UserDto userDto) {
+    public ResponseEntity<String> updateUser(@PathVariable UUID uuid, @RequestBody UserDto userDto) {
         try {
             userService.updateByUuid(uuid, userDto);
-            return ResponseEntity.ok(userDto);
+            return ResponseEntity.ok("A user has been successfully edited");
         } catch (UserServiceException userServiceException) {
-            userDto.setLogin(userServiceException.getMessage());
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(userDto);
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(userServiceException.getMessage());
         }
     }
 
@@ -62,7 +61,7 @@ public class UserController {
     public ResponseEntity<String> deleteUser(@PathVariable UUID uuid) {
         try {
             userService.deleteByUuid(uuid);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.ok("A user has been successfully deleted");
         } catch (UserServiceException userServiceException) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(userServiceException.getMessage());
         }
