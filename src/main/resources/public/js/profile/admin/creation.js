@@ -14,5 +14,5 @@ onload = function () {
 }
 
 xmlHttpRequest.onreadystatechange = function () {
-    setXmlHttpRequest(201, creationStorageKeyPrefix, "A user has been successfully created");
+    setXmlHttpRequest(201, creationStorageKeyPrefix);
 }

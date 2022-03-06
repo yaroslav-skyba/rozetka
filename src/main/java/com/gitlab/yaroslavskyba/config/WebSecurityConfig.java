@@ -1,6 +1,7 @@
 package com.gitlab.yaroslavskyba.config;
 
 import com.gitlab.yaroslavskyba.security.JwtTokenFilter;
+import com.gitlab.yaroslavskyba.util.RoleName;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -31,17 +32,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        final String adminRoleName = "admin";
-        final String userRoleName = "user";
-
         http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and().authorizeRequests()
             .antMatchers(HttpMethod.GET, "/api/v1/products/**").permitAll()
             .antMatchers("/api/v1/logins", "/api/v1/registrations").permitAll()
-            .antMatchers(HttpMethod.PUT, "/api/v1/users/**").hasAnyAuthority(userRoleName, adminRoleName)
-            .antMatchers("/api/v1/orders/**").hasAnyAuthority(userRoleName, adminRoleName)
-            .antMatchers("/api/v1/**").hasAuthority(adminRoleName)
+            .antMatchers(HttpMethod.PUT, "/api/v1/users/**").hasAnyAuthority(RoleName.USER, RoleName.ADMIN)
+            .antMatchers("/api/v1/orders/**").hasAnyAuthority(RoleName.USER, RoleName.ADMIN)
+            .antMatchers("/api/v1/**").hasAuthority(RoleName.USER)
             .antMatchers("/**").permitAll()
             .anyRequest().authenticated()
             .and().exceptionHandling().authenticationEntryPoint((request, response, authException) -> response.sendRedirect("/"))

@@ -47,7 +47,7 @@ public class UserController {
     }
 
     @PutMapping(value = ControllerPath.UUID, consumes = MediaType.USER)
-    @PreAuthorize("#uuid.equals(principal.uuid)")
+    @PreAuthorize("#uuid.equals(principal.uuid) or hasAuthority('admin')")
     public ResponseEntity<String> updateUser(@PathVariable UUID uuid, @RequestBody UserDto userDto) {
         try {
             userService.updateByUuid(uuid, userDto);

@@ -95,16 +95,16 @@ function sendModificationRequest(userUuid, passwordValue, httpMethod, url) {
     xmlHttpRequest.send(JSON.stringify(body));
 }
 
-function setXmlHttpRequest(successStatus, storageKeyPrefix, successMessage) {
+function setXmlHttpRequest(successStatus, storageKeyPrefix) {
     if (xmlHttpRequest.readyState === 4) {
         if (xmlHttpRequest.status === successStatus) {
             for (const formControlElement of formControlElements) {
                 localStorage.removeItem(storageKeyPrefix + formControlElement.id);
             }
 
-            alert("success", successMessage);
+            alert("success", xmlHttpRequest.responseText);
         } else if (xmlHttpRequest.status === 409) {
-            alert("danger", JSON.parse(xmlHttpRequest.responseText)[userLoginDtoKey]);
+            alert("danger", xmlHttpRequest.responseText);
         }
     }
 }

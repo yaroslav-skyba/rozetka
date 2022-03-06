@@ -38,5 +38,5 @@ onload = function () {
 }
 
 xmlHttpRequest.onreadystatechange = function () {
-    setXmlHttpRequest(200, editStorageKeyPrefix, "A user has been successfully edited");
+    setXmlHttpRequest(200, editStorageKeyPrefix);
 }
