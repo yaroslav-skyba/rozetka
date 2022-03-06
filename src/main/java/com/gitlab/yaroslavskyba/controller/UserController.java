@@ -1,11 +1,14 @@
 package com.gitlab.yaroslavskyba.controller;
 
+import com.gitlab.yaroslavskyba.util.ControllerPath;
 import com.gitlab.yaroslavskyba.util.MediaType;
 import com.gitlab.yaroslavskyba.dto.UserDto;
 import com.gitlab.yaroslavskyba.exception.UserServiceException;
 import com.gitlab.yaroslavskyba.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,7 +22,8 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/v1")
+@RequestMapping(ControllerPath.USERS)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class UserController {
     private final UserService userService;
 
@@ -27,24 +31,24 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping(value = "users", consumes = MediaType.USER)
-    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
+    @PostMapping(consumes = MediaType.USER, produces = org.springframework.http.MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<String> createUser(@RequestBody UserDto userDto) {
         try {
             userService.createUser(userDto);
-            return ResponseEntity.status(HttpStatus.CREATED).body(userDto);
+            return ResponseEntity.status(HttpStatus.CREATED).body("A user has been successfully created");
         } catch (UserServiceException userServiceException) {
-            userDto.setLogin(userServiceException.getMessage());
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(userDto);
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(userServiceException.getMessage());
         }
     }
 
-    @GetMapping(value = "users", produces = MediaType.USER_LIST)
+    @GetMapping(produces = MediaType.USER_LIST)
     public ResponseEntity<List<UserDto>> getUserList() {
         return ResponseEntity.ok(userService.getUserList());
     }
 
-    @PutMapping(value = "users/{uuid}", consumes = MediaType.USER)
-    public ResponseEntity<UserDto> deleteUser(@PathVariable UUID uuid, @RequestBody UserDto userDto) {
+    @PutMapping(value = ControllerPath.UUID, consumes = MediaType.USER)
+    @PreAuthorize("#uuid.equals(principal.uuid)")
+    public ResponseEntity<UserDto> updateUser(@PathVariable UUID uuid, @RequestBody UserDto userDto) {
         try {
             userService.updateByUuid(uuid, userDto);
             return ResponseEntity.ok(userDto);
@@ -54,7 +58,7 @@ public class UserController {
         }
     }
 
-    @DeleteMapping(value = "users/{uuid}")
+    @DeleteMapping(ControllerPath.UUID)
     public ResponseEntity<String> deleteUser(@PathVariable UUID uuid) {
         try {
             userService.deleteByUuid(uuid);

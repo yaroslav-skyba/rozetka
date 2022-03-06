@@ -1,6 +1,7 @@
 package com.gitlab.yaroslavskyba.controller;
 
 import com.gitlab.yaroslavskyba.AuthRequest;
+import com.gitlab.yaroslavskyba.util.ControllerPath;
 import com.gitlab.yaroslavskyba.util.MediaType;
 import com.gitlab.yaroslavskyba.dto.UserDto;
 import com.gitlab.yaroslavskyba.exception.UserServiceException;
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/v1")
+@RequestMapping(ControllerPath.LOGINS)
 public class AuthController {
     private final JwtTokenUtil jwtTokenUtil;
     private final UserService userService;
@@ -34,7 +35,7 @@ public class AuthController {
         this.authenticationManager = authenticationManager;
     }
 
-    @PostMapping(value = "logins", consumes = MediaType.AUTH_REQUEST)
+    @PostMapping(consumes = MediaType.AUTH_REQUEST)
     public ResponseEntity<String> login(@RequestBody AuthRequest authRequest) {
         try {
             final String username = authRequest.getUsername();

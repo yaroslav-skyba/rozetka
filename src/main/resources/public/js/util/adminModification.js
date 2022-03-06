@@ -51,7 +51,7 @@ function setAdminModification(headlineInnerHtml, submitInnerHtml, storageKeyPref
     birthday.value = localStorage.getItem(storageKeyPrefix + birthday.id);
 }
 
-function sendModificationRequest(passwordValue, httpMethod, url) {
+function sendModificationRequest(userUuid, passwordValue, httpMethod, url) {
     for (const formOutlineElement of document.getElementsByClassName("form-outline")) {
         const formControlElement = formOutlineElement.getElementsByClassName("form-control")[0];
 
@@ -74,7 +74,7 @@ function sendModificationRequest(passwordValue, httpMethod, url) {
     }
 
     const body = {};
-    body[userUuidDtoKey] = null;
+    body[userUuidDtoKey] = userUuid;
 
     for (const [key, value] of Object.entries(JSON.parse(localStorage.getItem(rolesStorageKey)))) {
         if (value === document.getElementById("roleValue").value) {

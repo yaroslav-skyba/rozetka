@@ -32,7 +32,8 @@ onload = function () {
         }
 
         localStorage.removeItem(userToEditStorageKey);
-        sendModificationRequest(passwordValue, "PUT", usersApiUrl + "/" + userToEditParsed[userUuidDtoKey]);
+        sendModificationRequest(userToEditParsed[userUuidDtoKey], passwordValue, "PUT",
+            usersApiUrl + "/" + userToEditParsed[userUuidDtoKey]);
     }
 }
 

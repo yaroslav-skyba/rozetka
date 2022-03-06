@@ -2,5 +2,9 @@ setNavigation("../index.html", "../img/logo.png", "../cart.html", "../about.html
     "../registration.html", "admin/admin.html", "user.html");
 setUserModification();
 
+onload = function () {
+
+}
+
 document.getElementById("headline").innerHTML = "Edit your profile";
 document.getElementById("submit").innerHTML = "Save";

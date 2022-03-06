@@ -7,12 +7,15 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.UUID;
 
 public class UserDetailsImpl implements UserDetails {
     private final transient User user;
+    private final UUID uuid;
 
     public UserDetailsImpl(User user) {
         this.user = user;
+        uuid = user.getUuid();
     }
 
     @Override
@@ -52,5 +55,9 @@ public class UserDetailsImpl implements UserDetails {
 
     public User getUser() {
         return user;
+    }
+
+    public UUID getUuid() {
+        return uuid;
     }
 }

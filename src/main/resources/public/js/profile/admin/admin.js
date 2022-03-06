@@ -65,7 +65,9 @@ xmlHttpRequest.onreadystatechange = function () {
                 }
             }
         } else if (xmlHttpRequest.status === 204) {
-            if (JSON.parse(localStorage.getItem(userToEditStorageKey))[userUuidDtoKey] === userToDeleteUuid) {
+            const userToEdit = localStorage.getItem(userToEditStorageKey);
+
+            if (userToEdit && JSON.parse(userToEdit)[userUuidDtoKey] === userToDeleteUuid) {
                 localStorage.removeItem(userToEditStorageKey);
             }
 

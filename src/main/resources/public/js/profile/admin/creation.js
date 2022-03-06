@@ -9,7 +9,7 @@ onload = function () {
         password.required = true;
         document.getElementById("passwordConformation").required = true;
 
-        sendModificationRequest(password.value, "POST", usersApiUrl);
+        sendModificationRequest(null, password.value, "POST", usersApiUrl);
     }
 }
 
