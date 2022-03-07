@@ -5,6 +5,6 @@ import com.gitlab.yaroslavskyba.exception.OrderServiceException;
 import java.util.UUID;
 
 public interface OrderService {
-    OrderDto create(OrderDto orderDto) throws OrderServiceException;
-    OrderDto getByUuid(UUID uuid) throws OrderServiceException;
+    void createOrder(OrderDto orderDto) throws OrderServiceException;
+    OrderDto getOrderByUuid(UUID uuid) throws OrderServiceException;
 }

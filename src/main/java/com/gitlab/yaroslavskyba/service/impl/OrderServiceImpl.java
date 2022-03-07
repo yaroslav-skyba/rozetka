@@ -21,7 +21,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public OrderDto create(OrderDto orderDto) {
+    public void createOrder(OrderDto orderDto) {
         try {
             final Order order = new Order();
             order.setDescription(orderDto.getDescription());
@@ -36,9 +36,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDto getByUuid(UUID uuid) throws OrderServiceException {
+    public OrderDto getOrderByUuid(UUID uuid) throws OrderServiceException {
         try {
-            final Order order = orderRepository.findByUuid(uuid);
+            final Order order = orderRepository.findOrderByUuid(uuid);
 
             return new OrderDto(order.getUuid(), order.getDescription());
         } catch (Exception e) {

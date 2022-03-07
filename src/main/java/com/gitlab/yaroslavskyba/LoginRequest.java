@@ -3,16 +3,16 @@ package com.gitlab.yaroslavskyba;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
-public class AuthRequest {
+public class LoginRequest {
     @NotNull
     private String username;
     @NotNull
     private String password;
 
-    public AuthRequest() {
+    public LoginRequest() {
     }
 
-    public AuthRequest(String username, String password) {
+    public LoginRequest(String username, String password) {
         this.username = username;
         this.password = password;
     }
@@ -43,7 +43,7 @@ public class AuthRequest {
             return false;
         }
 
-        final AuthRequest that = (AuthRequest) o;
+        final LoginRequest that = (LoginRequest) o;
 
         return username.equals(that.username) && password.equals(that.password);
     }

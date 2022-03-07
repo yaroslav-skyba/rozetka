@@ -29,7 +29,7 @@ public class ReviewServiceImpl implements ReviewService {
             final List<ReviewDto> reviewDtoList = new ArrayList<>();
 
             for (Review review : reviewRepository.findAll()) {
-                reviewDtoList.add(getByUuid(review.getUuid()));
+                reviewDtoList.add(getReviewByUuid(review.getUuid()));
             }
 
             return reviewDtoList;
@@ -43,8 +43,8 @@ public class ReviewServiceImpl implements ReviewService {
         try {
             final List<ReviewDto> reviewDtoList = new ArrayList<>();
 
-            for (var review : reviewRepository.findByProductUuid(uuidProduct)) {
-                reviewDtoList.add(getByUuid(review.getUuid()));
+            for (var review : reviewRepository.findReviewByProductUuid(uuidProduct)) {
+                reviewDtoList.add(getReviewByUuid(review.getUuid()));
             }
 
             return reviewDtoList;
@@ -55,11 +55,11 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional
-    public ReviewDto createReview(ReviewDto reviewDto) {
+    public void createReview(ReviewDto reviewDto) {
         try {
             final Review review = new Review();
             review.setContent(reviewDto.getContent());
-            review.setProduct(productRepository.findByUuid(reviewDto.getUuidProduct()));
+            review.setProduct(productRepository.findProductByUuid(reviewDto.getUuidProduct()));
             review.setRating(reviewDto.getRating());
             review.setUuid(UUID.randomUUID());
 
@@ -72,9 +72,9 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public ReviewDto getByUuid(UUID uuid) {
+    public ReviewDto getReviewByUuid(UUID uuid) {
         try {
-            final Review review = reviewRepository.findByUuid(uuid);
+            final Review review = reviewRepository.findReviewByUuid(uuid);
             return new ReviewDto(review.getUuid(), review.getProduct().getUuid(), review.getContent(), review.getRating());
         } catch (Exception e) {
             throw new ReviewServiceException("An error occurred while getting a review", e);
@@ -83,11 +83,11 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional
-    public ReviewDto updateByUuid(UUID uuid, ReviewDto reviewDto) {
+    public void updateReviewByUuid(UUID uuid, ReviewDto reviewDto) {
         try {
-            final Review review = reviewRepository.findByUuid(uuid);
+            final Review review = reviewRepository.findReviewByUuid(uuid);
             review.setContent(reviewDto.getContent());
-            review.setProduct(productRepository.findByUuid(reviewDto.getUuidProduct()));
+            review.setProduct(productRepository.findProductByUuid(reviewDto.getUuidProduct()));
             review.setRating(reviewDto.getRating());
 
             reviewRepository.saveAndFlush(review);
@@ -100,9 +100,9 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional
-    public void deleteByUuid(UUID uuid) {
+    public void deleteReviewByUuid(UUID uuid) {
         try {
-            reviewRepository.deleteById(reviewRepository.findByUuid(uuid).getIdReview());
+            reviewRepository.deleteById(reviewRepository.findReviewByUuid(uuid).getIdReview());
         } catch (Exception e) {
             throw new ReviewServiceException("An error occurred while deleting a review", e);
         }

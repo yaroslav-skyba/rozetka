@@ -30,7 +30,7 @@ public class ProductServiceImpl implements ProductService {
             final List<ProductDto> productDtoList = new ArrayList<>();
 
             for (Product product : productList) {
-                productDtoList.add(getProductDtoByUuid(product.getUuid()));
+                productDtoList.add(getProductByUuid(product.getUuid()));
             }
 
             return productDtoList;
@@ -40,9 +40,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDto getProductDtoByUuid(UUID uuid) {
+    public ProductDto getProductByUuid(UUID uuid) {
         try {
-            return createProductDto(productRepository.findByUuid(uuid), uuid);
+            return createProductDto(productRepository.findProductByUuid(uuid), uuid);
         } catch (Exception e) {
             throw new ProductServiceException("An error occurred while getting a product", e);
         }
@@ -50,7 +50,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public ProductDto createProduct(ProductDto productDto) {
+    public void createProduct(ProductDto productDto) {
         try {
             final Product product = new Product();
             product.setDescription(productDto.getDescription());
@@ -87,7 +87,7 @@ public class ProductServiceImpl implements ProductService {
             final List<ProductDto> productDtoList = new ArrayList<>();
 
             for (var product : productList) {
-                productDtoList.add(getProductDtoByUuid(product.getUuid()));
+                productDtoList.add(getProductByUuid(product.getUuid()));
             }
 
             return productDtoList;
@@ -99,7 +99,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public boolean isProductExistByUuid(UUID uuid) {
         try {
-            return productRepository.existsByUuid(uuid);
+            return productRepository.existsProductByUuid(uuid);
         } catch (Exception e) {
             throw new ProductServiceException("An error occurred while checking a product existence by uuid", e);
         }

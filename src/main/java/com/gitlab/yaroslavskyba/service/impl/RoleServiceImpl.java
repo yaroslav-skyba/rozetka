@@ -23,7 +23,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Transactional
-    public RoleDto createRole(RoleDto roleDto) {
+    public void createRole(RoleDto roleDto) {
         try {
             final Role role = new Role();
             role.setUuid(UUID.randomUUID());
@@ -55,7 +55,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public RoleDto getRoleByUuid(UUID uuid) {
         try {
-            return new RoleDto(uuid, roleRepository.findByUuid(uuid).getNameRole());
+            return new RoleDto(uuid, roleRepository.findRoleByUuid(uuid).getNameRole());
         } catch (Exception e) {
             throw new RoleServiceException("An error occurred while getting a role by uuid", e);
         }

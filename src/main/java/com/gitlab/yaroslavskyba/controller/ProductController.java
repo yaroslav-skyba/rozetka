@@ -54,7 +54,7 @@ public class ProductController {
             return ResponseEntity.notFound().build();
         }
 
-        return ResponseEntity.ok(productService.getProductDtoByUuid(uuid));
+        return ResponseEntity.ok(productService.getProductByUuid(uuid));
     }
 
     @GetMapping(value = "products/{uuid}/reviews", produces = MediaType.REVIEW_LIST)
@@ -69,18 +69,18 @@ public class ProductController {
 
     @GetMapping(value = "products/{uuidProduct}/reviews/{uuidReview}", produces = MediaType.REVIEW)
     public ResponseEntity<ReviewDto> getReview(@PathVariable UUID uuidProduct, @PathVariable UUID uuidReview) {
-        return ResponseEntity.ok(reviewService.getByUuid(uuidReview));
+        return ResponseEntity.ok(reviewService.getReviewByUuid(uuidReview));
     }
 
     @PutMapping(value = "products/{uuidProduct}/reviews/{uuidReview}", consumes = MediaType.REVIEW)
     public ResponseEntity<ReviewDto> updateReview(@PathVariable UUID uuidProduct, @PathVariable UUID uuidReview,
                                                   @RequestBody ReviewDto reviewDto) {
-        return ResponseEntity.ok(reviewService.updateByUuid(uuidReview, reviewDto));
+        return ResponseEntity.ok(reviewService.updateReviewByUuid(uuidReview, reviewDto));
     }
 
     @DeleteMapping(value = "products/{uuidProduct}/reviews/{uuidReview}")
     public ResponseEntity<Void> deleteReview(@PathVariable UUID uuidProduct, @PathVariable UUID uuidReview) {
-        reviewService.deleteByUuid(uuidReview);
+        reviewService.deleteReviewByUuid(uuidReview);
         return ResponseEntity.noContent().build();
     }
 

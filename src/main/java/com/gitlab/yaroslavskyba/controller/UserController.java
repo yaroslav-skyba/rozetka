@@ -50,7 +50,7 @@ public class UserController {
     @PreAuthorize("#uuid.equals(principal.uuid) or hasAuthority('admin')")
     public ResponseEntity<String> updateUser(@PathVariable UUID uuid, @RequestBody UserDto userDto) {
         try {
-            userService.updateByUuid(uuid, userDto);
+            userService.updateUserByUuid(uuid, userDto);
             return ResponseEntity.ok("A user has been successfully edited");
         } catch (UserServiceException userServiceException) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(userServiceException.getMessage());
@@ -60,7 +60,7 @@ public class UserController {
     @DeleteMapping(ControllerPath.UUID)
     public ResponseEntity<String> deleteUser(@PathVariable UUID uuid) {
         try {
-            userService.deleteByUuid(uuid);
+            userService.deleteUserByUuid(uuid);
             return ResponseEntity.ok("A user has been successfully deleted");
         } catch (UserServiceException userServiceException) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(userServiceException.getMessage());

@@ -1,13 +1,14 @@
 package com.gitlab.yaroslavskyba.controller;
 
-import com.gitlab.yaroslavskyba.AuthRequest;
-import com.gitlab.yaroslavskyba.util.ControllerPath;
-import com.gitlab.yaroslavskyba.util.MediaType;
+import com.gitlab.yaroslavskyba.LoginRequest;
 import com.gitlab.yaroslavskyba.dto.UserDto;
 import com.gitlab.yaroslavskyba.exception.UserServiceException;
 import com.gitlab.yaroslavskyba.security.JwtTokenUtil;
 import com.gitlab.yaroslavskyba.service.RoleService;
 import com.gitlab.yaroslavskyba.service.UserService;
+import com.gitlab.yaroslavskyba.util.ControllerPath;
+import com.gitlab.yaroslavskyba.util.MediaType;
+import com.gitlab.yaroslavskyba.util.RoleName;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,10 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.UUID;
-
 @RestController
-@RequestMapping(ControllerPath.ROOT)
+@RequestMapping(value = ControllerPath.ROOT, produces = org.springframework.http.MediaType.TEXT_PLAIN_VALUE)
 public class AuthController {
     private final JwtTokenUtil jwtTokenUtil;
     private final UserService userService;
@@ -35,11 +34,11 @@ public class AuthController {
         this.authenticationManager = authenticationManager;
     }
 
-    @PostMapping(value = ControllerPath.LOGINS, consumes = MediaType.AUTH_REQUEST)
-    public ResponseEntity<String> login(@RequestBody AuthRequest authRequest) {
+    @PostMapping(value = ControllerPath.LOGINS, consumes = MediaType.LOGIN_REQUEST)
+    public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
         try {
-            final String username = authRequest.getUsername();
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, authRequest.getPassword()));
+            final String username = loginRequest.getUsername();
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, loginRequest.getPassword()));
 
             return ResponseEntity.ok(jwtTokenUtil.generateAccessToken(userService.getUserByLogin(username)));
         } catch (RuntimeException runtimeException) {
@@ -50,13 +49,12 @@ public class AuthController {
     @PostMapping(value = ControllerPath.REGISTRATIONS, consumes = MediaType.USER)
     public ResponseEntity<String> register(@RequestBody UserDto userDto) {
         try {
-            userDto.setUuid(UUID.randomUUID());
-            userDto.setRoleUuid(roleService.getRoleByName("user").getUuid());
+            userDto.setRoleUuid(roleService.getRoleByName(RoleName.USER).getUuid());
             userService.createUser(userDto);
 
             return ResponseEntity.status(HttpStatus.CREATED).body("You were successfully registered");
         } catch (UserServiceException userServiceException) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("A user with such a username or password already exists");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(userServiceException.getMessage());
         }
     }
 }

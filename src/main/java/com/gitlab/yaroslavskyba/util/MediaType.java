@@ -12,7 +12,7 @@ public class MediaType {
     public static final String ROLE_LIST = ROZETKA + ".roleList+json";
     public static final String USER = ROZETKA + ".user+json";
     public static final String USER_LIST = ROZETKA + ".userList+json";
-    public static final String AUTH_REQUEST = ROZETKA + ".authRequest+json";
+    public static final String LOGIN_REQUEST = ROZETKA + ".loginRequest+json";
 
     private MediaType() {}
 }

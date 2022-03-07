@@ -1,14 +1,16 @@
 package com.gitlab.yaroslavskyba.service;
 
 import com.gitlab.yaroslavskyba.dto.ReviewDto;
+import com.gitlab.yaroslavskyba.exception.ReviewServiceException;
+
 import java.util.List;
 import java.util.UUID;
 
 public interface ReviewService {
-    List<ReviewDto> getReviewList();
-    List<ReviewDto> getReviewListByProductUuid(UUID uuidProduct);
-    ReviewDto createReview(ReviewDto reviewDto);
-    ReviewDto getByUuid(UUID uuid);
-    ReviewDto updateByUuid(UUID uuid, ReviewDto reviewDto);
-    void deleteByUuid(UUID uuid);
+    void createReview(ReviewDto reviewDto) throws ReviewServiceException;
+    ReviewDto getReviewByUuid(UUID uuid) throws ReviewServiceException;
+    List<ReviewDto> getReviewListByProductUuid(UUID uuidProduct) throws ReviewServiceException;
+    List<ReviewDto> getReviewList() throws ReviewServiceException;
+    void updateReviewByUuid(UUID uuid, ReviewDto reviewDto) throws ReviewServiceException;
+    void deleteReviewByUuid(UUID uuid) throws ReviewServiceException;
 }

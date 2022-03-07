@@ -21,8 +21,6 @@ public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
-    private static final String USER_SERVICE_EXCEPTION_MESSAGE = "A user was not found";
-
     public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
@@ -35,7 +33,7 @@ public class UserServiceImpl implements UserService {
         try {
             final User user = new User();
             user.setUuid(UUID.randomUUID());
-            user.setRole(roleRepository.findByUuid(userDto.getRoleUuid()));
+            user.setRole(roleRepository.findRoleByUuid(userDto.getRoleUuid()));
             user.setLogin(userDto.getLogin());
             user.setPasswordUser(passwordEncoder.encode(userDto.getPasswordUser()));
             user.setEmail(userDto.getEmail());
@@ -67,21 +65,21 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getUserByLogin(String login) {
         try {
-            final User user = userRepository.findByLogin(login).orElseThrow(() -> new UserServiceException(USER_SERVICE_EXCEPTION_MESSAGE));
+            final User user = userRepository.findUserByLogin(login).orElseThrow();
             return new UserDto(user.getUuid(), user.getRole().getUuid(), user.getLogin(), user.getPasswordUser(), user.getEmail(),
                                user.getFirstName(), user.getLastName(), user.getBirthday());
         } catch (Exception exception) {
-            throw new UserServiceException("An error occurred while getting a user by a login", exception);
+            throw new UserServiceException("An error occurred while getting a user", exception);
         }
     }
 
     @Override
     @Transactional
-    public void updateByUuid(UUID uuid, UserDto userDto) {
+    public void updateUserByUuid(UUID uuid, UserDto userDto) {
         try {
-            final User user = userRepository.findByUuid(uuid).orElseThrow(() -> new UserServiceException(USER_SERVICE_EXCEPTION_MESSAGE));
+            final User user = userRepository.findUserByUuid(uuid).orElseThrow();
             user.setUuid(userDto.getUuid());
-            user.setRole(roleRepository.findByUuid(userDto.getRoleUuid()));
+            user.setRole(roleRepository.findRoleByUuid(userDto.getRoleUuid()));
             user.setLogin(userDto.getLogin());
 
             final String password = userDto.getPasswordUser();
@@ -103,10 +101,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void deleteByUuid(UUID uuid) {
+    public void deleteUserByUuid(UUID uuid) {
         try {
-            userRepository.deleteById(
-                userRepository.findByUuid(uuid).orElseThrow(() -> new UserServiceException(USER_SERVICE_EXCEPTION_MESSAGE)).getIdUser());
+            userRepository.deleteUserByUuid(uuid);
         } catch (Exception exception) {
             throw new UserServiceException("An error occurred while deleting a user", exception);
         }

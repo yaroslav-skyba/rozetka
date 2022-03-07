@@ -1,8 +1,8 @@
 package com.gitlab.yaroslavskyba.service.impl;
 
 import com.gitlab.yaroslavskyba.dto.OrderItemDto;
-import com.gitlab.yaroslavskyba.model.OrderItem;
 import com.gitlab.yaroslavskyba.exception.OrderItemServiceException;
+import com.gitlab.yaroslavskyba.model.OrderItem;
 import com.gitlab.yaroslavskyba.model.Product;
 import com.gitlab.yaroslavskyba.repository.OrderItemRepository;
 import com.gitlab.yaroslavskyba.repository.OrderRepository;
@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 @Service
 @Transactional
@@ -30,46 +31,55 @@ public class OrderItemServiceImpl implements OrderItemService {
     }
 
     @Override
-    public OrderItemDto create(OrderItemDto orderItemDto) {
+    public void createOrderItem(OrderItemDto orderItemDto) {
         try {
-            final UUID orderUuid = orderItemDto.getOrderUuid();
-            final UUID productUuid = orderItemDto.getProductUuid();
-            final UUID uuid = UUID.randomUUID();
+            final int orderItemProductQuantity = 1;
+            final Product product = productRepository.findProductByUuid(orderItemDto.getProductUuid()).orElseThrow();
 
-            final Product product = productRepository.findByUuid(productUuid);
             //Do not remove this variable
             final Integer productQuantity = product.getQuantity();
-            final int orderItemProductQuantity = 1;
+
             product.setQuantity(orderItemProductQuantity);
 
             final OrderItem orderItem = new OrderItem();
-            orderItem.setOrder(orderRepository.findByUuid(orderUuid));
+            orderItem.setOrder(orderRepository.findOrderByUuid(orderItemDto.getOrderUuid()).orElseThrow());
             orderItem.setProduct(product);
-            orderItem.setUuid(uuid);
+            orderItem.setUuid(UUID.randomUUID());
 
             orderItemRepository.saveAndFlush(orderItem);
 
             product.setQuantity(productQuantity - orderItemProductQuantity);
             productRepository.saveAndFlush(product);
-
-            return new OrderItemDto(uuid, productUuid, orderUuid);
-        } catch (Exception e) {
-            throw new OrderItemServiceException("An error occurred while saving an order item", e);
+        } catch (Exception exception) {
+            throw new OrderItemServiceException("An error occurred while creating an order item", exception);
         }
     }
 
     @Override
-    public List<OrderItemDto> createList(List<OrderItemDto> orderItemDtoList) throws OrderItemServiceException {
+    public void createOrderItemList(List<OrderItemDto> orderItemDtoList) throws OrderItemServiceException {
         try {
-            final List<OrderItemDto> orderItemDtoListResponse = new ArrayList<>();
+            orderItemDtoList.forEach(this::createOrderItem);
+        } catch (Exception exception) {
+            throw new OrderItemServiceException("An error occurred while creating an order item list", exception);
+        }
+    }
 
-            for (OrderItemDto orderItemDto : orderItemDtoList) {
-                orderItemDtoListResponse.add(create(orderItemDto));
-            }
+    @Override
+    public OrderItemDto getOrderItemByUuid(UUID uuid) throws OrderItemServiceException {
+        try {
+            final OrderItem orderItem = orderItemRepository.findOrderItemByUuid(uuid).orElseThrow();
+            return new OrderItemDto(uuid, orderItem.getProduct().getUuid(), orderItem.getOrder().getUuid());
+        } catch (Exception exception) {
+            throw new OrderItemServiceException("An error occurred while getting an order item", exception);
+        }
+    }
 
-            return orderItemDtoListResponse;
-        } catch (Exception e) {
-            throw new OrderItemServiceException("An error occurred while saving an order item list", e);
+    @Override
+    public List<OrderItemDto> getOrderItemList() throws OrderItemServiceException {
+        try {
+            return Stream.of(orderItemRepository.findAll())
+        } catch (Exception exception) {
+            throw new OrderItemServiceException("An error occurred while getting an order item list", exception);
         }
     }
 }
