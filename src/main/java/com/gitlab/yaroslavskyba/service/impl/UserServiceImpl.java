@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@Transactional
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
@@ -28,18 +29,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
     public void createUser(UserDto userDto) {
         try {
             final User user = new User();
             user.setUuid(UUID.randomUUID());
-            user.setRole(roleRepository.findRoleByUuid(userDto.getRoleUuid()));
-            user.setLogin(userDto.getLogin());
             user.setPasswordUser(passwordEncoder.encode(userDto.getPasswordUser()));
-            user.setEmail(userDto.getEmail());
-            user.setFirstName(userDto.getFirstName());
-            user.setLastName(userDto.getLastName());
-            user.setBirthday(userDto.getBirthday());
+            setUserFields(userDto, user);
 
             userRepository.saveAndFlush(user);
         } catch (Exception exception) {
@@ -48,18 +43,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> getUserList() {
-        try {
-            final List<UserDto> userDtoList = new ArrayList<>();
+    public UserDto getUserByUuid(UUID uuid) throws UserServiceException {
 
-            for (User user : userRepository.findAll()) {
-                userDtoList.add(getUserByLogin(user.getLogin()));
-            }
-
-            return userDtoList;
-        } catch (Exception exception) {
-            throw new ReviewServiceException("An error occurred while getting a user list", exception);
-        }
     }
 
     @Override
@@ -74,13 +59,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
+    public List<UserDto> getUserList() {
+        try {
+            final List<UserDto> userDtoList = new ArrayList<>();
+            userRepository.findAll().forEach(user -> userDtoList.add(getUserByLogin(user.getLogin())));
+
+            return userDtoList;
+        } catch (Exception exception) {
+            throw new ReviewServiceException("An error occurred while getting a user list", exception);
+        }
+    }
+
+    @Override
     public void updateUserByUuid(UUID uuid, UserDto userDto) {
         try {
-            final User user = userRepository.findUserByUuid(uuid).orElseThrow();
+            final User user = userRepository.findUserByLogin()
             user.setUuid(userDto.getUuid());
-            user.setRole(roleRepository.findRoleByUuid(userDto.getRoleUuid()));
-            user.setLogin(userDto.getLogin());
+            setUserFields(userDto, user);
 
             final String password = userDto.getPasswordUser();
 
@@ -100,12 +95,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
     public void deleteUserByUuid(UUID uuid) {
         try {
             userRepository.deleteUserByUuid(uuid);
         } catch (Exception exception) {
             throw new UserServiceException("An error occurred while deleting a user", exception);
         }
+    }
+
+    private void setUserFields(UserDto userDto, User user) {
+        user.setRole(roleRepository.findRoleByUuid(userDto.getRoleUuid()).orElseThrow());
+        user.setLogin(userDto.getLogin());
+        user.setEmail(userDto.getEmail());
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
+        user.setBirthday(userDto.getBirthday());
     }
 }

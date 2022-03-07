@@ -28,12 +28,8 @@ public class ProductServiceImpl implements ProductService {
     public void createProduct(ProductDto productDto) {
         try {
             final Product product = new Product();
-            product.setDescription(productDto.getDescription());
-            product.setDiscount(productDto.getDiscount());
-            product.setNameProduct(product.getNameProduct());
-            product.setPrice(productDto.getPrice());
-            product.setQuantity(productDto.getQuantity());
             product.setUuid(UUID.randomUUID());
+            setProductFields(productDto, product);
 
             productRepository.saveAndFlush(product);
         } catch (Exception exception) {
@@ -44,7 +40,9 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDto getProductByUuid(UUID uuid) {
         try {
-            return createProductDto(productRepository.findProductByUuid(uuid).orElseThrow(), uuid);
+            final Product product = productRepository.findProductByUuid(uuid).orElseThrow();
+            return new ProductDto(product.getUuid(), product.getNameProduct(), product.getQuantity(), product.getPrice(),
+                                  product.getDiscount(), product.getDescription());
         } catch (Exception exception) {
             throw new ProductServiceException("An error occurred while getting a product", exception);
         }
@@ -67,48 +65,50 @@ public class ProductServiceImpl implements ProductService {
             productRepository.findByNameProduct(name).forEach(product -> productDtoList.add(getProductByUuid(product.getUuid())));
 
             return productDtoList;
-        } catch (Exception e) {
-            throw new ProductServiceException("An error occurred while getting a product list by a name", e);
+        } catch (Exception exception) {
+            throw new ProductServiceException("An error occurred while getting a product list", exception);
         }
     }
 
     @Override
     public List<ProductDto> getProductList() {
         try {
-            final List<Product> productList = productRepository.findAll();
             final List<ProductDto> productDtoList = new ArrayList<>();
-
-            for (Product product : productList) {
-                productDtoList.add(getProductByUuid(product.getUuid()));
-            }
+            productRepository.findAll().forEach(product -> productDtoList.add(getProductByUuid(product.getUuid())));
 
             return productDtoList;
-        } catch (Exception e) {
-            throw new ProductServiceException("An error occurred while getting a product list", e);
+        } catch (Exception exception) {
+            throw new ProductServiceException("An error occurred while getting a product list", exception);
         }
     }
 
     @Override
     public void updateProductByUuid(UUID uuid, ProductDto productDto) {
+        try {
+            final Product product = productRepository.findProductByUuid(uuid).orElseThrow();
+            product.setUuid(productDto.getUuid());
+            setProductFields(productDto, product);
 
+            productRepository.saveAndFlush(product);
+        } catch (Exception exception) {
+            throw new ProductServiceException("An error occurred while updating a product", exception);
+        }
     }
 
     @Override
     public void deleteProductByUuid(UUID uuid) {
-
-    }
-
-    @Override
-    public boolean isProductExistByUuid(UUID uuid) {
         try {
-            return productRepository.existsProductByUuid(uuid);
-        } catch (Exception e) {
-            throw new ProductServiceException("An error occurred while checking a product existence by uuid", e);
+            productRepository.deleteProductByUuid(uuid);
+        } catch (Exception exception) {
+            throw new ProductServiceException("An error occurred while deleting a product", exception);
         }
     }
 
-    private ProductDto createProductDto(Product product, UUID uuid) {
-        return new ProductDto(uuid, product.getNameProduct(), product.getQuantity(), product.getPrice(), product.getDiscount(),
-                              product.getDescription());
+    private void setProductFields(ProductDto productDto, Product product) {
+        product.setDescription(productDto.getDescription());
+        product.setDiscount(productDto.getDiscount());
+        product.setNameProduct(product.getNameProduct());
+        product.setPrice(productDto.getPrice());
+        product.setQuantity(productDto.getQuantity());
     }
 }

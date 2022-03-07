@@ -14,6 +14,4 @@ public interface ProductService {
     List<ProductDto> getProductList() throws ProductServiceException;
     void updateProductByUuid(UUID uuid, ProductDto productDto) throws ProductServiceException;
     void deleteProductByUuid(UUID uuid) throws ProductServiceException;
-
-    boolean isProductExistByUuid(UUID uuid) throws ProductServiceException;
 }
