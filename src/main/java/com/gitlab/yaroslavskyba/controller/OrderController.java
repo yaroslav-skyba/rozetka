@@ -53,15 +53,24 @@ public class OrderController {
     @PostMapping(value = ControllerPath.ORDER_ITEMS, consumes = MediaType.ORDER_ITEM_LIST)
     public ResponseEntity<String> createOrderItemList(@PathVariable UUID uuid, @RequestBody List<OrderItemDto> orderItemDtoList) {
         try {
+            orderService.getOrderByUuid(uuid);
             orderItemService.createOrderItemList(orderItemDtoList);
+
             return ResponseEntity.status(HttpStatus.CREATED).body("An order item list has been successfully created");
+        } catch (OrderServiceException orderServiceException) {
+            return ResponseEntity.notFound().build();
         } catch (OrderItemServiceException orderItemServiceException) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(orderItemServiceException.getMessage());
         }
     }
 
+    @SuppressWarnings("unused")
     @GetMapping(value = ControllerPath.ORDER_ITEMS, produces = MediaType.ORDER_ITEM_LIST)
     public ResponseEntity<List<OrderItemDto>> getOrderItemList(@PathVariable UUID uuid) {
-        return orderItemService
+        try {
+            return ResponseEntity.ok(orderItemService.getOrderItemList());
+        } catch (OrderItemServiceException orderItemServiceException) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

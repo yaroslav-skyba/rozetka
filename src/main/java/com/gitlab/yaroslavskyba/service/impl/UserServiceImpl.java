@@ -44,7 +44,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getUserByUuid(UUID uuid) throws UserServiceException {
-
+        try {
+            final User user = userRepository.findUserByUuid(uuid).orElseThrow();
+            return new UserDto(user.getUuid(), user.getRole().getUuid(), user.getLogin(), user.getPasswordUser(), user.getEmail(),
+                               user.getFirstName(), user.getLastName(), user.getBirthday());
+        } catch (Exception exception) {
+            throw new UserServiceException("An error occurred while getting a user", exception);
+        }
     }
 
     @Override
@@ -73,7 +79,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateUserByUuid(UUID uuid, UserDto userDto) {
         try {
-            final User user = userRepository.findUserByLogin()
+            final User user = userRepository.findUserByUuid(uuid).orElseThrow();
             user.setUuid(userDto.getUuid());
             setUserFields(userDto, user);
 
@@ -82,11 +88,6 @@ public class UserServiceImpl implements UserService {
             if (password != null) {
                 user.setPasswordUser(passwordEncoder.encode(password));
             }
-
-            user.setEmail(userDto.getEmail());
-            user.setFirstName(userDto.getFirstName());
-            user.setLastName(userDto.getLastName());
-            user.setBirthday(userDto.getBirthday());
 
             userRepository.saveAndFlush(user);
         } catch (Exception exception) {
