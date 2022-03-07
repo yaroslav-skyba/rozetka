@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 @Service
 @Transactional
@@ -56,7 +55,7 @@ public class OrderItemServiceImpl implements OrderItemService {
     }
 
     @Override
-    public void createOrderItemList(List<OrderItemDto> orderItemDtoList) throws OrderItemServiceException {
+    public void createOrderItemList(List<OrderItemDto> orderItemDtoList) {
         try {
             orderItemDtoList.forEach(this::createOrderItem);
         } catch (Exception exception) {
@@ -65,7 +64,7 @@ public class OrderItemServiceImpl implements OrderItemService {
     }
 
     @Override
-    public OrderItemDto getOrderItemByUuid(UUID uuid) throws OrderItemServiceException {
+    public OrderItemDto getOrderItemByUuid(UUID uuid) {
         try {
             final OrderItem orderItem = orderItemRepository.findOrderItemByUuid(uuid).orElseThrow();
             return new OrderItemDto(uuid, orderItem.getProduct().getUuid(), orderItem.getOrder().getUuid());
@@ -75,9 +74,12 @@ public class OrderItemServiceImpl implements OrderItemService {
     }
 
     @Override
-    public List<OrderItemDto> getOrderItemList() throws OrderItemServiceException {
+    public List<OrderItemDto> getOrderItemList() {
         try {
-            return Stream.of(orderItemRepository.findAll())
+            final List<OrderItemDto> orderItemDtoList = new ArrayList<>();
+            orderItemRepository.findAll().forEach(orderItem -> orderItemDtoList.add(getOrderItemByUuid(orderItem.getUuid())));
+
+            return orderItemDtoList;
         } catch (Exception exception) {
             throw new OrderItemServiceException("An error occurred while getting an order item list", exception);
         }

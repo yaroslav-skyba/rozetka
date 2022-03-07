@@ -9,7 +9,7 @@ import java.util.UUID;
 public interface ProductService {
     void createProduct(ProductDto productDto) throws ProductServiceException;
     ProductDto getProductByUuid(UUID uuid) throws ProductServiceException;
-    String getImageByUuidProduct(UUID uuidProduct) throws ProductServiceException;
+    String getProductImageByUuid(UUID uuid) throws ProductServiceException;
     List<ProductDto> getProductListByName(String name) throws ProductServiceException;
     List<ProductDto> getProductList() throws ProductServiceException;
     void updateProductByUuid(UUID uuid, ProductDto productDto) throws ProductServiceException;

@@ -16,11 +16,60 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@Transactional
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
 
     public ProductServiceImpl(ProductRepository productRepository) {
         this.productRepository = productRepository;
+    }
+
+    @Override
+    public void createProduct(ProductDto productDto) {
+        try {
+            final Product product = new Product();
+            product.setDescription(productDto.getDescription());
+            product.setDiscount(productDto.getDiscount());
+            product.setNameProduct(product.getNameProduct());
+            product.setPrice(productDto.getPrice());
+            product.setQuantity(productDto.getQuantity());
+            product.setUuid(UUID.randomUUID());
+
+            productRepository.saveAndFlush(product);
+        } catch (Exception exception) {
+            throw new ProductServiceException("An error occurred while creating a product", exception);
+        }
+    }
+
+    @Override
+    public ProductDto getProductByUuid(UUID uuid) {
+        try {
+            return createProductDto(productRepository.findProductByUuid(uuid).orElseThrow(), uuid);
+        } catch (Exception exception) {
+            throw new ProductServiceException("An error occurred while getting a product", exception);
+        }
+    }
+
+    @Override
+    public String getProductImageByUuid(UUID uuid) {
+        try {
+            return Base64.getEncoder().encodeToString(FileUtils.readFileToByteArray(
+                new File("C:/Projects/IdeaProjects/PetProjects/Rozetka/src/main/resources/" + uuid + ".png")));
+        } catch (Exception exception) {
+            throw new ProductServiceException("An error occurred while getting a product image", exception);
+        }
+    }
+
+    @Override
+    public List<ProductDto> getProductListByName(String name) {
+        try {
+            final List<ProductDto> productDtoList = new ArrayList<>();
+            productRepository.findByNameProduct(name).forEach(product -> productDtoList.add(getProductByUuid(product.getUuid())));
+
+            return productDtoList;
+        } catch (Exception e) {
+            throw new ProductServiceException("An error occurred while getting a product list by a name", e);
+        }
     }
 
     @Override
@@ -40,60 +89,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDto getProductByUuid(UUID uuid) {
-        try {
-            return createProductDto(productRepository.findProductByUuid(uuid), uuid);
-        } catch (Exception e) {
-            throw new ProductServiceException("An error occurred while getting a product", e);
-        }
+    public void updateProductByUuid(UUID uuid, ProductDto productDto) {
+
     }
 
     @Override
-    @Transactional
-    public void createProduct(ProductDto productDto) {
-        try {
-            final Product product = new Product();
-            product.setDescription(productDto.getDescription());
-            product.setDiscount(productDto.getDiscount());
-            product.setNameProduct(product.getNameProduct());
-            product.setPrice(productDto.getPrice());
-            product.setQuantity(productDto.getQuantity());
-            product.setUuid(UUID.randomUUID());
+    public void deleteProductByUuid(UUID uuid) {
 
-            productRepository.saveAndFlush(product);
-
-            final UUID uuid = product.getUuid();
-
-            return createProductDto(product, uuid);
-        } catch (Exception e) {
-            throw new ProductServiceException("An error occurred while creating a product", e);
-        }
-    }
-
-    @Override
-    public String getImageByUuidProduct(UUID uuidProduct) {
-        try {
-            return Base64.getEncoder().encodeToString(FileUtils.readFileToByteArray(
-                new File("C:\\Projects\\IdeaProjects\\PetProjects\\Rozetka\\src\\main\\resources\\" + uuidProduct + ".png")));
-        } catch (Exception e) {
-            throw new ProductServiceException("An error occurred while getting a product image", e);
-        }
-    }
-
-    @Override
-    public List<ProductDto> getProductListByName(String name) {
-        try {
-            final List<Product> productList = productRepository.findByNameProduct(name);
-            final List<ProductDto> productDtoList = new ArrayList<>();
-
-            for (var product : productList) {
-                productDtoList.add(getProductByUuid(product.getUuid()));
-            }
-
-            return productDtoList;
-        } catch (Exception e) {
-            throw new ProductServiceException("An error occurred while getting a product list by a name", e);
-        }
     }
 
     @Override

@@ -86,6 +86,6 @@ public class ProductController {
 
     @GetMapping(value = "products/{uuidProduct}/image", produces = "image/png")
     public ResponseEntity<String> getImage(@PathVariable UUID uuidProduct) {
-        return ResponseEntity.ok(productService.getImageByUuidProduct(uuidProduct));
+        return ResponseEntity.ok(productService.getProductImageByUuid(uuidProduct));
     }
 }
