@@ -14,6 +14,7 @@ public class UserDto {
     private String lastName;
     private Timestamp birthday;
 
+    @SuppressWarnings("unused")
     public UserDto() {
     }
 

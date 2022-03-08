@@ -9,11 +9,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -29,8 +32,14 @@ public class User extends AbstractModel {
     @Column(name = "uuid", nullable = false, unique = true)
     private UUID uuid;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private final List<Order> orderList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private final List<Review> reviewList = new ArrayList<>();
+
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY,  cascade = CascadeType.MERGE)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_role", nullable = false)
     private Role role;
 
@@ -64,10 +73,52 @@ public class User extends AbstractModel {
     @Column(name = "birthday", nullable = false)
     private Timestamp birthday;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        final User user = (User) o;
+
+        return idUser.equals(user.idUser) && uuid.equals(user.uuid) && orderList.equals(user.orderList)
+               && reviewList.equals(user.reviewList) && role.equals(user.role) && login.equals(user.login)
+               && passwordUser.equals(user.passwordUser) && email.equals(user.email) && firstName.equals(user.firstName)
+               && lastName.equals(user.lastName) && birthday.equals(user.birthday);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idUser, uuid, orderList, reviewList, role, login, passwordUser, email, firstName, lastName, birthday);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+               "idUser=" + idUser +
+               ", uuid=" + uuid +
+               ", orderList=" + orderList +
+               ", reviewList=" + reviewList +
+               ", role=" + role +
+               ", login='" + login + '\'' +
+               ", passwordUser='" + passwordUser + '\'' +
+               ", email='" + email + '\'' +
+               ", firstName='" + firstName + '\'' +
+               ", lastName='" + lastName + '\'' +
+               ", birthday=" + birthday +
+               '}';
+    }
+
+    @SuppressWarnings("unused")
     public Long getIdUser() {
         return idUser;
     }
 
+    @SuppressWarnings("unused")
     public void setIdUser(Long id) {
         this.idUser = id;
     }
@@ -78,6 +129,14 @@ public class User extends AbstractModel {
 
     public void setUuid(UUID uuid) {
         this.uuid = uuid;
+    }
+
+    public List<Order> getOrderList() {
+        return orderList;
+    }
+
+    public List<Review> getReviewList() {
+        return reviewList;
     }
 
     public Role getRole() {
@@ -134,46 +193,5 @@ public class User extends AbstractModel {
 
     public void setBirthday(Timestamp birthday) {
         this.birthday = birthday;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        final User user = (User) o;
-
-        return idUser.equals(user.idUser)
-                && role.equals(user.role)
-                && login.equals(user.login)
-                && passwordUser.equals(user.passwordUser)
-                && email.equals(user.email)
-                && firstName.equals(user.firstName)
-                && lastName.equals(user.lastName)
-                && birthday.equals(user.birthday);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(idUser, role, login, passwordUser, email, firstName, lastName, birthday);
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-               "id=" + idUser +
-               ", role=" + role +
-               ", login='" + login + '\'' +
-               ", password='" + passwordUser + '\'' +
-               ", email='" + email + '\'' +
-               ", firstName='" + firstName + '\'' +
-               ", lastName='" + lastName + '\'' +
-               ", birthday=" + birthday +
-               '}';
     }
 }

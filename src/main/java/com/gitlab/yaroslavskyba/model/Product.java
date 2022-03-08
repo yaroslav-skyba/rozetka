@@ -30,16 +30,16 @@ public class Product extends AbstractModel {
     @Column(name = "uuid", nullable = false, unique = true)
     private UUID uuid;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "product", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     private final List<OrderItem> orderItemList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "product", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     private final List<Review> reviewList = new ArrayList<>();
 
     @NotNull
     @Size(min = 1, max = 1024)
-    @Column(name = "name_product", nullable = false, length = 1024)
-    private String nameProduct;
+    @Column(name = "name", nullable = false, length = 1024)
+    private String name;
 
     @NotNull
     @PositiveOrZero
@@ -59,10 +59,47 @@ public class Product extends AbstractModel {
     @Column(name = "description", length = 1024)
     private String description;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        final Product product = (Product) o;
+
+        return idProduct.equals(product.idProduct) && uuid.equals(product.uuid) && name.equals(product.name) &&
+               quantity.equals(product.quantity) && price.equals(product.price) && Objects.equals(discount, product.discount) &&
+               Objects.equals(description, product.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idProduct, uuid, name, quantity, price, discount, description);
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+               "idProduct=" + idProduct +
+               ", uuid=" + uuid +
+               ", nameProduct='" + name + '\'' +
+               ", quantity=" + quantity +
+               ", price=" + price +
+               ", discount=" + discount +
+               ", description='" + description + '\'' +
+               '}';
+    }
+
+    @SuppressWarnings("unused")
     public Integer getIdProduct() {
         return idProduct;
     }
 
+    @SuppressWarnings("unused")
     public void setIdProduct(Integer idProduct) {
         this.idProduct = idProduct;
     }
@@ -75,12 +112,12 @@ public class Product extends AbstractModel {
         this.uuid = uuidProduct;
     }
 
-    public String getNameProduct() {
-        return nameProduct;
+    public String getName() {
+        return name;
     }
 
-    public void setNameProduct(String nameProduct) {
-        this.nameProduct = nameProduct;
+    public void setName(String nameProduct) {
+        this.name = nameProduct;
     }
 
     public Integer getQuantity() {
@@ -121,53 +158,5 @@ public class Product extends AbstractModel {
 
     public List<Review> getReviewList() {
         return reviewList;
-    }
-
-    public void addOrderItem(OrderItem orderItem) {
-        orderItem.setProduct(this);
-        orderItemList.add(orderItem);
-    }
-
-    public void removeOrderItem(OrderItem orderItem) {
-        orderItem.setProduct(null);
-        orderItemList.remove(orderItem);
-    }
-
-    public void addReview(Review review) {
-        review.setProduct(this);
-        reviewList.add(review);
-    }
-
-    public void removeReview(Review review) {
-        review.setProduct(null);
-        reviewList.remove(review);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Product product = (Product) o;
-        return  idProduct.equals(product.idProduct) && uuid.equals(product.uuid) && nameProduct.equals(product.nameProduct) &&
-                quantity.equals(product.quantity) && price.equals(product.price) && Objects.equals(discount, product.discount) &&
-                Objects.equals(description, product.description);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(idProduct, uuid, nameProduct, quantity, price, discount, description);
-    }
-
-    @Override
-    public String toString() {
-        return "Product{" +
-                "idProduct=" + idProduct +
-                ", uuid=" + uuid +
-                ", nameProduct='" + nameProduct + '\'' +
-                ", quantity=" + quantity +
-                ", price=" + price +
-                ", discount=" + discount +
-                ", description='" + description + '\'' +
-                '}';
     }
 }

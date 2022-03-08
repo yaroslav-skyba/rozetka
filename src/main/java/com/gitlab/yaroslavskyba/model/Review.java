@@ -34,6 +34,11 @@ public class Review extends AbstractModel {
     @JoinColumn(name = "id_product")
     private Product product;
 
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_user")
+    private User user;
+
     @Size(max = 1024)
     @NotEmpty
     @Column(name = "content", nullable = false, length = 1024)
@@ -42,6 +47,49 @@ public class Review extends AbstractModel {
     @Min(1)
     @Max(5)
     private Integer rating;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        final Review review = (Review) o;
+
+        return idReview.equals(review.idReview) && uuid.equals(review.uuid) && product.equals(review.product)
+               && user.equals(review.user) && content.equals(review.content) && Objects.equals(rating, review.rating);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idReview, uuid, product, user, content, rating);
+    }
+
+    @Override
+    public String toString() {
+        return "Review{" +
+               "idReview=" + idReview +
+               ", uuid=" + uuid +
+               ", product=" + product +
+               ", user=" + user +
+               ", content='" + content + '\'' +
+               ", rating=" + rating +
+               '}';
+    }
+
+    @SuppressWarnings("unused")
+    public Integer getIdReview() {
+        return idReview;
+    }
+
+    @SuppressWarnings("unused")
+    public void setIdReview(Integer idReview) {
+        this.idReview = idReview;
+    }
 
     public UUID getUuid() {
         return uuid;
@@ -59,6 +107,14 @@ public class Review extends AbstractModel {
         this.product = product;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     public String getContent() {
         return content;
     }
@@ -73,38 +129,5 @@ public class Review extends AbstractModel {
 
     public void setRating(Integer rating) {
         this.rating = rating;
-    }
-
-    public Integer getIdReview() {
-        return idReview;
-    }
-
-    public void setIdReview(Integer idReview) {
-        this.idReview = idReview;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Review review = (Review) o;
-        return  idReview.equals(review.idReview) && uuid.equals(review.uuid) && product.equals(review.product) &&
-                content.equals(review.content) && Objects.equals(rating, review.rating);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(idReview, uuid, product, content, rating);
-    }
-
-    @Override
-    public String toString() {
-        return "Review{" +
-                "idReview=" + idReview +
-                ", uuid=" + uuid +
-                ", product=" + product +
-                ", content='" + content + '\'' +
-                ", rating=" + rating +
-                '}';
     }
 }

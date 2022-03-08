@@ -19,18 +19,22 @@ public abstract class AbstractModel {
     @LastModifiedDate
     protected Timestamp updated;
 
+    @SuppressWarnings("unused")
     public Timestamp getCreated() {
         return created;
     }
 
+    @SuppressWarnings("unused")
     public void setCreated(Timestamp created) {
         this.created = created;
     }
 
+    @SuppressWarnings("unused")
     public Timestamp getUpdated() {
         return updated;
     }
 
+    @SuppressWarnings("unused")
     public void setUpdated(Timestamp updated) {
         this.updated = updated;
     }

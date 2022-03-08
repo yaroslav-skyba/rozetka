@@ -1,5 +1,7 @@
 package com.gitlab.yaroslavskyba.security.impl;
 
+import com.gitlab.yaroslavskyba.model.Order;
+import com.gitlab.yaroslavskyba.model.Review;
 import com.gitlab.yaroslavskyba.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -7,20 +9,20 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class UserDetailsImpl implements UserDetails {
     private final transient User user;
-    private final UUID uuid;
 
     public UserDetailsImpl(User user) {
         this.user = user;
-        uuid = user.getUuid();
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(new SimpleGrantedAuthority(user.getRole().getNameRole()));
+        return Collections.singletonList(new SimpleGrantedAuthority(user.getRole().getName()));
     }
 
     @Override
@@ -53,11 +55,15 @@ public class UserDetailsImpl implements UserDetails {
         return true;
     }
 
-    public User getUser() {
-        return user;
+    public UUID getUuid() {
+        return user.getUuid();
     }
 
-    public UUID getUuid() {
-        return uuid;
+    public List<UUID> getOrderUuidList() {
+        return user.getOrderList().stream().map(Order::getUuid).collect(Collectors.toList());
+    }
+
+    public List<UUID> getReviewUuidList() {
+        return user.getReviewList().stream().map(Review::getUuid).collect(Collectors.toList());
     }
 }

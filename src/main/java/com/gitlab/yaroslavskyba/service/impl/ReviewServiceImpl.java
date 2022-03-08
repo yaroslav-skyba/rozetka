@@ -51,19 +51,7 @@ public class ReviewServiceImpl implements ReviewService {
     public List<ReviewDto> getReviewListByProductUuid(UUID uuidProduct) {
         try {
             final List<ReviewDto> reviewDtoList = new ArrayList<>();
-            reviewRepository.findReviewByProductUuid(uuidProduct).forEach(review -> reviewDtoList.add(getReviewByUuid(review.getUuid())));
-
-            return reviewDtoList;
-        } catch (Exception exception) {
-            throw new ReviewServiceException("An error occurred while getting a review list", exception);
-        }
-    }
-
-    @Override
-    public List<ReviewDto> getReviewList() {
-        try {
-            final List<ReviewDto> reviewDtoList = new ArrayList<>();
-            reviewRepository.findAll().forEach(review -> reviewDtoList.add(getReviewByUuid(review.getUuid())));
+            reviewRepository.findReviewsByProductUuid(uuidProduct).forEach(review -> reviewDtoList.add(getReviewByUuid(review.getUuid())));
 
             return reviewDtoList;
         } catch (Exception exception) {

@@ -40,7 +40,7 @@ public class ITCreateEntityUtil {
         final Product product = new Product();
         product.setDescription(RandomString.make(MAX_STRING_LENGTH));
         product.setDiscount(random.nextInt(maxNumber));
-        product.setNameProduct(RandomString.make(MAX_STRING_LENGTH));
+        product.setName(RandomString.make(MAX_STRING_LENGTH));
         product.setPrice(random.nextFloat() * maxNumber * product.getDiscount() / 100);
         product.setQuantity(random.nextInt(maxNumber));
         product.setUuid(UUID.randomUUID());

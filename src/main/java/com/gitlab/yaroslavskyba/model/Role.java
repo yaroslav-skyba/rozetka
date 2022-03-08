@@ -26,46 +26,12 @@ public class Role extends AbstractModel {
     @Column(name = "uuid", nullable = false, unique = true)
     private UUID uuid;
 
-    @NotNull
-    @Column(name = "name_role", unique = true, nullable = false)
-    private String nameRole;
-
-    @OneToMany(mappedBy = "role", cascade = CascadeType.MERGE, orphanRemoval = true)
+    @OneToMany(mappedBy = "role", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     private List<User> userList = new ArrayList<>();
 
-    public Long getIdRole() {
-        return idRole;
-    }
-
-    public void setIdRole(Long id) {
-        this.idRole = id;
-    }
-
-    public UUID getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
-    }
-
-    public String getNameRole() {
-        return nameRole;
-    }
-
-    public void setNameRole(String name) {
-        this.nameRole = name;
-    }
-
-    public void addUser(User user) {
-        userList.add(user);
-        user.setRole(this);
-    }
-
-    public void removeUser(User user) {
-        userList.remove(user);
-        user.setRole(null);
-    }
+    @NotNull
+    @Column(name = "name_role", unique = true, nullable = false)
+    private String name;
 
     @Override
     public boolean equals(Object o) {
@@ -79,19 +45,51 @@ public class Role extends AbstractModel {
 
         final Role role = (Role) o;
 
-        return Objects.equals(idRole, role.idRole) && Objects.equals(nameRole, role.nameRole);
+        return idRole.equals(role.idRole) && uuid.equals(role.uuid) && userList.equals(role.userList) && name.equals(role.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idRole, nameRole);
+        return Objects.hash(idRole, uuid, userList, name);
     }
 
     @Override
     public String toString() {
         return "Role{" +
-               "id=" + idRole +
-               ", name='" + nameRole + '\'' +
+               "idRole=" + idRole +
+               ", uuid=" + uuid +
+               ", userList=" + userList +
+               ", name='" + name + '\'' +
                '}';
+    }
+
+    @SuppressWarnings("unused")
+    public Long getIdRole() {
+        return idRole;
+    }
+
+    @SuppressWarnings("unused")
+    public void setIdRole(Long id) {
+        this.idRole = id;
+    }
+
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
+    }
+
+    public List<User> getUserList() {
+        return userList;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

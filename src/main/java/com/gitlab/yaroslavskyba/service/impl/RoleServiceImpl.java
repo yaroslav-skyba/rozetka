@@ -27,7 +27,7 @@ public class RoleServiceImpl implements RoleService {
         try {
             final Role role = new Role();
             role.setUuid(UUID.randomUUID());
-            role.setNameRole(roleDto.getNameRole());
+            role.setName(roleDto.getNameRole());
 
             roleRepository.saveAndFlush(role);
         } catch (Exception exception) {
@@ -39,7 +39,7 @@ public class RoleServiceImpl implements RoleService {
     public RoleDto getRoleByUuid(UUID uuid) {
         try {
             final Role role = roleRepository.findRoleByUuid(uuid).orElseThrow();
-            return new RoleDto(role.getUuid(), role.getNameRole());
+            return new RoleDto(role.getUuid(), role.getName());
         } catch (Exception exception) {
             throw new RoleServiceException("An error occurred while getting a role", exception);
         }
@@ -48,8 +48,8 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public RoleDto getRoleByName(String nameRole) {
         try {
-            final Role role = roleRepository.findByNameRole(nameRole).orElseThrow();
-            return new RoleDto(role.getUuid(), role.getNameRole());
+            final Role role = roleRepository.findRoleByName(nameRole).orElseThrow();
+            return new RoleDto(role.getUuid(), role.getName());
         } catch (Exception exception) {
             throw new RoleServiceException("An error occurred while getting a role", exception);
         }
@@ -72,7 +72,7 @@ public class RoleServiceImpl implements RoleService {
         try {
             final Role role = roleRepository.findRoleByUuid(uuid).orElseThrow();
             role.setUuid(roleDto.getUuid());
-            role.setNameRole(roleDto.getNameRole());
+            role.setName(roleDto.getNameRole());
 
             roleRepository.saveAndFlush(role);
         } catch (Exception exception) {

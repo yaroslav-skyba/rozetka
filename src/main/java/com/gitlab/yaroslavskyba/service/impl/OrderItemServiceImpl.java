@@ -35,7 +35,7 @@ public class OrderItemServiceImpl implements OrderItemService {
             final int orderItemProductQuantity = 1;
             final Product product = productRepository.findProductByUuid(orderItemDto.getProductUuid()).orElseThrow();
 
-            //Do not remove this variable
+            //Do not inline this variable
             final Integer productQuantity = product.getQuantity();
 
             product.setQuantity(orderItemProductQuantity);
@@ -74,10 +74,11 @@ public class OrderItemServiceImpl implements OrderItemService {
     }
 
     @Override
-    public List<OrderItemDto> getOrderItemList() {
+    public List<OrderItemDto> getItemListByOrderUuid(UUID orderUuid) {
         try {
             final List<OrderItemDto> orderItemDtoList = new ArrayList<>();
-            orderItemRepository.findAll().forEach(orderItem -> orderItemDtoList.add(getOrderItemByUuid(orderItem.getUuid())));
+            orderItemRepository.findOrderItemsByOrderUuid(orderUuid)
+                .forEach(orderItem -> orderItemDtoList.add(getOrderItemByUuid(orderItem.getUuid())));
 
             return orderItemDtoList;
         } catch (Exception exception) {

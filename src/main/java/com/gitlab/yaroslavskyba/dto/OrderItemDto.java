@@ -8,6 +8,7 @@ public class OrderItemDto {
     private UUID productUuid;
     private UUID orderUuid;
 
+    @SuppressWarnings("unused")
     public OrderItemDto() { }
 
     public OrderItemDto(UUID uuid, UUID productUuid, UUID orderUuid) {
@@ -30,11 +31,17 @@ public class OrderItemDto {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        OrderItemDto that = (OrderItemDto) o;
-        return Objects.equals(uuid, that.uuid) && Objects.equals(productUuid, that.productUuid) &&
-               Objects.equals(orderUuid, that.orderUuid);
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        final OrderItemDto that = (OrderItemDto) o;
+
+        return uuid.equals(that.uuid) && productUuid.equals(that.productUuid) && orderUuid.equals(that.orderUuid);
     }
 
     @Override
@@ -45,9 +52,9 @@ public class OrderItemDto {
     @Override
     public String toString() {
         return "OrderItemDto{" +
-                "uuid=" + uuid +
-                ", product=" + productUuid +
-                ", order=" + orderUuid +
-                '}';
+               "uuid=" + uuid +
+               ", productUuid=" + productUuid +
+               ", orderUuid=" + orderUuid +
+               '}';
     }
 }

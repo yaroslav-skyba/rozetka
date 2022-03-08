@@ -55,7 +55,7 @@ public class ProductTestIT extends AbstractTestNGSpringContextTests {
     @Transactional
     @Test(groups = {"integration-tests"}, expectedExceptions = ConstraintViolationException.class)
     public void testProductIsNotSavedWithEmptyName() {
-        product1.setNameProduct("");
+        product1.setName("");
         productRepository.save(product1);
     }
 
@@ -63,7 +63,7 @@ public class ProductTestIT extends AbstractTestNGSpringContextTests {
     @Transactional
     @Test(groups = {"integration-tests"}, expectedExceptions = DataIntegrityViolationException.class)
     public void testProductIsNotSavedWithNullName() {
-        product1.setNameProduct(null);
+        product1.setName(null);
         productRepository.save(product1);
     }
 

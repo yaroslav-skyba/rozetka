@@ -35,6 +35,47 @@ public class OrderItem extends AbstractModel {
     @JoinColumn(name = "id_order", nullable = false)
     private Order order;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        final OrderItem orderItem = (OrderItem) o;
+
+        return idOrderItem.equals(orderItem.idOrderItem) && uuid.equals(orderItem.uuid) && product.equals(orderItem.product)
+               && order.equals(orderItem.order);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idOrderItem, uuid, product, order);
+    }
+
+    @Override
+    public String toString() {
+        return "OrderItem{" +
+               "idOrderItem=" + idOrderItem +
+               ", uuid=" + uuid +
+               ", product=" + product +
+               ", order=" + order +
+               '}';
+    }
+
+    @SuppressWarnings("unused")
+    public Integer getIdOrderItem() {
+        return idOrderItem;
+    }
+
+    @SuppressWarnings("unused")
+    public void setIdOrderItem(Integer idOrderItem) {
+        this.idOrderItem = idOrderItem;
+    }
+
     public UUID getUuid() {
         return uuid;
     }
@@ -57,37 +98,5 @@ public class OrderItem extends AbstractModel {
 
     public void setOrder(Order order) {
         this.order = order;
-    }
-
-    public Integer getIdOrderItem() {
-        return idOrderItem;
-    }
-
-    public void setIdOrderItem(Integer idOrderItem) {
-        this.idOrderItem = idOrderItem;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        OrderItem orderItem = (OrderItem) o;
-        return idOrderItem.equals(orderItem.idOrderItem) && uuid.equals(orderItem.uuid) && product.equals(orderItem.product) &&
-               order.equals(orderItem.order);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(idOrderItem, uuid, product, order);
-    }
-
-    @Override
-    public String toString() {
-        return "OrderItem{" +
-                "idOrderItem=" + idOrderItem +
-                ", uuid=" + uuid +
-                ", product=" + product +
-                ", order=" + order +
-                '}';
     }
 }

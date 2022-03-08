@@ -8,7 +8,6 @@ import com.gitlab.yaroslavskyba.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,7 +22,6 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping(value = ControllerPath.USERS, produces = org.springframework.http.MediaType.TEXT_PLAIN_VALUE)
-@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class UserController {
     private final UserService userService;
 
@@ -46,6 +44,7 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserList());
     }
 
+    @SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
     @PutMapping(value = ControllerPath.UUID, consumes = MediaType.USER)
     @PreAuthorize("#uuid.equals(principal.uuid) or hasAuthority('admin')")
     public ResponseEntity<String> updateUser(@PathVariable UUID uuid, @RequestBody UserDto userDto) {

@@ -1,12 +1,16 @@
 package com.gitlab.yaroslavskyba.controller;
 
-import com.gitlab.yaroslavskyba.util.MediaType;
 import com.gitlab.yaroslavskyba.dto.ProductDto;
 import com.gitlab.yaroslavskyba.dto.ReviewDto;
+import com.gitlab.yaroslavskyba.exception.ProductServiceException;
+import com.gitlab.yaroslavskyba.exception.ReviewServiceException;
 import com.gitlab.yaroslavskyba.service.ProductService;
 import com.gitlab.yaroslavskyba.service.ReviewService;
+import com.gitlab.yaroslavskyba.util.ControllerPath;
+import com.gitlab.yaroslavskyba.util.MediaType;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,11 +20,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/v1")
+@RequestMapping(value = ControllerPath.PRODUCTS, produces = org.springframework.http.MediaType.TEXT_PLAIN_VALUE)
 public class ProductController {
     private final ProductService productService;
     private final ReviewService reviewService;
@@ -30,62 +35,132 @@ public class ProductController {
         this.reviewService = reviewService;
     }
 
-    @PostMapping(value = "products", consumes = MediaType.PRODUCT)
-    public ResponseEntity<ProductDto> addProduct(@RequestBody ProductDto productDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(productDto));
-    }
-
-    @GetMapping(value = "products", produces = MediaType.PRODUCT_LIST)
-    public ResponseEntity<List<ProductDto>> getProductList(@RequestParam(required = false) String name) {
-        final List<ProductDto> productDtoList;
-
-        if (name != null) {
-            productDtoList = productService.getProductListByName(name);
-        } else {
-            productDtoList = productService.getProductList();
+    @PostMapping(consumes = MediaType.PRODUCT)
+    public ResponseEntity<String> createProduct(@RequestBody ProductDto productDto) {
+        try {
+            productService.createProduct(productDto);
+            return ResponseEntity.status(HttpStatus.CREATED).body("A product has been successfully created");
+        } catch (ProductServiceException productServiceException) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(productServiceException.getMessage());
         }
-
-        return ResponseEntity.ok(productDtoList);
     }
 
-    @GetMapping(value = "products/{uuid}", produces = MediaType.PRODUCT)
+    @GetMapping(value = ControllerPath.UUID, produces = MediaType.PRODUCT)
     public ResponseEntity<ProductDto> getProduct(@PathVariable UUID uuid) {
-        if (!productService.isProductExistByUuid(uuid)) {
+        try {
+            return ResponseEntity.ok(productService.getProductByUuid(uuid));
+        } catch (ProductServiceException productServiceException) {
             return ResponseEntity.notFound().build();
         }
-
-        return ResponseEntity.ok(productService.getProductByUuid(uuid));
     }
 
-    @GetMapping(value = "products/{uuid}/reviews", produces = MediaType.REVIEW_LIST)
-    public ResponseEntity<List<ReviewDto>> getReviewList(@PathVariable UUID uuid) {
-        return ResponseEntity.ok(reviewService.getReviewListByProductUuid(uuid));
+    @GetMapping(value = ControllerPath.PRODUCT_IMAGE, produces = org.springframework.http.MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<String> getProductImage(@PathVariable UUID uuidProduct) {
+        try {
+            return ResponseEntity.ok(productService.getProductImageByUuid(uuidProduct));
+        } catch (ProductServiceException productServiceException) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    @PostMapping(value = "products/{uuid}/reviews", consumes = MediaType.REVIEW)
-    public ResponseEntity<ReviewDto> addReview(@PathVariable UUID uuid, @RequestBody ReviewDto reviewDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(reviewService.createReview(reviewDto));
+    @GetMapping(produces = MediaType.PRODUCT_LIST)
+    public ResponseEntity<List<ProductDto>> getProductList(@RequestParam(required = false) String name) {
+        try {
+            final List<ProductDto> productDtoList;
+
+            if (name != null) {
+                productDtoList = productService.getProductListByName(name);
+            } else {
+                productDtoList = productService.getProductList();
+            }
+
+            return ResponseEntity.ok(productDtoList);
+        } catch (ProductServiceException productServiceException) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    @GetMapping(value = "products/{uuidProduct}/reviews/{uuidReview}", produces = MediaType.REVIEW)
-    public ResponseEntity<ReviewDto> getReview(@PathVariable UUID uuidProduct, @PathVariable UUID uuidReview) {
-        return ResponseEntity.ok(reviewService.getReviewByUuid(uuidReview));
+    @PutMapping(value = ControllerPath.UUID, consumes = MediaType.PRODUCT)
+    public ResponseEntity<String> updateProduct(@PathVariable UUID uuid, @RequestBody ProductDto productDto) {
+        try {
+            productService.updateProductByUuid(uuid, productDto);
+            return ResponseEntity.ok("A product has been successfully updated");
+        } catch (ProductServiceException productServiceException) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(productServiceException.getMessage());
+        }
     }
 
-    @PutMapping(value = "products/{uuidProduct}/reviews/{uuidReview}", consumes = MediaType.REVIEW)
-    public ResponseEntity<ReviewDto> updateReview(@PathVariable UUID uuidProduct, @PathVariable UUID uuidReview,
-                                                  @RequestBody ReviewDto reviewDto) {
-        return ResponseEntity.ok(reviewService.updateReviewByUuid(uuidReview, reviewDto));
+    @DeleteMapping(ControllerPath.UUID)
+    public ResponseEntity<String> deleteUser(@PathVariable UUID uuid) {
+        try {
+            productService.deleteProductByUuid(uuid);
+            return ResponseEntity.ok("A product has been successfully deleted");
+        } catch (ProductServiceException productServiceException) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(productServiceException.getMessage());
+        }
     }
 
-    @DeleteMapping(value = "products/{uuidProduct}/reviews/{uuidReview}")
-    public ResponseEntity<Void> deleteReview(@PathVariable UUID uuidProduct, @PathVariable UUID uuidReview) {
-        reviewService.deleteReviewByUuid(uuidReview);
-        return ResponseEntity.noContent().build();
+    @PostMapping(value = ControllerPath.REVIEWS, consumes = MediaType.REVIEW)
+    public ResponseEntity<String> createReview(@PathVariable UUID uuidProduct, @RequestBody ReviewDto reviewDto) {
+        try {
+            productService.getProductByUuid(uuidProduct);
+            reviewService.createReview(reviewDto);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body("A product has been successfully created");
+        } catch (ProductServiceException productServiceException) {
+            return ResponseEntity.notFound().build();
+        } catch (ReviewServiceException productServiceException) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(productServiceException.getMessage());
+        }
     }
 
-    @GetMapping(value = "products/{uuidProduct}/image", produces = "image/png")
-    public ResponseEntity<String> getImage(@PathVariable UUID uuidProduct) {
-        return ResponseEntity.ok(productService.getProductImageByUuid(uuidProduct));
+    @GetMapping(value = ControllerPath.REVIEW, produces = MediaType.REVIEW)
+    public ResponseEntity<ReviewDto> getReview(@SuppressWarnings("unused") @PathVariable UUID uuidProduct, @PathVariable UUID uuid) {
+        try {
+            return ResponseEntity.ok(reviewService.getReviewByUuid(uuid));
+        } catch (ReviewServiceException productServiceException) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping(value = ControllerPath.REVIEWS, produces = MediaType.REVIEW_LIST)
+    public ResponseEntity<List<ReviewDto>> getReviewList(@PathVariable UUID uuidProduct) {
+        try {
+            return ResponseEntity.ok(reviewService.getReviewListByProductUuid(uuidProduct));
+        } catch (ProductServiceException productServiceException) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
+    @PutMapping(value = ControllerPath.REVIEW, consumes = MediaType.REVIEW)
+    @PreAuthorize("principal.reviewUuidList.contains(#uuid) or hasAuthority('admin')")
+    public ResponseEntity<String> updateReview(@PathVariable UUID uuidProduct, @PathVariable UUID uuid, @RequestBody ReviewDto reviewDto) {
+        try {
+            productService.getProductByUuid(uuidProduct);
+            reviewService.updateReviewByUuid(uuid, reviewDto);
+
+            return ResponseEntity.ok("A review has been successfully updated");
+        } catch (ProductServiceException productServiceException) {
+            return ResponseEntity.notFound().build();
+        } catch (ReviewServiceException productServiceException) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(productServiceException.getMessage());
+        }
+    }
+
+    @SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
+    @DeleteMapping(ControllerPath.REVIEW)
+    @PreAuthorize("principal.reviewUuidList.contains(#uuid) or hasAuthority('admin')")
+    public ResponseEntity<String> deleteReview(@PathVariable UUID uuidProduct, @PathVariable UUID uuid) {
+        try {
+            productService.getProductByUuid(uuidProduct);
+            reviewService.deleteReviewByUuid(uuid);
+
+            return ResponseEntity.ok("A review has been successfully deleted");
+        } catch (ProductServiceException productServiceException) {
+            return ResponseEntity.notFound().build();
+        } catch (ReviewServiceException productServiceException) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(productServiceException.getMessage());
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.gitlab.yaroslavskyba.security.impl;
 
+import com.gitlab.yaroslavskyba.repository.OrderItemRepository;
 import com.gitlab.yaroslavskyba.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -9,9 +10,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserRepository userRepository;
+    private final OrderItemRepository orderItemRepository;
 
-    public UserDetailsServiceImpl(UserRepository userRepository) {
+    public UserDetailsServiceImpl(UserRepository userRepository, OrderItemRepository orderItemRepository) {
         this.userRepository = userRepository;
+        this.orderItemRepository = orderItemRepository;
     }
 
     @Override

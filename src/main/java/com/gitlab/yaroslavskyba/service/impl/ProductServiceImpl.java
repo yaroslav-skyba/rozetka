@@ -41,7 +41,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductDto getProductByUuid(UUID uuid) {
         try {
             final Product product = productRepository.findProductByUuid(uuid).orElseThrow();
-            return new ProductDto(product.getUuid(), product.getNameProduct(), product.getQuantity(), product.getPrice(),
+            return new ProductDto(product.getUuid(), product.getName(), product.getQuantity(), product.getPrice(),
                                   product.getDiscount(), product.getDescription());
         } catch (Exception exception) {
             throw new ProductServiceException("An error occurred while getting a product", exception);
@@ -62,7 +62,7 @@ public class ProductServiceImpl implements ProductService {
     public List<ProductDto> getProductListByName(String name) {
         try {
             final List<ProductDto> productDtoList = new ArrayList<>();
-            productRepository.findByNameProduct(name).forEach(product -> productDtoList.add(getProductByUuid(product.getUuid())));
+            productRepository.findProductByName(name).forEach(product -> productDtoList.add(getProductByUuid(product.getUuid())));
 
             return productDtoList;
         } catch (Exception exception) {
@@ -107,7 +107,7 @@ public class ProductServiceImpl implements ProductService {
     private void setProductFields(ProductDto productDto, Product product) {
         product.setDescription(productDto.getDescription());
         product.setDiscount(productDto.getDiscount());
-        product.setNameProduct(product.getNameProduct());
+        product.setName(product.getName());
         product.setPrice(productDto.getPrice());
         product.setQuantity(productDto.getQuantity());
     }

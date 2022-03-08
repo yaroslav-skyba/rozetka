@@ -8,6 +8,6 @@ import java.util.UUID;
 
 public interface ProductRepository extends JpaRepository<Product, Integer> {
     Optional<Product> findProductByUuid(UUID uuid);
-    List<Product> findByNameProduct(String name);
+    List<Product> findProductByName(String name);
     void deleteProductByUuid(UUID uuid);
 }
