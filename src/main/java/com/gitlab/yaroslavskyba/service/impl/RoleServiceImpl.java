@@ -27,7 +27,7 @@ public class RoleServiceImpl implements RoleService {
         try {
             final Role role = new Role();
             role.setUuid(UUID.randomUUID());
-            role.setName(roleDto.getNameRole());
+            role.setName(roleDto.getName());
 
             roleRepository.saveAndFlush(role);
         } catch (Exception exception) {
@@ -72,7 +72,7 @@ public class RoleServiceImpl implements RoleService {
         try {
             final Role role = roleRepository.findRoleByUuid(uuid).orElseThrow();
             role.setUuid(roleDto.getUuid());
-            role.setName(roleDto.getNameRole());
+            role.setName(roleDto.getName());
 
             roleRepository.saveAndFlush(role);
         } catch (Exception exception) {

@@ -1,6 +1,6 @@
 package com.gitlab.yaroslavskyba.controller;
 
-import com.gitlab.yaroslavskyba.LoginRequest;
+import com.gitlab.yaroslavskyba.dto.LoginDto;
 import com.gitlab.yaroslavskyba.dto.UserDto;
 import com.gitlab.yaroslavskyba.exception.UserServiceException;
 import com.gitlab.yaroslavskyba.security.JwtTokenUtil;
@@ -35,10 +35,10 @@ public class AuthController {
     }
 
     @PostMapping(value = ControllerPath.LOGINS, consumes = MediaType.LOGIN_REQUEST)
-    public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<String> login(@RequestBody LoginDto loginDto) {
         try {
-            final String username = loginRequest.getUsername();
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, loginRequest.getPassword()));
+            final String username = loginDto.getUsername();
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, loginDto.getPassword()));
 
             return ResponseEntity.ok(jwtTokenUtil.generateAccessToken(userService.getUserByLogin(username)));
         } catch (RuntimeException runtimeException) {
@@ -49,7 +49,7 @@ public class AuthController {
     @PostMapping(value = ControllerPath.REGISTRATIONS, consumes = MediaType.USER)
     public ResponseEntity<String> register(@RequestBody UserDto userDto) {
         try {
-            userDto.setRoleUuid(roleService.getRoleByName(RoleName.USER).getUuid());
+            userDto.setUuidRole(roleService.getRoleByName(RoleName.USER).getUuid());
             userService.createUser(userDto);
 
             return ResponseEntity.status(HttpStatus.CREATED).body("You were successfully registered");

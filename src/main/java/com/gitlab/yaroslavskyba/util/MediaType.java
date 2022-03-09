@@ -1,18 +1,19 @@
 package com.gitlab.yaroslavskyba.util;
 
 public class MediaType {
-    public static final String ROZETKA = "application/vnd.rozetka";
-    public static final String ORDER = ROZETKA + ".order+json";
-    public static final String ORDER_ITEM_LIST = ROZETKA + ".orderItemList+json";
-    public static final String PRODUCT_LIST = ROZETKA + ".productList+json";
-    public static final String PRODUCT = ROZETKA + ".product+json";
-    public static final String REVIEW_LIST = ROZETKA + ".reviewList+json";
-    public static final String REVIEW = ROZETKA + ".review+json";
-    public static final String ROLE = ROZETKA + ".role+json";
-    public static final String ROLE_LIST = ROZETKA + ".roleList+json";
-    public static final String USER = ROZETKA + ".user+json";
-    public static final String USER_LIST = ROZETKA + ".userList+json";
-    public static final String LOGIN_REQUEST = ROZETKA + ".loginRequest+json";
+    private static final String ROOT = "application/vnd.rozetka";
+    private static final String SUFFIX = "+json";
+
+    public static final String ORDER = ROOT + ".order" + SUFFIX;
+    public static final String PRODUCT_LIST = ROOT + ".productList" + SUFFIX;
+    public static final String PRODUCT = ROOT + ".product" + SUFFIX;
+    public static final String REVIEW_LIST = ROOT + ".reviewList" + SUFFIX;
+    public static final String REVIEW = ROOT + ".review" + SUFFIX;
+    public static final String ROLE = ROOT + ".role" + SUFFIX;
+    public static final String ROLE_LIST = ROOT + ".roleList" + SUFFIX;
+    public static final String USER = ROOT + ".user" + SUFFIX;
+    public static final String USER_LIST = ROOT + ".userList" + SUFFIX;
+    public static final String LOGIN_REQUEST = ROOT + ".loginRequest" + SUFFIX;
 
     private MediaType() {}
 }

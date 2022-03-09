@@ -5,29 +5,17 @@ import java.util.UUID;
 
 public class OrderDto {
     private UUID uuid;
-    private UUID userUuid;
+    private UUID uuidUser;
     private String description;
 
     @SuppressWarnings("unused")
     public OrderDto() {
     }
 
-    public OrderDto(UUID uuid, UUID userUuid, String description) {
+    public OrderDto(UUID uuid, UUID uuidUser, String description) {
         this.uuid = uuid;
-        this.userUuid = userUuid;
+        this.uuidUser = uuidUser;
         this.description = description;
-    }
-
-    public UUID getUuid() {
-        return uuid;
-    }
-
-    public UUID getUserUuid() {
-        return userUuid;
-    }
-
-    public String getDescription() {
-        return description;
     }
 
     @Override
@@ -42,21 +30,33 @@ public class OrderDto {
 
         final OrderDto orderDto = (OrderDto) o;
 
-        return Objects.equals(uuid, orderDto.uuid) && Objects.equals(userUuid, orderDto.userUuid) &&
+        return Objects.equals(uuid, orderDto.uuid) && Objects.equals(uuidUser, orderDto.uuidUser) &&
                Objects.equals(description, orderDto.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, userUuid, description);
+        return Objects.hash(uuid, uuidUser, description);
     }
 
     @Override
     public String toString() {
         return "OrderDto{" +
                "uuid=" + uuid +
-               ", orderUuid=" + userUuid +
+               ", orderUuid=" + uuidUser +
                ", description='" + description + '\'' +
                '}';
+    }
+
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public UUID getUuidUser() {
+        return uuidUser;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }

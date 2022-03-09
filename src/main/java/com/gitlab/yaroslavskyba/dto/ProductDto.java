@@ -11,6 +11,7 @@ public class ProductDto {
     private Integer discount;
     private String description;
 
+    @SuppressWarnings("unused")
     public ProductDto() {
     }
 
@@ -21,6 +22,40 @@ public class ProductDto {
         this.price = price;
         this.discount = discount;
         this.description = description;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        final ProductDto that = (ProductDto) o;
+
+        return Objects.equals(uuid, that.uuid) && Objects.equals(name, that.name) && Objects.equals(quantity, that.quantity)
+               && Objects.equals(price, that.price) && Objects.equals(discount, that.discount)
+               && Objects.equals(description, that.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(uuid, name, quantity, price, discount, description);
+    }
+
+    @Override
+    public String toString() {
+        return "ProductDto{" +
+               "uuid=" + uuid +
+               ", name='" + name + '\'' +
+               ", quantity=" + quantity +
+               ", price=" + price +
+               ", discount=" + discount +
+               ", description='" + description + '\'' +
+               '}';
     }
 
     public UUID getUuid() {
@@ -45,35 +80,5 @@ public class ProductDto {
 
     public String getDescription() {
         return description;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ProductDto that = (ProductDto) o;
-        return  Objects.equals(uuid, that.uuid) &&
-                Objects.equals(name, that.name) &&
-                Objects.equals(quantity, that.quantity) &&
-                Objects.equals(price, that.price) &&
-                Objects.equals(discount, that.discount) &&
-                Objects.equals(description, that.description);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(uuid, name, quantity, price, discount, description);
-    }
-
-    @Override
-    public String toString() {
-        return "ProductDto{" +
-                "uuid=" + uuid +
-                ", name='" + name + '\'' +
-                ", quantity=" + quantity +
-                ", price=" + price +
-                ", discount=" + discount +
-                ", description='" + description + '\'' +
-                '}';
     }
 }

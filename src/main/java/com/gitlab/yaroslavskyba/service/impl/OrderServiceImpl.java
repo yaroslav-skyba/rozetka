@@ -4,6 +4,7 @@ import com.gitlab.yaroslavskyba.dto.OrderDto;
 import com.gitlab.yaroslavskyba.exception.OrderServiceException;
 import com.gitlab.yaroslavskyba.model.Order;
 import com.gitlab.yaroslavskyba.repository.OrderRepository;
+import com.gitlab.yaroslavskyba.repository.UserRepository;
 import com.gitlab.yaroslavskyba.service.OrderService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,17 +15,20 @@ import java.util.UUID;
 @Transactional
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
+    private final UserRepository userRepository;
 
-    public OrderServiceImpl(OrderRepository orderRepository) {
+    public OrderServiceImpl(OrderRepository orderRepository, UserRepository userRepository) {
         this.orderRepository = orderRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
     public void createOrder(OrderDto orderDto) {
         try {
             final Order order = new Order();
-            order.setDescription(orderDto.getDescription());
             order.setUuid(UUID.randomUUID());
+            order.setUser(userRepository.findUserByUuid(orderDto.getUuidUser()).orElseThrow());
+            order.setDescription(orderDto.getDescription());
 
             orderRepository.saveAndFlush(order);
         } catch (Exception exception) {

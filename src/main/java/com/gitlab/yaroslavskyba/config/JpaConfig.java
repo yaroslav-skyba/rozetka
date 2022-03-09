@@ -18,26 +18,32 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.Properties;
 
+@SuppressWarnings("SpellCheckingInspection")
 @Configuration
 @EnableTransactionManagement
 @EnableJpaAuditing(auditorAwareRef = "auditorAware")
-@EnableJpaRepositories(basePackages = {"com.gitlab.yaroslavskyba.repository"})
-@PropertySource({"classpath:application.properties"})
+@EnableJpaRepositories("com.gitlab.yaroslavskyba.repository")
+@PropertySource("classpath:application.properties")
 public class JpaConfig {
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(Environment environment) {
-        final var entityManagerFactory = new LocalContainerEntityManagerFactoryBean();
+        final LocalContainerEntityManagerFactoryBean entityManagerFactory = new LocalContainerEntityManagerFactoryBean();
         entityManagerFactory.setDataSource(dataSource(environment));
         entityManagerFactory.setPackagesToScan("com.gitlab.yaroslavskyba.model");
         entityManagerFactory.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
-        entityManagerFactory.setJpaProperties(getAdditionalProperties(environment));
+
+        final Properties properties = new Properties();
+        properties.setProperty("hibernate.hbm2ddl.auto", environment.getProperty("hibernate.hbm2ddl.auto"));
+        properties.setProperty("hibernate.dialect", environment.getProperty("hibernate.dialect"));
+        properties.setProperty("hibernate.enable_lazy_load_no_trans", environment.getProperty("hibernate.enable_lazy_load_no_trans"));
+        entityManagerFactory.setJpaProperties(properties);
 
         return entityManagerFactory;
     }
 
     @Bean
     public DataSource dataSource(Environment environment) {
-        final var basicDataSource = new BasicDataSource();
+        final BasicDataSource basicDataSource = new BasicDataSource();
         basicDataSource.setDriverClassName(environment.getProperty("jdbc.driverClassName"));
         basicDataSource.setUrl(System.getenv("ROZETKA_DB_URL"));
         basicDataSource.setUsername(System.getenv("ROZETKA_DB_USER"));
@@ -48,7 +54,7 @@ public class JpaConfig {
 
     @Bean
     public JpaTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
-        final var jpaTransactionManager = new JpaTransactionManager();
+        final JpaTransactionManager jpaTransactionManager = new JpaTransactionManager();
         jpaTransactionManager.setEntityManagerFactory(entityManagerFactory);
 
         return jpaTransactionManager;
@@ -57,14 +63,5 @@ public class JpaConfig {
     @Bean
     public AuditorAware<String> auditorAware() {
         return new AuditorAwareImpl();
-    }
-
-    private Properties getAdditionalProperties(Environment environment) {
-        final var properties = new Properties();
-        properties.setProperty("hibernate.hbm2ddl.auto", environment.getProperty("hibernate.hbm2ddl.auto"));
-        properties.setProperty("hibernate.dialect", environment.getProperty("hibernate.dialect"));
-        properties.setProperty("hibernate.enable_lazy_load_no_trans", environment.getProperty("hibernate.enable_lazy_load_no_trans"));
-
-        return properties;
     }
 }

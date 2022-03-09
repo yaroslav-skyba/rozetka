@@ -33,7 +33,7 @@ public class OrderItemServiceImpl implements OrderItemService {
     public void createOrderItem(OrderItemDto orderItemDto) {
         try {
             final int orderItemProductQuantity = 1;
-            final Product product = productRepository.findProductByUuid(orderItemDto.getProductUuid()).orElseThrow();
+            final Product product = productRepository.findProductByUuid(orderItemDto.getUuidProduct()).orElseThrow();
 
             //Do not inline this variable
             final Integer productQuantity = product.getQuantity();
@@ -41,7 +41,7 @@ public class OrderItemServiceImpl implements OrderItemService {
             product.setQuantity(orderItemProductQuantity);
 
             final OrderItem orderItem = new OrderItem();
-            orderItem.setOrder(orderRepository.findOrderByUuid(orderItemDto.getOrderUuid()).orElseThrow());
+            orderItem.setOrder(orderRepository.findOrderByUuid(orderItemDto.getUuidOrder()).orElseThrow());
             orderItem.setProduct(product);
             orderItem.setUuid(UUID.randomUUID());
 

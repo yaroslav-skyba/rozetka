@@ -9,6 +9,7 @@ public class ReviewDto {
     private String content;
     private Integer rating;
 
+    @SuppressWarnings("unused")
     public ReviewDto() {
     }
 
@@ -17,6 +18,37 @@ public class ReviewDto {
         this.uuidProduct = uuidProduct;
         this.content = content;
         this.rating = rating;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        final ReviewDto reviewDto = (ReviewDto) o;
+
+        return Objects.equals(uuid, reviewDto.uuid) && Objects.equals(uuidProduct, reviewDto.uuidProduct)
+               && Objects.equals(content, reviewDto.content) && Objects.equals(rating, reviewDto.rating);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(uuid, uuidProduct, content, rating);
+    }
+
+    @Override
+    public String toString() {
+        return "ReviewDto{" +
+               "uuid=" + uuid +
+               ", uuidProduct=" + uuidProduct +
+               ", content='" + content + '\'' +
+               ", rating=" + rating +
+               '}';
     }
 
     public UUID getUuid() {
@@ -33,31 +65,5 @@ public class ReviewDto {
 
     public Integer getRating() {
         return rating;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ReviewDto reviewDto = (ReviewDto) o;
-        return  Objects.equals(uuid, reviewDto.uuid) &&
-                Objects.equals(uuidProduct, reviewDto.uuidProduct) &&
-                Objects.equals(content, reviewDto.content) &&
-                Objects.equals(rating, reviewDto.rating);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(uuid, uuidProduct, content, rating);
-    }
-
-    @Override
-    public String toString() {
-        return "ReviewDto{" +
-                "uuid=" + uuid +
-                ", product=" + uuidProduct +
-                ", content='" + content + '\'' +
-                ", rating=" + rating +
-                '}';
     }
 }

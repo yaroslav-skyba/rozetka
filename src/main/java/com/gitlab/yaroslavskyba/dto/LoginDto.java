@@ -1,35 +1,18 @@
-package com.gitlab.yaroslavskyba;
+package com.gitlab.yaroslavskyba.dto;
 
-import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
-public class LoginRequest {
-    @NotNull
+public class LoginDto {
     private String username;
-    @NotNull
     private String password;
 
-    public LoginRequest() {
+    @SuppressWarnings("unused")
+    public LoginDto() {
     }
 
-    public LoginRequest(String username, String password) {
+    @SuppressWarnings("unused")
+    public LoginDto(String username, String password) {
         this.username = username;
-        this.password = password;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
         this.password = password;
     }
 
@@ -43,7 +26,7 @@ public class LoginRequest {
             return false;
         }
 
-        final LoginRequest that = (LoginRequest) o;
+        final LoginDto that = (LoginDto) o;
 
         return username.equals(that.username) && password.equals(that.password);
     }
@@ -59,5 +42,23 @@ public class LoginRequest {
                "login='" + username + '\'' +
                ", password='" + password + '\'' +
                '}';
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    @SuppressWarnings("unused")
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    @SuppressWarnings("unused")
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
