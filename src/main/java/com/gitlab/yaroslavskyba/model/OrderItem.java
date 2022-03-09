@@ -1,5 +1,6 @@
 package com.gitlab.yaroslavskyba.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -32,6 +33,11 @@ public class OrderItem extends AbstractModel {
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_user", nullable = false)
+    private User user;
+
+    @NotNull
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "id_order", nullable = false)
     private Order order;
 
@@ -48,12 +54,12 @@ public class OrderItem extends AbstractModel {
         final OrderItem orderItem = (OrderItem) o;
 
         return idOrderItem.equals(orderItem.idOrderItem) && uuid.equals(orderItem.uuid) && product.equals(orderItem.product)
-               && order.equals(orderItem.order);
+               && user.equals(orderItem.user) && order.equals(orderItem.order);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idOrderItem, uuid, product, order);
+        return Objects.hash(idOrderItem, uuid, product, user, order);
     }
 
     @Override
@@ -62,6 +68,7 @@ public class OrderItem extends AbstractModel {
                "idOrderItem=" + idOrderItem +
                ", uuid=" + uuid +
                ", product=" + product +
+               ", user=" + user +
                ", order=" + order +
                '}';
     }
@@ -90,6 +97,14 @@ public class OrderItem extends AbstractModel {
 
     public void setProduct(Product product) {
         this.product = product;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Order getOrder() {

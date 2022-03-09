@@ -33,7 +33,7 @@ public class User extends AbstractModel {
     private UUID uuid;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private final List<Order> orderList = new ArrayList<>();
+    private final List<OrderItem> orderItemList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private final List<Review> reviewList = new ArrayList<>();
@@ -85,7 +85,7 @@ public class User extends AbstractModel {
 
         final User user = (User) o;
 
-        return idUser.equals(user.idUser) && uuid.equals(user.uuid) && orderList.equals(user.orderList)
+        return idUser.equals(user.idUser) && uuid.equals(user.uuid) && orderItemList.equals(user.orderItemList)
                && reviewList.equals(user.reviewList) && role.equals(user.role) && login.equals(user.login)
                && passwordUser.equals(user.passwordUser) && email.equals(user.email) && firstName.equals(user.firstName)
                && lastName.equals(user.lastName) && birthday.equals(user.birthday);
@@ -93,7 +93,7 @@ public class User extends AbstractModel {
 
     @Override
     public int hashCode() {
-        return Objects.hash(idUser, uuid, orderList, reviewList, role, login, passwordUser, email, firstName, lastName, birthday);
+        return Objects.hash(idUser, uuid, orderItemList, reviewList, role, login, passwordUser, email, firstName, lastName, birthday);
     }
 
     @Override
@@ -101,7 +101,7 @@ public class User extends AbstractModel {
         return "User{" +
                "idUser=" + idUser +
                ", uuid=" + uuid +
-               ", orderList=" + orderList +
+               ", orderList=" + orderItemList +
                ", reviewList=" + reviewList +
                ", role=" + role +
                ", login='" + login + '\'' +
@@ -131,8 +131,8 @@ public class User extends AbstractModel {
         this.uuid = uuid;
     }
 
-    public List<Order> getOrderList() {
-        return orderList;
+    public List<OrderItem> getOrderItemList() {
+        return orderItemList;
     }
 
     public List<Review> getReviewList() {

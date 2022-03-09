@@ -3,12 +3,9 @@ package com.gitlab.yaroslavskyba.model;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -30,17 +27,12 @@ public class Order extends AbstractModel {
     @Column(name = "uuid", nullable = false, unique = true)
     private UUID uuid;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_user", nullable = false)
-    private User user;
-
-    @OneToMany(mappedBy = "order", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
-    private final List<OrderItem> orderItemList = new ArrayList<>();
-
     @Size(max = 1024)
     @Column(name = "description", length = 1024)
     private String description;
+
+    @OneToMany(mappedBy = "order", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
+    private final List<OrderItem> orderItemList = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {
@@ -54,13 +46,13 @@ public class Order extends AbstractModel {
 
         final Order order = (Order) o;
 
-        return idOrder.equals(order.idOrder) && uuid.equals(order.uuid) && user.equals(order.user)
-               && orderItemList.equals(order.orderItemList) && Objects.equals(description, order.description);
+        return idOrder.equals(order.idOrder) && uuid.equals(order.uuid) && Objects.equals(description, order.description)
+               && orderItemList.equals(order.orderItemList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idOrder, uuid, user, orderItemList, description);
+        return Objects.hash(idOrder, uuid, description, orderItemList);
     }
 
     @Override
@@ -68,9 +60,8 @@ public class Order extends AbstractModel {
         return "Order{" +
                "idOrder=" + idOrder +
                ", uuid=" + uuid +
-               ", user=" + user +
-               ", orderItemList=" + orderItemList +
                ", description='" + description + '\'' +
+               ", orderItemList=" + orderItemList +
                '}';
     }
 
@@ -90,14 +81,6 @@ public class Order extends AbstractModel {
 
     public void setUuid(UUID uuidOrder) {
         this.uuid = uuidOrder;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public String getDescription() {

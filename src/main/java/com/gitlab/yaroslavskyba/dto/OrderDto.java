@@ -5,16 +5,14 @@ import java.util.UUID;
 
 public class OrderDto {
     private UUID uuid;
-    private UUID uuidUser;
     private String description;
 
     @SuppressWarnings("unused")
     public OrderDto() {
     }
 
-    public OrderDto(UUID uuid, UUID uuidUser, String description) {
+    public OrderDto(UUID uuid, String description) {
         this.uuid = uuid;
-        this.uuidUser = uuidUser;
         this.description = description;
     }
 
@@ -30,30 +28,24 @@ public class OrderDto {
 
         final OrderDto orderDto = (OrderDto) o;
 
-        return Objects.equals(uuid, orderDto.uuid) && Objects.equals(uuidUser, orderDto.uuidUser) &&
-               Objects.equals(description, orderDto.description);
+        return Objects.equals(uuid, orderDto.uuid) && Objects.equals(description, orderDto.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, uuidUser, description);
+        return Objects.hash(uuid, description);
     }
 
     @Override
     public String toString() {
         return "OrderDto{" +
                "uuid=" + uuid +
-               ", orderUuid=" + uuidUser +
                ", description='" + description + '\'' +
                '}';
     }
 
     public UUID getUuid() {
         return uuid;
-    }
-
-    public UUID getUuidUser() {
-        return uuidUser;
     }
 
     public String getDescription() {

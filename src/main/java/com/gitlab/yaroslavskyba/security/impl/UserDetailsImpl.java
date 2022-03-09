@@ -1,6 +1,5 @@
 package com.gitlab.yaroslavskyba.security.impl;
 
-import com.gitlab.yaroslavskyba.model.Order;
 import com.gitlab.yaroslavskyba.model.Review;
 import com.gitlab.yaroslavskyba.model.User;
 import org.springframework.security.core.GrantedAuthority;
@@ -60,7 +59,7 @@ public class UserDetailsImpl implements UserDetails {
     }
 
     public List<UUID> getOrderUuidList() {
-        return user.getOrderList().stream().map(Order::getUuid).collect(Collectors.toList());
+        return user.getOrderItemList().stream().map(orderItem -> orderItem.getUser().getUuid()).collect(Collectors.toList());
     }
 
     public List<UUID> getReviewUuidList() {

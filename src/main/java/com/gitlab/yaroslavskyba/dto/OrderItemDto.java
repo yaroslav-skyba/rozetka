@@ -6,15 +6,15 @@ import java.util.UUID;
 public class OrderItemDto {
     private UUID uuid;
     private UUID uuidProduct;
-    private UUID uuidOrder;
+    private UUID uuidUser;
 
     @SuppressWarnings("unused")
     public OrderItemDto() { }
 
-    public OrderItemDto(UUID uuid, UUID uuidProduct, UUID uuidOrder) {
+    public OrderItemDto(UUID uuid, UUID uuidProduct, UUID uuidUser) {
         this.uuid = uuid;
         this.uuidProduct = uuidProduct;
-        this.uuidOrder = uuidOrder;
+        this.uuidUser = uuidUser;
     }
 
     @Override
@@ -29,20 +29,20 @@ public class OrderItemDto {
 
         final OrderItemDto that = (OrderItemDto) o;
 
-        return uuid.equals(that.uuid) && uuidProduct.equals(that.uuidProduct) && uuidOrder.equals(that.uuidOrder);
+        return uuid.equals(that.uuid) && uuidProduct.equals(that.uuidProduct) && uuidUser.equals(that.uuidUser);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, uuidProduct, uuidOrder);
+        return Objects.hash(uuid, uuidProduct, uuidUser);
     }
 
     @Override
     public String toString() {
         return "OrderItemDto{" +
                "uuid=" + uuid +
-               ", productUuid=" + uuidProduct +
-               ", orderUuid=" + uuidOrder +
+               ", uuidProduct=" + uuidProduct +
+               ", uuidUser=" + uuidUser +
                '}';
     }
 
@@ -54,7 +54,7 @@ public class OrderItemDto {
         return uuidProduct;
     }
 
-    public UUID getUuidOrder() {
-        return uuidOrder;
+    public UUID getUuidUser() {
+        return uuidUser;
     }
 }

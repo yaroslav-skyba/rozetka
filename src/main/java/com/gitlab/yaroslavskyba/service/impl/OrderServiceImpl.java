@@ -27,7 +27,6 @@ public class OrderServiceImpl implements OrderService {
         try {
             final Order order = new Order();
             order.setUuid(UUID.randomUUID());
-            order.setUser(userRepository.findUserByUuid(orderDto.getUuidUser()).orElseThrow());
             order.setDescription(orderDto.getDescription());
 
             orderRepository.saveAndFlush(order);
@@ -40,7 +39,7 @@ public class OrderServiceImpl implements OrderService {
     public OrderDto getOrderByUuid(UUID uuid) {
         try {
             final Order order = orderRepository.findOrderByUuid(uuid).orElseThrow();
-            return new OrderDto(order.getUuid(), order.getUser().getUuid(), order.getDescription());
+            return new OrderDto(order.getUuid(), order.getDescription());
         } catch (Exception exception) {
             throw new OrderServiceException("An error occurred while getting an order", exception);
         }

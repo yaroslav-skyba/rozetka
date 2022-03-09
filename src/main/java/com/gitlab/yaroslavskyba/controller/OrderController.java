@@ -1,7 +1,10 @@
 package com.gitlab.yaroslavskyba.controller;
 
 import com.gitlab.yaroslavskyba.dto.OrderDto;
+import com.gitlab.yaroslavskyba.dto.OrderItemDto;
+import com.gitlab.yaroslavskyba.exception.OrderItemServiceException;
 import com.gitlab.yaroslavskyba.exception.OrderServiceException;
+import com.gitlab.yaroslavskyba.service.OrderItemService;
 import com.gitlab.yaroslavskyba.service.OrderService;
 import com.gitlab.yaroslavskyba.util.ControllerPath;
 import com.gitlab.yaroslavskyba.util.MediaType;
@@ -14,17 +17,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
 public class OrderController {
     private final OrderService orderService;
+    private final OrderItemService orderItemService;
 
-    public OrderController(OrderService orderService) {
+    public OrderController(OrderService orderService, OrderItemService orderItemService) {
         this.orderService = orderService;
+        this.orderItemService = orderItemService;
     }
 
-    @PostMapping(value = ControllerPath.ORDERS, consumes = MediaType.ORDER, produces = org.springframework.http.MediaType.TEXT_PLAIN_VALUE)
+    /*@PostMapping(value = ControllerPath.ORDERS, consumes = MediaType.ORDER, produces = org.springframework.http.MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<String> createOrder(@RequestBody OrderDto orderDto) {
         try {
             orderService.createOrder(orderDto);
@@ -32,7 +38,7 @@ public class OrderController {
         } catch (OrderServiceException orderServiceException) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(orderServiceException.getMessage());
         }
-    }
+    }*/
 
     @SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
     @GetMapping(value = ControllerPath.ORDER, produces = MediaType.ORDER)
@@ -44,4 +50,19 @@ public class OrderController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @PostMapping(value = ControllerPath.ORDERS, consumes = MediaType.ORDER, produces = org.springframework.http.MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<String> createOrderItemList(@RequestBody List<OrderItemDto> orderItemDtoList) {
+        try {
+            orderItemService.createOrderItemList(orderItemDtoList);
+            return ResponseEntity.status(HttpStatus.CREATED).body("An order item list has been successfully created");
+        } catch (OrderItemServiceException orderItemServiceException) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(orderItemServiceException.getMessage());
+        }
+    }
+
+    /*@GetMapping(value = ControllerPath.ORDER_ITEMS, produces = MediaType.ORDER_ITEM_LIST)
+    public ResponseEntity<List<OrderItemDto>> getOrderItemList(@PathVariable UUID uuid) {
+        return orderItemService
+    }*/
 }
