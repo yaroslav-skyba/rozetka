@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(value = ControllerPath.PRODUCTS, produces = org.springframework.http.MediaType.TEXT_PLAIN_VALUE)
+@RequestMapping(produces = org.springframework.http.MediaType.TEXT_PLAIN_VALUE)
 public class ProductController {
     private final ProductService productService;
     private final ReviewService reviewService;
@@ -35,7 +35,7 @@ public class ProductController {
         this.reviewService = reviewService;
     }
 
-    @PostMapping(consumes = MediaType.PRODUCT)
+    @PostMapping(value = ControllerPath.PRODUCTS, consumes = MediaType.PRODUCT)
     public ResponseEntity<String> createProduct(@RequestBody ProductDto productDto) {
         try {
             productService.createProduct(productDto);
@@ -45,7 +45,7 @@ public class ProductController {
         }
     }
 
-    @GetMapping(value = ControllerPath.UUID, produces = MediaType.PRODUCT)
+    @GetMapping(value = ControllerPath.PRODUCT, produces = MediaType.PRODUCT)
     public ResponseEntity<ProductDto> getProduct(@PathVariable UUID uuid) {
         try {
             return ResponseEntity.ok(productService.getProductByUuid(uuid));
@@ -55,15 +55,15 @@ public class ProductController {
     }
 
     @GetMapping(value = ControllerPath.PRODUCT_IMAGE, produces = org.springframework.http.MediaType.IMAGE_PNG_VALUE)
-    public ResponseEntity<String> getProductImage(@PathVariable UUID uuidProduct) {
+    public ResponseEntity<String> getProductImage(@PathVariable UUID uuid) {
         try {
-            return ResponseEntity.ok(productService.getProductImageByUuid(uuidProduct));
+            return ResponseEntity.ok(productService.getProductImageByUuid(uuid));
         } catch (ProductServiceException productServiceException) {
             return ResponseEntity.notFound().build();
         }
     }
 
-    @GetMapping(produces = MediaType.PRODUCT_LIST)
+    @GetMapping(value = ControllerPath.PRODUCTS, produces = MediaType.PRODUCT_LIST)
     public ResponseEntity<List<ProductDto>> getProductList(@RequestParam(required = false) String name) {
         try {
             final List<ProductDto> productDtoList;
@@ -80,7 +80,7 @@ public class ProductController {
         }
     }
 
-    @PutMapping(value = ControllerPath.UUID, consumes = MediaType.PRODUCT)
+    @PutMapping(value = ControllerPath.PRODUCT, consumes = MediaType.PRODUCT)
     public ResponseEntity<String> updateProduct(@PathVariable UUID uuid, @RequestBody ProductDto productDto) {
         try {
             productService.updateProductByUuid(uuid, productDto);
@@ -90,8 +90,8 @@ public class ProductController {
         }
     }
 
-    @DeleteMapping(ControllerPath.UUID)
-    public ResponseEntity<String> deleteUser(@PathVariable UUID uuid) {
+    @DeleteMapping(ControllerPath.PRODUCT)
+    public ResponseEntity<String> deleteProduct(@PathVariable UUID uuid) {
         try {
             productService.deleteProductByUuid(uuid);
             return ResponseEntity.ok("A product has been successfully deleted");

@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = ControllerPath.ROOT, produces = org.springframework.http.MediaType.TEXT_PLAIN_VALUE)
+@RequestMapping(produces = org.springframework.http.MediaType.TEXT_PLAIN_VALUE)
 public class AuthController {
     private final JwtTokenUtil jwtTokenUtil;
     private final UserService userService;

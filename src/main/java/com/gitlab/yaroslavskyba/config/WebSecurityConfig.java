@@ -1,6 +1,7 @@
 package com.gitlab.yaroslavskyba.config;
 
 import com.gitlab.yaroslavskyba.security.JwtTokenFilter;
+import com.gitlab.yaroslavskyba.util.ControllerPath;
 import com.gitlab.yaroslavskyba.util.RoleName;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
@@ -37,11 +38,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and().authorizeRequests()
-            .antMatchers(HttpMethod.GET, "/api/v1/products/**").permitAll()
-            .antMatchers("/api/v1/logins", "/api/v1/registrations").permitAll()
-            .antMatchers(HttpMethod.PUT, "/api/v1/users/**").hasAnyAuthority(RoleName.USER, RoleName.ADMIN)
-            .antMatchers("/api/v1/orders/**").hasAnyAuthority(RoleName.USER, RoleName.ADMIN)
-            .antMatchers("/api/v1/**").hasAuthority(RoleName.USER)
+            .antMatchers(HttpMethod.POST, ControllerPath.PRODUCTS).hasAuthority(RoleName.ADMIN)
+            .antMatchers(HttpMethod.PUT, ControllerPath.PRODUCT).hasAuthority(RoleName.ADMIN)
+            .antMatchers(HttpMethod.DELETE, ControllerPath.PRODUCT, ControllerPath.USER).hasAuthority(RoleName.ADMIN)
+            .antMatchers(ControllerPath.ROLES, ControllerPath.ROLE, ControllerPath.USERS).hasAuthority(RoleName.ADMIN)
+            .antMatchers(HttpMethod.POST, ControllerPath.REVIEWS).hasAnyAuthority(RoleName.ADMIN, RoleName.USER)
+            .antMatchers(HttpMethod.PUT, ControllerPath.REVIEW, ControllerPath.USER).hasAnyAuthority(RoleName.ADMIN, RoleName.USER)
+            .antMatchers(HttpMethod.DELETE, ControllerPath.REVIEW).hasAnyAuthority(RoleName.ADMIN, RoleName.USER)
+            .antMatchers(ControllerPath.ORDERS, ControllerPath.ORDER).hasAnyAuthority(RoleName.ADMIN, RoleName.USER)
             .antMatchers("/**").permitAll()
             .anyRequest().authenticated()
             .and().exceptionHandling().authenticationEntryPoint((request, response, authException) -> response.sendRedirect("/"))

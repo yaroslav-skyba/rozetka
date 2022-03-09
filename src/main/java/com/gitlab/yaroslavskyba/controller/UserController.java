@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(value = ControllerPath.USERS, produces = org.springframework.http.MediaType.TEXT_PLAIN_VALUE)
+@RequestMapping(produces = org.springframework.http.MediaType.TEXT_PLAIN_VALUE)
 public class UserController {
     private final UserService userService;
 
@@ -29,7 +29,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping(consumes = MediaType.USER)
+    @PostMapping(value = ControllerPath.USERS, consumes = MediaType.USER)
     public ResponseEntity<String> createUser(@RequestBody UserDto userDto) {
         try {
             userService.createUser(userDto);
@@ -39,24 +39,28 @@ public class UserController {
         }
     }
 
-    @GetMapping(produces = MediaType.USER_LIST)
+    @GetMapping(value = ControllerPath.USERS, produces = MediaType.USER_LIST)
     public ResponseEntity<List<UserDto>> getUserList() {
-        return ResponseEntity.ok(userService.getUserList());
+        try {
+            return ResponseEntity.ok(userService.getUserList());
+        } catch (UserServiceException userServiceException) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
-    @PutMapping(value = ControllerPath.UUID, consumes = MediaType.USER)
+    @PutMapping(value = ControllerPath.USER, consumes = MediaType.USER)
     @PreAuthorize("#uuid.equals(principal.uuid) or hasAuthority('admin')")
     public ResponseEntity<String> updateUser(@PathVariable UUID uuid, @RequestBody UserDto userDto) {
         try {
             userService.updateUserByUuid(uuid, userDto);
-            return ResponseEntity.ok("A user has been successfully edited");
+            return ResponseEntity.ok("A user has been successfully updated");
         } catch (UserServiceException userServiceException) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(userServiceException.getMessage());
         }
     }
 
-    @DeleteMapping(ControllerPath.UUID)
+    @DeleteMapping(ControllerPath.USER)
     public ResponseEntity<String> deleteUser(@PathVariable UUID uuid) {
         try {
             userService.deleteUserByUuid(uuid);
