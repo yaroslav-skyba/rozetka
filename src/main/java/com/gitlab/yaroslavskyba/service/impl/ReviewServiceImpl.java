@@ -5,6 +5,7 @@ import com.gitlab.yaroslavskyba.model.Review;
 import com.gitlab.yaroslavskyba.exception.ReviewServiceException;
 import com.gitlab.yaroslavskyba.repository.ProductRepository;
 import com.gitlab.yaroslavskyba.repository.ReviewRepository;
+import com.gitlab.yaroslavskyba.repository.UserRepository;
 import com.gitlab.yaroslavskyba.service.ReviewService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,10 +19,12 @@ import java.util.UUID;
 public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
     private final ProductRepository productRepository;
+    private final UserRepository userRepository;
 
-    public ReviewServiceImpl(ReviewRepository reviewRepository, ProductRepository productRepository) {
+    public ReviewServiceImpl(ReviewRepository reviewRepository, ProductRepository productRepository, UserRepository userRepository) {
         this.reviewRepository = reviewRepository;
         this.productRepository = productRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -38,16 +41,19 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ReviewDto getReviewByUuid(UUID uuid) {
         try {
             final Review review = reviewRepository.findReviewByUuid(uuid).orElseThrow();
-            return new ReviewDto(review.getUuid(), review.getProduct().getUuid(), review.getContent(), review.getRating());
+            return new ReviewDto(review.getUuid(), review.getProduct().getUuid(), review.getUser().getUuid(), review.getContent(),
+                                 review.getRating());
         } catch (Exception exception) {
             throw new ReviewServiceException("An error occurred while getting a review", exception);
         }
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ReviewDto> getReviewListByProductUuid(UUID uuidProduct) {
         try {
             final List<ReviewDto> reviewDtoList = new ArrayList<>();
@@ -82,8 +88,9 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     private void setReviewFields(ReviewDto reviewDto, Review review) {
-        review.setContent(reviewDto.getContent());
         review.setProduct(productRepository.findProductByUuid(reviewDto.getUuidProduct()).orElseThrow());
+        review.setUser(userRepository.findUserByUuid(reviewDto.getUuidUser()).orElseThrow());
+        review.setContent(reviewDto.getContent());
         review.setRating(reviewDto.getRating());
     }
 }

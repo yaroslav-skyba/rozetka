@@ -36,6 +36,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public RoleDto getRoleByUuid(UUID uuid) {
         try {
             final Role role = roleRepository.findRoleByUuid(uuid).orElseThrow();
@@ -46,6 +47,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public RoleDto getRoleByName(String nameRole) {
         try {
             final Role role = roleRepository.findRoleByName(nameRole).orElseThrow();
@@ -56,6 +58,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<RoleDto> getRoleList() {
         try {
             final List<RoleDto> roleDtoList = new ArrayList<>();

@@ -8,7 +8,6 @@ import com.gitlab.yaroslavskyba.service.ProductService;
 import com.gitlab.yaroslavskyba.service.ReviewService;
 import com.gitlab.yaroslavskyba.util.ControllerPath;
 import com.gitlab.yaroslavskyba.util.MediaType;
-import com.gitlab.yaroslavskyba.util.RoleName;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -101,17 +100,16 @@ public class ProductController {
         }
     }
 
+    @SuppressWarnings("SpringElInspection")
     @PostMapping(value = ControllerPath.REVIEWS, consumes = MediaType.REVIEW)
-    public ResponseEntity<String> createReview(@PathVariable UUID uuidProduct, @RequestBody ReviewDto reviewDto) {
+    @PreAuthorize("principal.uuid.equals(#reviewDto.uuidUser)")
+    public ResponseEntity<String> createReview(@SuppressWarnings("unused") @PathVariable UUID uuidProduct,
+                                               @RequestBody ReviewDto reviewDto) {
         try {
-            productService.getProductByUuid(uuidProduct);
             reviewService.createReview(reviewDto);
-
-            return ResponseEntity.status(HttpStatus.CREATED).body("A product has been successfully created");
-        } catch (ProductServiceException productServiceException) {
-            return ResponseEntity.notFound().build();
-        } catch (ReviewServiceException productServiceException) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(productServiceException.getMessage());
+            return ResponseEntity.status(HttpStatus.CREATED).body("A review has been successfully created");
+        } catch (ReviewServiceException reviewServiceException) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(reviewServiceException.getMessage());
         }
     }
 
@@ -133,33 +131,27 @@ public class ProductController {
         }
     }
 
-    @SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
-    @PutMapping(value = ControllerPath.REVIEW, consumes = MediaType.REVIEW)
-    @PreAuthorize("principal.reviewUuidList.contains(#uuid) or hasAuthority('admin')")
-    public ResponseEntity<String> updateReview(@PathVariable UUID uuidProduct, @PathVariable UUID uuid, @RequestBody ReviewDto reviewDto) {
-        try {
-            productService.getProductByUuid(uuidProduct);
-            reviewService.updateReviewByUuid(uuid, reviewDto);
 
+    @SuppressWarnings("SpringElInspection")
+    @PutMapping(value = ControllerPath.REVIEW, consumes = MediaType.REVIEW)
+    @PreAuthorize("principal.reviewUuidList.contains(#uuid)")
+    public ResponseEntity<String> updateReview(@SuppressWarnings("unused") @PathVariable UUID uuidProduct, @PathVariable UUID uuid,
+                                               @RequestBody ReviewDto reviewDto) {
+        try {
+            reviewService.updateReviewByUuid(uuid, reviewDto);
             return ResponseEntity.ok("A review has been successfully updated");
-        } catch (ProductServiceException productServiceException) {
-            return ResponseEntity.notFound().build();
-        } catch (ReviewServiceException productServiceException) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(productServiceException.getMessage());
+        } catch (ReviewServiceException reviewServiceException) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(reviewServiceException.getMessage());
         }
     }
 
-    @SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
+    @SuppressWarnings("SpringElInspection")
     @DeleteMapping(ControllerPath.REVIEW)
-    @PreAuthorize("principal.reviewUuidList.contains(#uuid) or hasAuthority(" + RoleName.ADMIN + ")")
-    public ResponseEntity<String> deleteReview(@PathVariable UUID uuidProduct, @PathVariable UUID uuid) {
+    @PreAuthorize("principal.reviewUuidList.contains(#uuid)")
+    public ResponseEntity<String> deleteReview(@SuppressWarnings("unused") @PathVariable UUID uuidProduct, @PathVariable UUID uuid) {
         try {
-            productService.getProductByUuid(uuidProduct);
             reviewService.deleteReviewByUuid(uuid);
-
             return ResponseEntity.ok("A review has been successfully deleted");
-        } catch (ProductServiceException productServiceException) {
-            return ResponseEntity.notFound().build();
         } catch (ReviewServiceException productServiceException) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(productServiceException.getMessage());
         }

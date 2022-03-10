@@ -38,6 +38,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ProductDto getProductByUuid(UUID uuid) {
         try {
             final Product product = productRepository.findProductByUuid(uuid).orElseThrow();
@@ -49,6 +50,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public String getProductImageByUuid(UUID uuid) {
         try {
             return Base64.getEncoder().encodeToString(FileUtils.readFileToByteArray(new File("src/main/resources/img/" + uuid + ".png")));
@@ -58,6 +60,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ProductDto> getProductListByName(String name) {
         try {
             final List<ProductDto> productDtoList = new ArrayList<>();
@@ -70,6 +73,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ProductDto> getProductList() {
         try {
             final List<ProductDto> productDtoList = new ArrayList<>();

@@ -43,6 +43,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserDto getUserByUuid(UUID uuid) throws UserServiceException {
         try {
             final User user = userRepository.findUserByUuid(uuid).orElseThrow();
@@ -54,6 +55,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserDto getUserByLogin(String login) {
         try {
             final User user = userRepository.findUserByLogin(login).orElseThrow();
@@ -65,6 +67,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<UserDto> getUserList() {
         try {
             final List<UserDto> userDtoList = new ArrayList<>();

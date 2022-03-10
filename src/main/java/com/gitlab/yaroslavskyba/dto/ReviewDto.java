@@ -6,6 +6,7 @@ import java.util.UUID;
 public class ReviewDto {
     private UUID uuid;
     private UUID uuidProduct;
+    private UUID uuidUser;
     private String content;
     private Integer rating;
 
@@ -13,9 +14,10 @@ public class ReviewDto {
     public ReviewDto() {
     }
 
-    public ReviewDto(UUID uuid, UUID uuidProduct, String content, Integer rating) {
+    public ReviewDto(UUID uuid, UUID uuidProduct, UUID uuidUser, String content, Integer rating) {
         this.uuid = uuid;
         this.uuidProduct = uuidProduct;
+        this.uuidUser = uuidUser;
         this.content = content;
         this.rating = rating;
     }
@@ -33,12 +35,13 @@ public class ReviewDto {
         final ReviewDto reviewDto = (ReviewDto) o;
 
         return Objects.equals(uuid, reviewDto.uuid) && Objects.equals(uuidProduct, reviewDto.uuidProduct)
-               && Objects.equals(content, reviewDto.content) && Objects.equals(rating, reviewDto.rating);
+               && Objects.equals(uuidUser, reviewDto.uuidUser) && Objects.equals(content, reviewDto.content)
+               && Objects.equals(rating, reviewDto.rating);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, uuidProduct, content, rating);
+        return Objects.hash(uuid, uuidProduct, uuidUser, content, rating);
     }
 
     @Override
@@ -46,6 +49,7 @@ public class ReviewDto {
         return "ReviewDto{" +
                "uuid=" + uuid +
                ", uuidProduct=" + uuidProduct +
+               ", uuidUser=" + uuidUser +
                ", content='" + content + '\'' +
                ", rating=" + rating +
                '}';
@@ -57,6 +61,10 @@ public class ReviewDto {
 
     public UUID getUuidProduct() {
         return uuidProduct;
+    }
+
+    public UUID getUuidUser() {
+        return uuidUser;
     }
 
     public String getContent() {
