@@ -12,7 +12,6 @@ import com.gitlab.yaroslavskyba.service.OrderItemService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,6 +34,7 @@ public class OrderItemServiceImpl implements OrderItemService {
         try {
             final Order order = new Order();
             order.setUuid(UUID.randomUUID());
+            order.setDescription(orderItemDtoList.toString());
 
             for (OrderItemDto orderItemDto : orderItemDtoList) {
                 final int orderItemProductQuantity = 1;
@@ -58,29 +58,6 @@ public class OrderItemServiceImpl implements OrderItemService {
             }
         } catch (Exception exception) {
             throw new OrderItemServiceException("An error occurred while creating an order item list", exception);
-        }
-    }
-
-    @Override
-    public OrderItemDto getOrderItemByUuid(UUID uuid) {
-        try {
-            final OrderItem orderItem = orderItemRepository.findOrderItemByUuid(uuid).orElseThrow();
-            return new OrderItemDto(uuid, orderItem.getProduct().getUuid(), orderItem.getUser().getUuid());
-        } catch (Exception exception) {
-            throw new OrderItemServiceException("An error occurred while getting an order item", exception);
-        }
-    }
-
-    @Override
-    public List<OrderItemDto> getItemListByOrderUuid(UUID orderUuid) {
-        try {
-            final List<OrderItemDto> orderItemDtoList = new ArrayList<>();
-            orderItemRepository.findOrderItemsByOrderUuid(orderUuid)
-                .forEach(orderItem -> orderItemDtoList.add(getOrderItemByUuid(orderItem.getUuid())));
-
-            return orderItemDtoList;
-        } catch (Exception exception) {
-            throw new OrderItemServiceException("An error occurred while getting an order item list", exception);
         }
     }
 }

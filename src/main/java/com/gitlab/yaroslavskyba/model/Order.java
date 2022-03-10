@@ -1,17 +1,13 @@
 package com.gitlab.yaroslavskyba.model;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -31,9 +27,6 @@ public class Order extends AbstractModel {
     @Column(name = "description", length = 1024)
     private String description;
 
-    @OneToMany(mappedBy = "order", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
-    private final List<OrderItem> orderItemList = new ArrayList<>();
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -46,13 +39,12 @@ public class Order extends AbstractModel {
 
         final Order order = (Order) o;
 
-        return idOrder.equals(order.idOrder) && uuid.equals(order.uuid) && Objects.equals(description, order.description)
-               && orderItemList.equals(order.orderItemList);
+        return idOrder.equals(order.idOrder) && uuid.equals(order.uuid) && Objects.equals(description, order.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idOrder, uuid, description, orderItemList);
+        return Objects.hash(idOrder, uuid, description);
     }
 
     @Override
@@ -61,7 +53,6 @@ public class Order extends AbstractModel {
                "idOrder=" + idOrder +
                ", uuid=" + uuid +
                ", description='" + description + '\'' +
-               ", orderItemList=" + orderItemList +
                '}';
     }
 
@@ -79,19 +70,16 @@ public class Order extends AbstractModel {
         return uuid;
     }
 
-    public void setUuid(UUID uuidOrder) {
-        this.uuid = uuidOrder;
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
     }
 
+    @SuppressWarnings("unused")
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public List<OrderItem> getOrderItemList() {
-        return orderItemList;
     }
 }

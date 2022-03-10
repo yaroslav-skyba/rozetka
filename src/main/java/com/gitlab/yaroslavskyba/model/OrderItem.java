@@ -37,7 +37,7 @@ public class OrderItem extends AbstractModel {
     private User user;
 
     @NotNull
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "id_order", nullable = false)
     private Order order;
 
