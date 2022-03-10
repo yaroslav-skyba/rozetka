@@ -97,7 +97,6 @@ public class Product extends AbstractModel {
                '}';
     }
 
-    @SuppressWarnings("unused")
     public Integer getIdProduct() {
         return idProduct;
     }

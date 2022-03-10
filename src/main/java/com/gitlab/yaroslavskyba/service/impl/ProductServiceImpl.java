@@ -51,8 +51,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public String getProductImageByUuid(UUID uuid) {
         try {
-            return Base64.getEncoder().encodeToString(FileUtils.readFileToByteArray(
-                new File("C:/Projects/IdeaProjects/PetProjects/Rozetka/src/main/resources/" + uuid + ".png")));
+            return Base64.getEncoder().encodeToString(FileUtils.readFileToByteArray(new File("src/main/resources/img/" + uuid + ".png")));
         } catch (Exception exception) {
             throw new ProductServiceException("An error occurred while getting a product image", exception);
         }
@@ -98,17 +97,17 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void deleteProductByUuid(UUID uuid) {
         try {
-            productRepository.deleteProductByUuid(uuid);
+            productRepository.deleteById(productRepository.findProductByUuid(uuid).orElseThrow().getIdProduct());
         } catch (Exception exception) {
             throw new ProductServiceException("An error occurred while deleting a product", exception);
         }
     }
 
     private void setProductFields(ProductDto productDto, Product product) {
-        product.setDescription(productDto.getDescription());
-        product.setDiscount(productDto.getDiscount());
-        product.setName(product.getName());
-        product.setPrice(productDto.getPrice());
+        product.setName(productDto.getName());
         product.setQuantity(productDto.getQuantity());
+        product.setPrice(productDto.getPrice());
+        product.setDiscount(productDto.getDiscount());
+        product.setDescription(productDto.getDescription());
     }
 }
