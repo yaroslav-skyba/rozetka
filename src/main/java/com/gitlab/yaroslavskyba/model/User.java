@@ -32,10 +32,10 @@ public class User extends AbstractModel {
     @Column(name = "uuid", nullable = false, unique = true)
     private UUID uuid;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private final List<OrderItem> orderItemList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private final List<Review> reviewList = new ArrayList<>();
 
     @NotNull
@@ -85,15 +85,15 @@ public class User extends AbstractModel {
 
         final User user = (User) o;
 
-        return idUser.equals(user.idUser) && uuid.equals(user.uuid) && orderItemList.equals(user.orderItemList)
-               && reviewList.equals(user.reviewList) && role.equals(user.role) && login.equals(user.login)
-               && passwordUser.equals(user.passwordUser) && email.equals(user.email) && firstName.equals(user.firstName)
-               && lastName.equals(user.lastName) && birthday.equals(user.birthday);
+        return idUser.equals(user.idUser) && uuid.equals(user.uuid) && reviewList.equals(user.reviewList) && role.equals(user.role)
+               && login.equals(user.login) && passwordUser.equals(user.passwordUser) && email.equals(user.email)
+               && firstName.equals(user.firstName) && lastName.equals(user.lastName) && birthday.equals(user.birthday)
+               && orderItemList.equals(user.orderItemList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idUser, uuid, orderItemList, reviewList, role, login, passwordUser, email, firstName, lastName, birthday);
+        return Objects.hash(idUser, uuid, reviewList, role, login, passwordUser, email, firstName, lastName, birthday, orderItemList);
     }
 
     @Override
@@ -101,7 +101,6 @@ public class User extends AbstractModel {
         return "User{" +
                "idUser=" + idUser +
                ", uuid=" + uuid +
-               ", orderList=" + orderItemList +
                ", reviewList=" + reviewList +
                ", role=" + role +
                ", login='" + login + '\'' +
@@ -110,6 +109,7 @@ public class User extends AbstractModel {
                ", firstName='" + firstName + '\'' +
                ", lastName='" + lastName + '\'' +
                ", birthday=" + birthday +
+               ", orderList=" + orderItemList +
                '}';
     }
 
@@ -129,14 +129,6 @@ public class User extends AbstractModel {
 
     public void setUuid(UUID uuid) {
         this.uuid = uuid;
-    }
-
-    public List<OrderItem> getOrderItemList() {
-        return orderItemList;
-    }
-
-    public List<Review> getReviewList() {
-        return reviewList;
     }
 
     public Role getRole() {
@@ -193,5 +185,14 @@ public class User extends AbstractModel {
 
     public void setBirthday(Timestamp birthday) {
         this.birthday = birthday;
+    }
+
+    @SuppressWarnings("unused")
+    public List<OrderItem> getOrderItemList() {
+        return orderItemList;
+    }
+
+    public List<Review> getReviewList() {
+        return reviewList;
     }
 }

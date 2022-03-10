@@ -5,6 +5,7 @@ import com.gitlab.yaroslavskyba.util.MediaType;
 import com.gitlab.yaroslavskyba.dto.UserDto;
 import com.gitlab.yaroslavskyba.exception.UserServiceException;
 import com.gitlab.yaroslavskyba.service.UserService;
+import com.gitlab.yaroslavskyba.util.RoleName;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -50,7 +51,7 @@ public class UserController {
 
     @SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
     @PutMapping(value = ControllerPath.USER, consumes = MediaType.USER)
-    @PreAuthorize("#uuid.equals(principal.uuid) or hasAuthority('admin')")
+    @PreAuthorize("#uuid.equals(principal.uuid) or hasAuthority(" + RoleName.ADMIN + ")")
     public ResponseEntity<String> updateUser(@PathVariable UUID uuid, @RequestBody UserDto userDto) {
         try {
             userService.updateUserByUuid(uuid, userDto);

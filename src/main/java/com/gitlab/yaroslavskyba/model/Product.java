@@ -30,12 +30,6 @@ public class Product extends AbstractModel {
     @Column(name = "uuid", nullable = false, unique = true)
     private UUID uuid;
 
-    @OneToMany(mappedBy = "product", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
-    private final List<OrderItem> orderItemList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "product", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
-    private final List<Review> reviewList = new ArrayList<>();
-
     @NotNull
     @Size(min = 1, max = 1024)
     @Column(name = "name", nullable = false, length = 1024)
@@ -59,6 +53,12 @@ public class Product extends AbstractModel {
     @Column(name = "description", length = 1024)
     private String description;
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private final List<OrderItem> orderItemList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private final List<Review> reviewList = new ArrayList<>();
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -71,14 +71,15 @@ public class Product extends AbstractModel {
 
         final Product product = (Product) o;
 
-        return idProduct.equals(product.idProduct) && uuid.equals(product.uuid) && name.equals(product.name) &&
-               quantity.equals(product.quantity) && price.equals(product.price) && Objects.equals(discount, product.discount) &&
-               Objects.equals(description, product.description);
+        return idProduct.equals(product.idProduct) && uuid.equals(product.uuid) && name.equals(product.name)
+               && quantity.equals(product.quantity) && price.equals(product.price) && Objects.equals(discount, product.discount)
+               && Objects.equals(description, product.description) && orderItemList.equals(product.orderItemList)
+               && reviewList.equals(product.reviewList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idProduct, uuid, name, quantity, price, discount, description);
+        return Objects.hash(idProduct, uuid, name, quantity, price, discount, description, orderItemList, reviewList);
     }
 
     @Override
@@ -86,11 +87,13 @@ public class Product extends AbstractModel {
         return "Product{" +
                "idProduct=" + idProduct +
                ", uuid=" + uuid +
-               ", nameProduct='" + name + '\'' +
+               ", name='" + name + '\'' +
                ", quantity=" + quantity +
                ", price=" + price +
                ", discount=" + discount +
                ", description='" + description + '\'' +
+               ", orderItemList=" + orderItemList +
+               ", reviewList=" + reviewList +
                '}';
     }
 
@@ -152,10 +155,12 @@ public class Product extends AbstractModel {
         this.description = description;
     }
 
+    @SuppressWarnings("unused")
     public List<OrderItem> getOrderItemList() {
         return orderItemList;
     }
 
+    @SuppressWarnings("unused")
     public List<Review> getReviewList() {
         return reviewList;
     }

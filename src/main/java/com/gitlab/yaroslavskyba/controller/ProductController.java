@@ -8,6 +8,7 @@ import com.gitlab.yaroslavskyba.service.ProductService;
 import com.gitlab.yaroslavskyba.service.ReviewService;
 import com.gitlab.yaroslavskyba.util.ControllerPath;
 import com.gitlab.yaroslavskyba.util.MediaType;
+import com.gitlab.yaroslavskyba.util.RoleName;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -150,7 +151,7 @@ public class ProductController {
 
     @SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
     @DeleteMapping(ControllerPath.REVIEW)
-    @PreAuthorize("principal.reviewUuidList.contains(#uuid) or hasAuthority('admin')")
+    @PreAuthorize("principal.reviewUuidList.contains(#uuid) or hasAuthority(" + RoleName.ADMIN + ")")
     public ResponseEntity<String> deleteReview(@PathVariable UUID uuidProduct, @PathVariable UUID uuid) {
         try {
             productService.getProductByUuid(uuidProduct);

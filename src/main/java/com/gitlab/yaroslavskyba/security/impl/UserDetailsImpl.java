@@ -58,10 +58,7 @@ public class UserDetailsImpl implements UserDetails {
         return user.getUuid();
     }
 
-    public List<UUID> getOrderUuidList() {
-        return user.getOrderItemList().stream().map(orderItem -> orderItem.getUser().getUuid()).collect(Collectors.toList());
-    }
-
+    @SuppressWarnings("unused")
     public List<UUID> getReviewUuidList() {
         return user.getReviewList().stream().map(Review::getUuid).collect(Collectors.toList());
     }

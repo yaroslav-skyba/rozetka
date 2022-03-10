@@ -107,6 +107,7 @@ public class OrderItem extends AbstractModel {
         this.user = user;
     }
 
+    @SuppressWarnings("unused")
     public Order getOrder() {
         return order;
     }

@@ -12,12 +12,17 @@ import com.gitlab.yaroslavskyba.service.OrderItemService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.UUID;
 
 @Service
 @Transactional
 public class OrderItemServiceImpl implements OrderItemService {
+    @PersistenceContext
+    private EntityManager entityManager;
+
     private final OrderItemRepository orderItemRepository;
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
@@ -38,11 +43,12 @@ public class OrderItemServiceImpl implements OrderItemService {
 
             for (OrderItemDto orderItemDto : orderItemDtoList) {
                 final int orderItemProductQuantity = 1;
+
                 final Product product = productRepository.findProductByUuid(orderItemDto.getUuidProduct()).orElseThrow();
+                product.setQuantity(product.getQuantity() - orderItemProductQuantity);
+                productRepository.saveAndFlush(product);
 
-                //Do not inline this variable
-                final Integer productQuantity = product.getQuantity();
-
+                entityManager.detach(product);
                 product.setQuantity(orderItemProductQuantity);
 
                 final OrderItem orderItem = new OrderItem();
@@ -50,11 +56,7 @@ public class OrderItemServiceImpl implements OrderItemService {
                 orderItem.setProduct(product);
                 orderItem.setUser(userRepository.findUserByUuid(orderItemDto.getUuidUser()).orElseThrow());
                 orderItem.setOrder(order);
-
                 orderItemRepository.saveAndFlush(orderItem);
-
-                product.setQuantity(productQuantity - orderItemProductQuantity);
-                productRepository.saveAndFlush(product);
             }
         } catch (Exception exception) {
             throw new OrderItemServiceException("An error occurred while creating an order item list", exception);

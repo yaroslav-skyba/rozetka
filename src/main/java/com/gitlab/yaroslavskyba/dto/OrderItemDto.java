@@ -11,6 +11,7 @@ public class OrderItemDto {
     @SuppressWarnings("unused")
     public OrderItemDto() { }
 
+    @SuppressWarnings("unused")
     public OrderItemDto(UUID uuid, UUID uuidProduct, UUID uuidUser) {
         this.uuid = uuid;
         this.uuidProduct = uuidProduct;

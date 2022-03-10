@@ -66,6 +66,7 @@ public class Order extends AbstractModel {
         this.idOrder = idOrder;
     }
 
+    @SuppressWarnings("unused")
     public UUID getUuid() {
         return uuid;
     }

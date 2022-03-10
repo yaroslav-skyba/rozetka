@@ -26,12 +26,12 @@ public class Role extends AbstractModel {
     @Column(name = "uuid", nullable = false, unique = true)
     private UUID uuid;
 
-    @OneToMany(mappedBy = "role", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
-    private List<User> userList = new ArrayList<>();
-
     @NotNull
     @Column(name = "name_role", unique = true, nullable = false)
     private String name;
+
+    @OneToMany(mappedBy = "role", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
+    private List<User> userList = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {
@@ -45,12 +45,12 @@ public class Role extends AbstractModel {
 
         final Role role = (Role) o;
 
-        return idRole.equals(role.idRole) && uuid.equals(role.uuid) && userList.equals(role.userList) && name.equals(role.name);
+        return idRole.equals(role.idRole) && uuid.equals(role.uuid) && name.equals(role.name) && userList.equals(role.userList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idRole, uuid, userList, name);
+        return Objects.hash(idRole, uuid, name, userList);
     }
 
     @Override
@@ -58,8 +58,8 @@ public class Role extends AbstractModel {
         return "Role{" +
                "idRole=" + idRole +
                ", uuid=" + uuid +
-               ", userList=" + userList +
                ", name='" + name + '\'' +
+               ", userList=" + userList +
                '}';
     }
 
@@ -81,15 +81,16 @@ public class Role extends AbstractModel {
         this.uuid = uuid;
     }
 
-    public List<User> getUserList() {
-        return userList;
-    }
-
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @SuppressWarnings("unused")
+    public List<User> getUserList() {
+        return userList;
     }
 }
