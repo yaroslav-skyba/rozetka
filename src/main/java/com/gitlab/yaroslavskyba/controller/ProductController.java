@@ -116,7 +116,7 @@ public class ProductController {
     public ResponseEntity<ReviewDto> getReview(@PathVariable UUID uuidProduct, @PathVariable UUID uuid) {
         try {
             return ResponseEntity.ok(reviewService.getReviewByUuid(uuid, uuidProduct));
-        } catch (ReviewServiceException productServiceException) {
+        } catch (ReviewServiceException reviewServiceException) {
             return ResponseEntity.notFound().build();
         }
     }
@@ -125,7 +125,7 @@ public class ProductController {
     public ResponseEntity<List<ReviewDto>> getReviewList(@PathVariable UUID uuidProduct) {
         try {
             return ResponseEntity.ok(reviewService.getReviewListByProductUuid(uuidProduct));
-        } catch (ProductServiceException productServiceException) {
+        } catch (ReviewServiceException reviewServiceException) {
             return ResponseEntity.notFound().build();
         }
     }
@@ -150,8 +150,8 @@ public class ProductController {
         try {
             reviewService.deleteReviewByUuid(uuid, uuidProduct);
             return ResponseEntity.ok("A review has been successfully deleted");
-        } catch (ReviewServiceException productServiceException) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(productServiceException.getMessage());
+        } catch (ReviewServiceException reviewServiceException) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(reviewServiceException.getMessage());
         }
     }
 }

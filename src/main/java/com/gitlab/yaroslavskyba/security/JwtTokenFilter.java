@@ -1,5 +1,6 @@
 package com.gitlab.yaroslavskyba.security;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,7 +30,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+    protected void doFilterInternal(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain chain)
         throws ServletException, IOException {
         final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
 
@@ -46,10 +47,10 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         }
 
         final UserDetails userDetails = userDetailsService.loadUserByUsername(jwtTokenUtil.getUsername(token));
-        final UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-            userDetails, null,
-            Optional.ofNullable(userDetails).map(UserDetails::getAuthorities).orElse(List.of())
-        );
+        final var usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null,
+                                                                                                Optional.ofNullable(userDetails)
+                                                                                                    .map(UserDetails::getAuthorities)
+                                                                                                    .orElse(List.of()));
 
         usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);

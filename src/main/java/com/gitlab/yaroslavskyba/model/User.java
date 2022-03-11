@@ -32,12 +32,6 @@ public class User extends AbstractModel {
     @Column(name = "uuid", nullable = false, unique = true)
     private UUID uuid;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private final List<OrderItem> orderItemList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private final List<Review> reviewList = new ArrayList<>();
-
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_role", nullable = false)
@@ -73,6 +67,12 @@ public class User extends AbstractModel {
     @Column(name = "birthday", nullable = false)
     private Timestamp birthday;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private final List<OrderItem> orderItemList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private final List<Review> reviewList = new ArrayList<>();
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -85,15 +85,15 @@ public class User extends AbstractModel {
 
         final User user = (User) o;
 
-        return idUser.equals(user.idUser) && uuid.equals(user.uuid) && reviewList.equals(user.reviewList) && role.equals(user.role)
-               && login.equals(user.login) && passwordUser.equals(user.passwordUser) && email.equals(user.email)
-               && firstName.equals(user.firstName) && lastName.equals(user.lastName) && birthday.equals(user.birthday)
-               && orderItemList.equals(user.orderItemList);
+        return idUser.equals(user.idUser) && uuid.equals(user.uuid) && role.equals(user.role) && login.equals(user.login)
+               && passwordUser.equals(user.passwordUser) && email.equals(user.email) && firstName.equals(user.firstName)
+               && lastName.equals(user.lastName) && birthday.equals(user.birthday) && orderItemList.equals(user.orderItemList)
+               && reviewList.equals(user.reviewList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idUser, uuid, reviewList, role, login, passwordUser, email, firstName, lastName, birthday, orderItemList);
+        return Objects.hash(idUser, uuid, role, login, passwordUser, email, firstName, lastName, birthday, orderItemList, reviewList);
     }
 
     @Override
@@ -101,7 +101,6 @@ public class User extends AbstractModel {
         return "User{" +
                "idUser=" + idUser +
                ", uuid=" + uuid +
-               ", reviewList=" + reviewList +
                ", role=" + role +
                ", login='" + login + '\'' +
                ", passwordUser='" + passwordUser + '\'' +
@@ -110,6 +109,7 @@ public class User extends AbstractModel {
                ", lastName='" + lastName + '\'' +
                ", birthday=" + birthday +
                ", orderList=" + orderItemList +
+               ", reviewList=" + reviewList +
                '}';
     }
 
