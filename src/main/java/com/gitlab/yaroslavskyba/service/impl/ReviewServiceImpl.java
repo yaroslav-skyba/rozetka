@@ -28,12 +28,13 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public void createReview(ReviewDto reviewDto) {
+    public void createReview(ReviewDto reviewDto, UUID uuidProduct) {
         try {
             final Review review = new Review();
             review.setUuid(UUID.randomUUID());
-            setReviewFields(reviewDto, review);
+            setReviewFields(reviewDto, review, uuidProduct);
 
+            productRepository.findProductByUuid(uuidProduct);
             reviewRepository.saveAndFlush(review);
         } catch (Exception exception) {
             throw new ReviewServiceException("An error occurred while creating a review", exception);
@@ -42,10 +43,12 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional(readOnly = true)
-    public ReviewDto getReviewByUuid(UUID uuid) {
+    public ReviewDto getReviewByUuid(UUID uuid, UUID uuidProduct) {
         try {
             final Review review = reviewRepository.findReviewByUuid(uuid).orElseThrow();
-            return new ReviewDto(review.getUuid(), review.getProduct().getUuid(), review.getUser().getUuid(), review.getContent(),
+            productRepository.findProductByUuid(uuidProduct);
+
+            return new ReviewDto(review.getUuid(), review.getUser().getUuid(), review.getContent(),
                                  review.getRating());
         } catch (Exception exception) {
             throw new ReviewServiceException("An error occurred while getting a review", exception);
@@ -57,7 +60,8 @@ public class ReviewServiceImpl implements ReviewService {
     public List<ReviewDto> getReviewListByProductUuid(UUID uuidProduct) {
         try {
             final List<ReviewDto> reviewDtoList = new ArrayList<>();
-            reviewRepository.findReviewsByProductUuid(uuidProduct).forEach(review -> reviewDtoList.add(getReviewByUuid(review.getUuid())));
+            reviewRepository.findReviewsByProductUuid(uuidProduct).forEach(review -> reviewDtoList.add(getReviewByUuid(review.getUuid(),
+                                                                                                                       uuidProduct)));
 
             return reviewDtoList;
         } catch (Exception exception) {
@@ -66,12 +70,13 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public void updateReviewByUuid(UUID uuid, ReviewDto reviewDto) {
+    public void updateReviewByUuid(UUID uuid, ReviewDto reviewDto, UUID uuidProduct) {
         try {
             final Review review = reviewRepository.findReviewByUuid(uuid).orElseThrow();
             review.setUuid(reviewDto.getUuid());
-            setReviewFields(reviewDto, review);
+            setReviewFields(reviewDto, review, uuidProduct);
 
+            productRepository.findProductByUuid(uuidProduct);
             reviewRepository.saveAndFlush(review);
         } catch (Exception exception) {
             throw new ReviewServiceException("An error occurred while updating a review", exception);
@@ -79,16 +84,17 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public void deleteReviewByUuid(UUID uuid) {
+    public void deleteReviewByUuid(UUID uuid, UUID uuidProduct) {
         try {
+            productRepository.findProductByUuid(uuidProduct);
             reviewRepository.deleteReviewByUuid(uuid);
         } catch (Exception exception) {
             throw new ReviewServiceException("An error occurred while deleting a review", exception);
         }
     }
 
-    private void setReviewFields(ReviewDto reviewDto, Review review) {
-        review.setProduct(productRepository.findProductByUuid(reviewDto.getUuidProduct()).orElseThrow());
+    private void setReviewFields(ReviewDto reviewDto, Review review, UUID uuidProduct) {
+        review.setProduct(productRepository.findProductByUuid(uuidProduct).orElseThrow());
         review.setUser(userRepository.findUserByUuid(reviewDto.getUuidUser()).orElseThrow());
         review.setContent(reviewDto.getContent());
         review.setRating(reviewDto.getRating());

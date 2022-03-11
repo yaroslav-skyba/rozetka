@@ -187,6 +187,7 @@ public class User extends AbstractModel {
         this.birthday = birthday;
     }
 
+    @SuppressWarnings("unused")
     public List<OrderItem> getOrderItemList() {
         return orderItemList;
     }

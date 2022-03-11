@@ -103,10 +103,9 @@ public class ProductController {
     @SuppressWarnings("SpringElInspection")
     @PostMapping(value = ControllerPath.REVIEWS, consumes = MediaType.REVIEW)
     @PreAuthorize("principal.uuid.equals(#reviewDto.uuidUser)")
-    public ResponseEntity<String> createReview(@SuppressWarnings("unused") @PathVariable UUID uuidProduct,
-                                               @RequestBody ReviewDto reviewDto) {
+    public ResponseEntity<String> createReview(@PathVariable UUID uuidProduct, @RequestBody ReviewDto reviewDto) {
         try {
-            reviewService.createReview(reviewDto);
+            reviewService.createReview(reviewDto, uuidProduct);
             return ResponseEntity.status(HttpStatus.CREATED).body("A review has been successfully created");
         } catch (ReviewServiceException reviewServiceException) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(reviewServiceException.getMessage());
@@ -114,9 +113,9 @@ public class ProductController {
     }
 
     @GetMapping(value = ControllerPath.REVIEW, produces = MediaType.REVIEW)
-    public ResponseEntity<ReviewDto> getReview(@SuppressWarnings("unused") @PathVariable UUID uuidProduct, @PathVariable UUID uuid) {
+    public ResponseEntity<ReviewDto> getReview(@PathVariable UUID uuidProduct, @PathVariable UUID uuid) {
         try {
-            return ResponseEntity.ok(reviewService.getReviewByUuid(uuid));
+            return ResponseEntity.ok(reviewService.getReviewByUuid(uuid, uuidProduct));
         } catch (ReviewServiceException productServiceException) {
             return ResponseEntity.notFound().build();
         }
@@ -135,10 +134,9 @@ public class ProductController {
     @SuppressWarnings("SpringElInspection")
     @PutMapping(value = ControllerPath.REVIEW, consumes = MediaType.REVIEW)
     @PreAuthorize("principal.reviewUuidList.contains(#uuid)")
-    public ResponseEntity<String> updateReview(@SuppressWarnings("unused") @PathVariable UUID uuidProduct, @PathVariable UUID uuid,
-                                               @RequestBody ReviewDto reviewDto) {
+    public ResponseEntity<String> updateReview(@PathVariable UUID uuidProduct, @PathVariable UUID uuid, @RequestBody ReviewDto reviewDto) {
         try {
-            reviewService.updateReviewByUuid(uuid, reviewDto);
+            reviewService.updateReviewByUuid(uuid, reviewDto, uuidProduct);
             return ResponseEntity.ok("A review has been successfully updated");
         } catch (ReviewServiceException reviewServiceException) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(reviewServiceException.getMessage());
@@ -148,9 +146,9 @@ public class ProductController {
     @SuppressWarnings("SpringElInspection")
     @DeleteMapping(ControllerPath.REVIEW)
     @PreAuthorize("principal.reviewUuidList.contains(#uuid)")
-    public ResponseEntity<String> deleteReview(@SuppressWarnings("unused") @PathVariable UUID uuidProduct, @PathVariable UUID uuid) {
+    public ResponseEntity<String> deleteReview(@PathVariable UUID uuidProduct, @PathVariable UUID uuid) {
         try {
-            reviewService.deleteReviewByUuid(uuid);
+            reviewService.deleteReviewByUuid(uuid, uuidProduct);
             return ResponseEntity.ok("A review has been successfully deleted");
         } catch (ReviewServiceException productServiceException) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(productServiceException.getMessage());

@@ -24,14 +24,11 @@ public class OrderController {
         this.orderItemService = orderItemService;
     }
 
+    @SuppressWarnings("SpringElInspection")
     @PostMapping(value = ControllerPath.ORDERS, consumes = MediaType.ORDER_ITEM_LIST, produces = TEXT_PLAIN_VALUE)
     @PreAuthorize("#orderItemDtoList.?[#this.getUuidUser() == #root.principal.uuid].size() eq #orderItemDtoList.size()")
     public ResponseEntity<String> createOrderItemList(@RequestBody List<OrderItemDto> orderItemDtoList) {
-        try {
-            /*"#root.getTags().?[#this.getId() == null].size() eq #root.getTags().size()"
-            orderItemDtoList.stream().allMatch(orderItemDto -> orderItemDto.getUuidUser().equals(principal.uuid))*/
-
-            orderItemService.createOrderItemList(orderItemDtoList);
+        try {orderItemService.createOrderItemList(orderItemDtoList);
             return ResponseEntity.status(HttpStatus.CREATED).body("An order item list has been successfully created");
         } catch (OrderItemServiceException orderItemServiceException) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(orderItemServiceException.getMessage());
