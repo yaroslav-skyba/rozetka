@@ -9,5 +9,4 @@ import java.util.UUID;
 public interface RoleRepository extends JpaRepository<Role, Long> {
     Optional<Role> findRoleByUuid(UUID uuid);
     Optional<Role> findRoleByName(String name);
-    void deleteRoleByUuid(UUID uuid);
 }

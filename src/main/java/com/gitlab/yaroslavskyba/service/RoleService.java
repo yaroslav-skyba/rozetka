@@ -8,7 +8,6 @@ import java.util.UUID;
 
 public interface RoleService {
     void createRole(RoleDto roleDto) throws RoleServiceException;
-    RoleDto getRoleByUuid(UUID uuid) throws RoleServiceException;
     RoleDto getRoleByName(String nameRole) throws RoleServiceException;
     List<RoleDto> getRoleList() throws RoleServiceException;
     void updateRoleByUuid(UUID uuid, RoleDto roleDto) throws RoleServiceException;

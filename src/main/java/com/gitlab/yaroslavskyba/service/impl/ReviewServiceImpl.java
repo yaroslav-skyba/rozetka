@@ -48,8 +48,7 @@ public class ReviewServiceImpl implements ReviewService {
             final Review review = reviewRepository.findReviewByUuid(uuid).orElseThrow();
             productRepository.findProductByUuid(uuidProduct).orElseThrow().setUuid(uuidProduct);
 
-            return new ReviewDto(review.getUuid(), review.getUser().getUuid(), review.getContent(),
-                                 review.getRating());
+            return new ReviewDto(review.getUuid(), review.getUser().getUuid(), review.getContent(), review.getRating());
         } catch (Exception exception) {
             throw new ReviewServiceException("An error occurred while getting a review", exception);
         }
@@ -90,7 +89,7 @@ public class ReviewServiceImpl implements ReviewService {
     public void deleteReviewByUuid(UUID uuid, UUID uuidProduct) {
         try {
             productRepository.findProductByUuid(uuidProduct);
-            reviewRepository.deleteReviewByUuid(uuid);
+            reviewRepository.delete(reviewRepository.findReviewByUuid(uuid).orElseThrow());
         } catch (Exception exception) {
             throw new ReviewServiceException("An error occurred while deleting a review", exception);
         }

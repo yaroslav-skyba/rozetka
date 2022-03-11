@@ -11,9 +11,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -44,18 +44,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public UserDto getUserByUuid(UUID uuid) throws UserServiceException {
-        try {
-            final User user = userRepository.findUserByUuid(uuid).orElseThrow();
-            return new UserDto(user.getUuid(), user.getRole().getUuid(), user.getLogin(), user.getPasswordUser(), user.getEmail(),
-                               user.getFirstName(), user.getLastName(), user.getBirthday());
-        } catch (Exception exception) {
-            throw new UserServiceException("An error occurred while getting a user", exception);
-        }
-    }
-
-    @Override
-    @Transactional(readOnly = true)
     public UserDto getUserByLogin(String login) {
         try {
             final User user = userRepository.findUserByLogin(login).orElseThrow();
@@ -70,8 +58,12 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public List<UserDto> getUserList() {
         try {
-            final List<UserDto> userDtoList = new ArrayList<>();
-            userRepository.findAll().forEach(user -> userDtoList.add(getUserByLogin(user.getLogin())));
+            final List<UserDto> userDtoList =
+                userRepository.findAll().stream().map(user -> getUserByLogin(user.getLogin())).collect(Collectors.toList());
+
+            if (userDtoList.isEmpty()) {
+                throw new ReviewServiceException("A user list is empty");
+            }
 
             return userDtoList;
         } catch (Exception exception) {
@@ -101,7 +93,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUserByUuid(UUID uuid) {
         try {
-            userRepository.deleteUserByUuid(uuid);
+            userRepository.delete(userRepository.findUserByUuid(uuid).orElseThrow());
         } catch (Exception exception) {
             throw new UserServiceException("An error occurred while deleting a user", exception);
         }

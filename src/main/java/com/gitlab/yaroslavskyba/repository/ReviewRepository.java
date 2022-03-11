@@ -9,5 +9,4 @@ import java.util.UUID;
 public interface ReviewRepository extends JpaRepository<Review, Integer> {
     Optional<Review> findReviewByUuid(UUID uuid);
     List<Review> findReviewsByProductUuid(UUID productUuid);
-    void deleteReviewByUuid(UUID uuid);
 }

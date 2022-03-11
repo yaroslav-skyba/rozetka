@@ -10,10 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -63,8 +63,13 @@ public class ProductServiceImpl implements ProductService {
     @Transactional(readOnly = true)
     public List<ProductDto> getProductListByName(String name) {
         try {
-            final List<ProductDto> productDtoList = new ArrayList<>();
-            productRepository.findProductByName(name).forEach(product -> productDtoList.add(getProductByUuid(product.getUuid())));
+            final List<ProductDto> productDtoList =
+                productRepository.findProductsByName(name).stream().map(product -> getProductByUuid(product.getUuid()))
+                    .collect(Collectors.toList());
+
+            if (productDtoList.isEmpty()) {
+                throw new ProductServiceException("A product list is empty");
+            }
 
             return productDtoList;
         } catch (Exception exception) {
@@ -76,8 +81,12 @@ public class ProductServiceImpl implements ProductService {
     @Transactional(readOnly = true)
     public List<ProductDto> getProductList() {
         try {
-            final List<ProductDto> productDtoList = new ArrayList<>();
-            productRepository.findAll().forEach(product -> productDtoList.add(getProductByUuid(product.getUuid())));
+            final List<ProductDto> productDtoList =
+                productRepository.findAll().stream().map(product -> getProductByUuid(product.getUuid())).collect(Collectors.toList());
+
+            if (productDtoList.isEmpty()) {
+                throw new ProductServiceException("A product list is empty");
+            }
 
             return productDtoList;
         } catch (Exception exception) {
