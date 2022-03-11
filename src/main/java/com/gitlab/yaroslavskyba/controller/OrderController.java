@@ -7,6 +7,7 @@ import com.gitlab.yaroslavskyba.util.ControllerPath;
 import com.gitlab.yaroslavskyba.util.MediaType;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,8 +25,12 @@ public class OrderController {
     }
 
     @PostMapping(value = ControllerPath.ORDERS, consumes = MediaType.ORDER_ITEM_LIST, produces = TEXT_PLAIN_VALUE)
+    @PreAuthorize("#orderItemDtoList.?[#this.getUuidUser() == #root.principal.uuid].size() eq #orderItemDtoList.size()")
     public ResponseEntity<String> createOrderItemList(@RequestBody List<OrderItemDto> orderItemDtoList) {
         try {
+            /*"#root.getTags().?[#this.getId() == null].size() eq #root.getTags().size()"
+            orderItemDtoList.stream().allMatch(orderItemDto -> orderItemDto.getUuidUser().equals(principal.uuid))*/
+
             orderItemService.createOrderItemList(orderItemDtoList);
             return ResponseEntity.status(HttpStatus.CREATED).body("An order item list has been successfully created");
         } catch (OrderItemServiceException orderItemServiceException) {
