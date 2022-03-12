@@ -3,6 +3,7 @@ package com.gitlab.yaroslavskyba.security;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,8 +17,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
+import java.util.NoSuchElementException;
 
 @Component
 public class JwtTokenFilter extends OncePerRequestFilter {
@@ -46,12 +48,17 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             return;
         }
 
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(jwtTokenUtil.getUsername(token));
-        final var usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null,
-                                                                                                Optional.ofNullable(userDetails)
-                                                                                                    .map(UserDetails::getAuthorities)
-                                                                                                    .orElse(List.of()));
+        UserDetails userDetails = null;
+        Collection<? extends GrantedAuthority> authorities;
 
+        try {
+            userDetails = userDetailsService.loadUserByUsername(jwtTokenUtil.getUsername(token));
+            authorities = userDetails.getAuthorities();
+        } catch (NoSuchElementException noSuchElementException) {
+            authorities = List.of();
+        }
+
+        final var usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
         usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
         chain.doFilter(request, response);

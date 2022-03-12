@@ -1,7 +1,6 @@
 package com.gitlab.yaroslavskyba.service.impl;
 
 import com.gitlab.yaroslavskyba.dto.UserDto;
-import com.gitlab.yaroslavskyba.exception.ReviewServiceException;
 import com.gitlab.yaroslavskyba.exception.UserServiceException;
 import com.gitlab.yaroslavskyba.model.User;
 import com.gitlab.yaroslavskyba.repository.RoleRepository;
@@ -62,12 +61,12 @@ public class UserServiceImpl implements UserService {
                 userRepository.findAll().stream().map(user -> getUserByLogin(user.getLogin())).collect(Collectors.toList());
 
             if (userDtoList.isEmpty()) {
-                throw new ReviewServiceException("A user list is empty");
+                throw new UserServiceException("A user list is empty");
             }
 
             return userDtoList;
         } catch (Exception exception) {
-            throw new ReviewServiceException("An error occurred while getting a user list", exception);
+            throw new UserServiceException("An error occurred while getting a user list", exception);
         }
     }
 

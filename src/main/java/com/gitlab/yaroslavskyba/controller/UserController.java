@@ -49,9 +49,9 @@ public class UserController {
         }
     }
 
-    @SuppressWarnings("SpringElInspection")
+    @SuppressWarnings({"SpringElInspection", "ELValidationInJSP"})
     @PutMapping(value = ControllerPath.USER, consumes = MediaType.USER)
-    @PreAuthorize("#uuid.equals(principal.uuid) or hasAuthority(" + RoleName.ADMIN + ")")
+    @PreAuthorize("#uuid.equals(principal.uuid) or hasAuthority('" + RoleName.ADMIN + "')")
     public ResponseEntity<String> updateUser(@PathVariable UUID uuid, @RequestBody UserDto userDto) {
         try {
             userService.updateUserByUuid(uuid, userDto);

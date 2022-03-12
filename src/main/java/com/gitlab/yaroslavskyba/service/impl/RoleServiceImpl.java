@@ -1,7 +1,6 @@
 package com.gitlab.yaroslavskyba.service.impl;
 
 import com.gitlab.yaroslavskyba.dto.RoleDto;
-import com.gitlab.yaroslavskyba.exception.ReviewServiceException;
 import com.gitlab.yaroslavskyba.exception.RoleServiceException;
 import com.gitlab.yaroslavskyba.model.Role;
 import com.gitlab.yaroslavskyba.repository.RoleRepository;
@@ -54,12 +53,12 @@ public class RoleServiceImpl implements RoleService {
                 roleRepository.findAll().stream().map(role -> new RoleDto(role.getUuid(), role.getName())).collect(Collectors.toList());
 
             if (roleDtoList.isEmpty()) {
-                throw new ReviewServiceException("A role list is empty");
+                throw new RoleServiceException("A role list is empty");
             }
 
             return roleDtoList;
         } catch (Exception exception) {
-            throw new ReviewServiceException("An error occurred while getting a role list", exception);
+            throw new RoleServiceException("An error occurred while getting a role list", exception);
         }
     }
 
@@ -72,7 +71,7 @@ public class RoleServiceImpl implements RoleService {
 
             roleRepository.saveAndFlush(role);
         } catch (Exception exception) {
-            throw new ReviewServiceException("An error occurred while updating a role", exception);
+            throw new RoleServiceException("An error occurred while updating a role", exception);
         }
     }
 
@@ -81,7 +80,7 @@ public class RoleServiceImpl implements RoleService {
         try {
             roleRepository.delete(roleRepository.findRoleByUuid(uuid).orElseThrow());
         } catch (Exception exception) {
-            throw new ReviewServiceException("An error occurred while deleting a role", exception);
+            throw new RoleServiceException("An error occurred while deleting a role", exception);
         }
     }
 }
