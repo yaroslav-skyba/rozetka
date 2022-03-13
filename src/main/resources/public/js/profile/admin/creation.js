@@ -1,7 +1,7 @@
 onload = function () {
-    setUserModification();
+    setUserForm();
     setRole();
-    setAdminModification("Create an account", "Create", creationStorageKeyPrefix);
+    setAdminForm("Create an account", "Create", creationStorageKeyPrefix);
 
     document.getElementById("submit").onclick = function () {
         const password = document.getElementById("password");
@@ -9,7 +9,19 @@ onload = function () {
         password.required = true;
         document.getElementById("passwordConformation").required = true;
 
-        sendModificationRequest(null, password.value, "POST", usersApiUrl);
+        const body = createModificationRequestBody(null, password.value);
+
+        if (!body) {
+            return;
+        }
+
+        for (const [key, value] of Object.entries(JSON.parse(localStorage.getItem(rolesStorageKey)))) {
+            if (value === document.getElementById("roleValue").value) {
+                body[userRoleUuidDtoKey] = key;
+            }
+        }
+
+        sendModificationRequest("POST", usersApiUrl, body);
     }
 }
 

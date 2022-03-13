@@ -1,4 +1,4 @@
-function setUserModification() {
+function setUserForm() {
     document.getElementById("main").innerHTML =
         `<section>
             <div class="container">
@@ -65,4 +65,98 @@ function setUserModification() {
                 </div>
             </div>
         </section>`;
+}
+
+function setEditStorageItems(userToEditParsed) {
+    localStorage.setItem(editStorageKeyPrefix + document.getElementById("login").id, userToEditParsed[userLoginDtoKey]);
+    localStorage.setItem(editStorageKeyPrefix + document.getElementById("email").id, userToEditParsed[userEmailDtoKey]);
+    localStorage.setItem(editStorageKeyPrefix + document.getElementById("firstName").id, userToEditParsed[userFirstNameDtoKey]);
+    localStorage.setItem(editStorageKeyPrefix + document.getElementById("secondName").id, userToEditParsed[userLastNameDtoKey]);
+    localStorage.setItem(editStorageKeyPrefix + document.getElementById("birthday").id, userToEditParsed[userBirthdayDtoKey]);
+}
+
+function setUserInputs(headlineInnerHtml, submitInnerHtml, storageKeyPrefix) {
+    document.getElementById("headline").innerHTML = headlineInnerHtml;
+    document.getElementById("submit").innerHTML = submitInnerHtml;
+
+    const role = document.getElementById("roleValue");
+    role.value = localStorage.getItem(storageKeyPrefix + role.id);
+
+    const login = document.getElementById("login");
+    login.value = localStorage.getItem(storageKeyPrefix + login.id);
+
+    const email = document.getElementById("email");
+    email.value = localStorage.getItem(storageKeyPrefix + email.id);
+
+    const firstName = document.getElementById("firstName");
+    firstName.value = localStorage.getItem(storageKeyPrefix + firstName.id);
+
+    const secondName = document.getElementById("secondName");
+    secondName.value = localStorage.getItem(storageKeyPrefix + secondName.id);
+
+    const birthday = document.getElementById("birthday");
+    birthday.value = localStorage.getItem(storageKeyPrefix + birthday.id);
+}
+
+function sendModificationRequest(httpMethod, url, body) {
+    xmlHttpRequest.open(httpMethod, url);
+    xmlHttpRequest.setRequestHeader("Content-Type", userMediaType);
+    xmlHttpRequest.setRequestHeader("Authorization", localStorage.getItem(jwtStorageKey));
+    xmlHttpRequest.send(JSON.stringify(body));
+}
+
+function createModificationRequestBody(userUuid, passwordValue) {
+    for (const formOutlineElement of document.getElementsByClassName("form-outline")) {
+        const formControlElement = formOutlineElement.getElementsByClassName("form-control")[0];
+
+        if (!formControlElement.checkValidity()) {
+            alert("danger", formOutlineElement.getElementsByClassName("invalid-feedback")[0].innerHTML);
+            return null;
+        }
+
+        const maxElementLength = 255;
+
+        if (formControlElement.value.length > maxElementLength) {
+            alert("danger", "A field should be equal or less than " + maxElementLength + " symbols");
+            return null;
+        }
+    }
+
+    if (document.getElementById("password").value !== document.getElementById("passwordConformation").value) {
+        alert("danger", "Passwords do not match");
+        return null;
+    }
+
+    const body = {};
+    body[userUuidDtoKey] = userUuid;
+    body[userLoginDtoKey] = document.getElementById("login").value;
+    body[userPasswordDtoKey] = passwordValue;
+    body[userEmailDtoKey] = document.getElementById("email").value;
+    body[userFirstNameDtoKey] = document.getElementById("firstName").value;
+    body[userLastNameDtoKey] = document.getElementById("secondName").value;
+    body[userBirthdayDtoKey] = document.getElementById("birthday").value;
+}
+
+function createEditRequestBody(userToEditParsed) {
+    let passwordValue = document.getElementById("password").value;
+
+    if (!passwordValue) {
+        passwordValue = null;
+    }
+
+    return createModificationRequestBody(userToEditParsed[userUuidDtoKey], passwordValue);
+}
+
+function setXmlHttpRequest(successStatus, storageKeyPrefix) {
+    if (xmlHttpRequest.readyState === 4) {
+        if (xmlHttpRequest.status === successStatus) {
+            for (const formControlElement of formControlElements) {
+                localStorage.removeItem(storageKeyPrefix + formControlElement.id);
+            }
+
+            alert("success", xmlHttpRequest.responseText);
+        } else if (xmlHttpRequest.status === 409) {
+            alert("danger", xmlHttpRequest.responseText);
+        }
+    }
 }

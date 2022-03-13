@@ -5,35 +5,23 @@ onload = function () {
         location.href = "/profile/admin/admin.html";
     }
 
-    setUserModification();
-    setRole();
-
     const userToEditParsed = JSON.parse(userToEdit);
 
     for (const [key, value] of Object.entries(JSON.parse(localStorage.getItem(rolesStorageKey)))) {
         if (key === userToEditParsed[userRoleUuidDtoKey]) {
             localStorage.setItem(editStorageKeyPrefix + document.getElementById("roleValue").id, value.toString());
+            break;
         }
     }
 
-    localStorage.setItem(editStorageKeyPrefix + document.getElementById("login").id, userToEditParsed[userLoginDtoKey]);
-    localStorage.setItem(editStorageKeyPrefix + document.getElementById("email").id, userToEditParsed[userEmailDtoKey]);
-    localStorage.setItem(editStorageKeyPrefix + document.getElementById("firstName").id, userToEditParsed[userFirstNameDtoKey]);
-    localStorage.setItem(editStorageKeyPrefix + document.getElementById("secondName").id, userToEditParsed[userLastNameDtoKey]);
-    localStorage.setItem(editStorageKeyPrefix + document.getElementById("birthday").id, userToEditParsed[userBirthdayDtoKey]);
-
-    setAdminModification("Edit an account", "Save", editStorageKeyPrefix);
+    setUserForm();
+    setRole();
+    setEditStorageItems(userToEditParsed);
+    setAdminForm("Edit an account", "Save", editStorageKeyPrefix);
 
     document.getElementById("submit").onclick = function () {
-        let passwordValue = document.getElementById("password").value;
-
-        if (!passwordValue) {
-            passwordValue = null;
-        }
-
         localStorage.removeItem(userToEditStorageKey);
-        sendModificationRequest(userToEditParsed[userUuidDtoKey], passwordValue, "PUT",
-            usersApiUrl + "/" + userToEditParsed[userUuidDtoKey]);
+        sendModificationRequest("PUT", usersApiUrl + "/" + userToEditParsed[userUuidDtoKey], createEditRequestBody(userToEditParsed));
     }
 }
 
