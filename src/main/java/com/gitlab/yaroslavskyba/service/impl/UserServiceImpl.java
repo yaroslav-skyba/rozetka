@@ -6,6 +6,9 @@ import com.gitlab.yaroslavskyba.model.User;
 import com.gitlab.yaroslavskyba.repository.RoleRepository;
 import com.gitlab.yaroslavskyba.repository.UserRepository;
 import com.gitlab.yaroslavskyba.service.UserService;
+import com.gitlab.yaroslavskyba.util.RoleName;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +35,7 @@ public class UserServiceImpl implements UserService {
         try {
             final User user = new User();
             user.setUuid(UUID.randomUUID());
-            user.setPasswordUser(passwordEncoder.encode(userDto.getPasswordUser()));
+            user.setPassword(passwordEncoder.encode(userDto.getPassword()));
             setUserFields(userDto, user);
 
             userRepository.saveAndFlush(user);
@@ -46,7 +49,7 @@ public class UserServiceImpl implements UserService {
     public UserDto getUserByLogin(String login) {
         try {
             final User user = userRepository.findUserByLogin(login).orElseThrow();
-            return new UserDto(user.getUuid(), user.getRole().getUuid(), user.getLogin(), user.getPasswordUser(), user.getEmail(),
+            return new UserDto(user.getUuid(), user.getRole().getUuid(), user.getLogin(), user.getPassword(), user.getEmail(),
                                user.getFirstName(), user.getLastName(), user.getBirthday());
         } catch (Exception exception) {
             throw new UserServiceException("An error occurred while getting a user", exception);
@@ -77,10 +80,10 @@ public class UserServiceImpl implements UserService {
             user.setUuid(userDto.getUuid());
             setUserFields(userDto, user);
 
-            final String password = userDto.getPasswordUser();
+            final String password = userDto.getPassword();
 
             if (password != null) {
-                user.setPasswordUser(passwordEncoder.encode(password));
+                user.setPassword(passwordEncoder.encode(password));
             }
 
             userRepository.saveAndFlush(user);
@@ -99,7 +102,14 @@ public class UserServiceImpl implements UserService {
     }
 
     private void setUserFields(UserDto userDto, User user) {
-        user.setRole(roleRepository.findRoleByUuid(userDto.getUuidRole()).orElseThrow());
+        final UUID uuidRole = userDto.getUuidRole();
+
+        if (uuidRole != null) {
+            user.setRole(roleRepository.findRoleByUuid(uuidRole).orElseThrow());
+        } else {
+            user.setRole(roleRepository.findRoleByName(RoleName.USER).orElseThrow());
+        }
+
         user.setLogin(userDto.getLogin());
         user.setEmail(userDto.getEmail());
         user.setFirstName(userDto.getFirstName());

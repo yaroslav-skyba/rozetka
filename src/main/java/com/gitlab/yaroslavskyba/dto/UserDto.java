@@ -8,7 +8,7 @@ public class UserDto {
     private UUID uuid;
     private UUID uuidRole;
     private String login;
-    private String passwordUser;
+    private String password;
     private String email;
     private String firstName;
     private String lastName;
@@ -18,12 +18,12 @@ public class UserDto {
     public UserDto() {
     }
 
-    public UserDto(UUID uuid, UUID uuidRole, String login, String passwordUser, String email, String firstName, String lastName,
+    public UserDto(UUID uuid, UUID uuidRole, String login, String password, String email, String firstName, String lastName,
                    Timestamp birthday) {
         this.uuid = uuid;
         this.uuidRole = uuidRole;
         this.login = login;
-        this.passwordUser = passwordUser;
+        this.password = password;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -43,14 +43,14 @@ public class UserDto {
         final UserDto userDto = (UserDto) o;
 
         return Objects.equals(uuid, userDto.uuid) && Objects.equals(uuidRole, userDto.uuidRole) && Objects.equals(login, userDto.login)
-               && Objects.equals(passwordUser, userDto.passwordUser) && Objects.equals(email, userDto.email)
+               && Objects.equals(password, userDto.password) && Objects.equals(email, userDto.email)
                && Objects.equals(firstName, userDto.firstName) && Objects.equals(lastName, userDto.lastName)
                && Objects.equals(birthday, userDto.birthday);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, uuidRole, login, passwordUser, email, firstName, lastName, birthday);
+        return Objects.hash(uuid, uuidRole, login, password, email, firstName, lastName, birthday);
     }
 
     @Override
@@ -59,7 +59,7 @@ public class UserDto {
                "uuid=" + uuid +
                ", uuidRole=" + uuidRole +
                ", login='" + login + '\'' +
-               ", passwordUser='" + passwordUser + '\'' +
+               ", passwordUser='" + password + '\'' +
                ", email='" + email + '\'' +
                ", firstName='" + firstName + '\'' +
                ", lastName='" + lastName + '\'' +
@@ -83,8 +83,8 @@ public class UserDto {
         return login;
     }
 
-    public String getPasswordUser() {
-        return passwordUser;
+    public String getPassword() {
+        return password;
     }
 
     public String getEmail() {

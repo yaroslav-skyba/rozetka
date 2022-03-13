@@ -5,6 +5,9 @@ onload = function () {
         location.href = "/profile/admin/admin.html";
     }
 
+    setUserForm();
+    setRole();
+
     const userToEditParsed = JSON.parse(userToEdit);
 
     for (const [key, value] of Object.entries(JSON.parse(localStorage.getItem(rolesStorageKey)))) {
@@ -14,14 +17,13 @@ onload = function () {
         }
     }
 
-    setUserForm();
-    setRole();
     setEditStorageItems(userToEditParsed);
     setAdminForm("Edit an account", "Save", editStorageKeyPrefix);
 
     document.getElementById("submit").onclick = function () {
         localStorage.removeItem(userToEditStorageKey);
-        sendModificationRequest("PUT", usersApiUrl + "/" + userToEditParsed[userUuidDtoKey], createEditRequestBody(userToEditParsed));
+        sendModificationRequest("PUT", usersApiUrl + "/" + userToEditParsed[userUuidDtoKey],
+            appendRoleToBody(createEditRequestBody(userToEditParsed)));
     }
 }
 

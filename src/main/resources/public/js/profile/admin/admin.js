@@ -5,6 +5,10 @@ let userToDeleteUuid = null;
 let userApiUrl = null;
 
 onload = function () {
+    if (localStorage.getItem(currentUserRoleNameStorageKey) !== adminRoleName) {
+        location.href = "/";
+    }
+
     setNavigation("../../index.html", "../../img/logo.png", "../../cart.html", "../../about.html",
         "../../login.html", "../../registration.html", "admin.html", "../user.html");
     sendHttpRequest("GET", usersApiUrl);

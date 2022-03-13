@@ -15,13 +15,7 @@ onload = function () {
             return;
         }
 
-        for (const [key, value] of Object.entries(JSON.parse(localStorage.getItem(rolesStorageKey)))) {
-            if (value === document.getElementById("roleValue").value) {
-                body[userRoleUuidDtoKey] = key;
-            }
-        }
-
-        sendModificationRequest("POST", usersApiUrl, body);
+        sendModificationRequest("POST", usersApiUrl, appendRoleToBody(body));
     }
 }
 

@@ -45,7 +45,7 @@ public class User extends AbstractModel {
     @NotNull
     @Size(min = 1, max = 255)
     @Column(name = "password_user", nullable = false)
-    private String passwordUser;
+    private String password;
 
     @NotNull
     @Size(min = 1, max = 255)
@@ -86,14 +86,14 @@ public class User extends AbstractModel {
         final User user = (User) o;
 
         return idUser.equals(user.idUser) && uuid.equals(user.uuid) && role.equals(user.role) && login.equals(user.login)
-               && passwordUser.equals(user.passwordUser) && email.equals(user.email) && firstName.equals(user.firstName)
+               && password.equals(user.password) && email.equals(user.email) && firstName.equals(user.firstName)
                && lastName.equals(user.lastName) && birthday.equals(user.birthday) && orderItemList.equals(user.orderItemList)
                && reviewList.equals(user.reviewList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idUser, uuid, role, login, passwordUser, email, firstName, lastName, birthday, orderItemList, reviewList);
+        return Objects.hash(idUser, uuid, role, login, password, email, firstName, lastName, birthday, orderItemList, reviewList);
     }
 
     @Override
@@ -103,12 +103,12 @@ public class User extends AbstractModel {
                ", uuid=" + uuid +
                ", role=" + role +
                ", login='" + login + '\'' +
-               ", passwordUser='" + passwordUser + '\'' +
+               ", password='" + password + '\'' +
                ", email='" + email + '\'' +
                ", firstName='" + firstName + '\'' +
                ", lastName='" + lastName + '\'' +
                ", birthday=" + birthday +
-               ", orderList=" + orderItemList +
+               ", orderItemList=" + orderItemList +
                ", reviewList=" + reviewList +
                '}';
     }
@@ -147,12 +147,12 @@ public class User extends AbstractModel {
         this.login = login;
     }
 
-    public String getPasswordUser() {
-        return passwordUser;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPasswordUser(String password) {
-        this.passwordUser = password;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getEmail() {

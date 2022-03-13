@@ -1,3 +1,5 @@
+const formControlElements = document.getElementsByClassName("form-control");
+
 function setUserForm() {
     document.getElementById("main").innerHTML =
         `<section>
@@ -79,9 +81,6 @@ function setUserInputs(headlineInnerHtml, submitInnerHtml, storageKeyPrefix) {
     document.getElementById("headline").innerHTML = headlineInnerHtml;
     document.getElementById("submit").innerHTML = submitInnerHtml;
 
-    const role = document.getElementById("roleValue");
-    role.value = localStorage.getItem(storageKeyPrefix + role.id);
-
     const login = document.getElementById("login");
     login.value = localStorage.getItem(storageKeyPrefix + login.id);
 
@@ -135,6 +134,8 @@ function createModificationRequestBody(userUuid, passwordValue) {
     body[userFirstNameDtoKey] = document.getElementById("firstName").value;
     body[userLastNameDtoKey] = document.getElementById("secondName").value;
     body[userBirthdayDtoKey] = document.getElementById("birthday").value;
+
+    return body;
 }
 
 function createEditRequestBody(userToEditParsed) {
@@ -145,18 +146,4 @@ function createEditRequestBody(userToEditParsed) {
     }
 
     return createModificationRequestBody(userToEditParsed[userUuidDtoKey], passwordValue);
-}
-
-function setXmlHttpRequest(successStatus, storageKeyPrefix) {
-    if (xmlHttpRequest.readyState === 4) {
-        if (xmlHttpRequest.status === successStatus) {
-            for (const formControlElement of formControlElements) {
-                localStorage.removeItem(storageKeyPrefix + formControlElement.id);
-            }
-
-            alert("success", xmlHttpRequest.responseText);
-        } else if (xmlHttpRequest.status === 409) {
-            alert("danger", xmlHttpRequest.responseText);
-        }
-    }
 }
