@@ -7,8 +7,6 @@ import com.gitlab.yaroslavskyba.repository.RoleRepository;
 import com.gitlab.yaroslavskyba.repository.UserRepository;
 import com.gitlab.yaroslavskyba.service.UserService;
 import com.gitlab.yaroslavskyba.util.RoleName;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
