@@ -48,17 +48,7 @@ public class LoginDto {
         return username;
     }
 
-    @SuppressWarnings("unused")
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public String getPassword() {
         return password;
-    }
-
-    @SuppressWarnings("unused")
-    public void setPassword(String password) {
-        this.password = password;
     }
 }

@@ -29,7 +29,7 @@ public class User extends AbstractModel {
     private Long idUser;
 
     @NotNull
-    @Column(name = "uuid", nullable = false, unique = true)
+    @Column(nullable = false, unique = true)
     private UUID uuid;
 
     @NotNull
@@ -39,18 +39,18 @@ public class User extends AbstractModel {
 
     @NotNull
     @Size(min = 1, max = 255)
-    @Column(name = "login", unique = true, nullable = false)
+    @Column(unique = true, nullable = false)
     private String login;
 
     @NotNull
     @Size(min = 1, max = 255)
-    @Column(name = "password_user", nullable = false)
+    @Column(nullable = false)
     private String password;
 
     @NotNull
     @Size(min = 1, max = 255)
-    @Email(message = "Email should be valid")
-    @Column(name = "email", unique = true, nullable = false)
+    @Email(message = "text@text")
+    @Column(unique = true, nullable = false)
     private String email;
 
     @NotNull
@@ -64,7 +64,7 @@ public class User extends AbstractModel {
     private String lastName;
 
     @NotNull
-    @Column(name = "birthday", nullable = false)
+    @Column(nullable = false)
     private Timestamp birthday;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)

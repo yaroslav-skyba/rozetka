@@ -1,16 +1,14 @@
 package com.gitlab.yaroslavskyba.controller;
 
-import com.gitlab.yaroslavskyba.util.ControllerPath;
-import com.gitlab.yaroslavskyba.util.MediaType;
 import com.gitlab.yaroslavskyba.dto.UserDto;
 import com.gitlab.yaroslavskyba.exception.UserServiceException;
 import com.gitlab.yaroslavskyba.service.UserService;
+import com.gitlab.yaroslavskyba.util.ControllerPath;
+import com.gitlab.yaroslavskyba.util.MediaType;
 import com.gitlab.yaroslavskyba.util.RoleName;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -57,12 +55,6 @@ public class UserController {
     public ResponseEntity<String> updateUser(@PathVariable UUID uuid, @RequestBody UserDto userDto) {
         try {
             userService.updateUserByUuid(uuid, userDto);
-
-            final UserDto user = userService.getUserByLogin(userDto.getLogin());
-            SecurityContextHolder.getContext().setAuthentication(
-                new UsernamePasswordAuthenticationToken(user.getLogin(), user.getPassword(),
-                                                        SecurityContextHolder.getContext().getAuthentication().getAuthorities()));
-
             return ResponseEntity.ok("A user has been successfully updated");
         } catch (UserServiceException userServiceException) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(userServiceException.getMessage());
