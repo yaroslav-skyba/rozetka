@@ -18,9 +18,10 @@ const userFirstNameDtoKey = "firstName";
 const userLastNameDtoKey = "lastName";
 const userBirthdayDtoKey = "birthday";
 
-const authority = "http://localhost:8080/api/v1/";
-const usersApiUrl = authority + "users";
-const rolesApiUrl = authority + "roles";
+const authorityApi = "http://localhost:8080/api/v1/";
+const usersApiUrl = authorityApi + "users";
+const rolesApiUrl = authorityApi + "roles";
+const jwtsApiUrl = authorityApi + "jwts";
 
 const buttonClasses = "btn btn-dark btn-outline-success";
 

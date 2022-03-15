@@ -23,6 +23,13 @@ onload = function () {
 xmlHttpRequest.onreadystatechange = function () {
     if (xmlHttpRequest.readyState === 4) {
         if (xmlHttpRequest.status === 200) {
+            alert("success", xmlHttpRequest.responseText);
+
+            xmlHttpRequest.open("POST", jwtsApiUrl);
+            xmlHttpRequest.send(localStorage.getItem(jwtStorageKey));
+        } else if (xmlHttpRequest.status === 201) {
+            localStorage.setItem(jwtStorageKey, xmlHttpRequest.responseText);
+
             const newCurrentUser = {};
             newCurrentUser[userUuidDtoKey] = currentUser[userUuidDtoKey];
             newCurrentUser[userRoleUuidDtoKey] = currentUser[userRoleUuidDtoKey];
@@ -32,15 +39,12 @@ xmlHttpRequest.onreadystatechange = function () {
             newCurrentUser[userFirstNameDtoKey] = document.getElementById("firstName").value;
             newCurrentUser[userLastNameDtoKey] = document.getElementById("secondName").value;
             newCurrentUser[userBirthdayDtoKey] = document.getElementById("birthday").value;
-
             localStorage.setItem(currentUserStorageKey, JSON.stringify(newCurrentUser));
 
             for (const formControlElement of formControlElements) {
                 localStorage.removeItem(editStorageKeyPrefix + formControlElement.id);
             }
-
-            alert("success", xmlHttpRequest.responseText);
-        } else if (xmlHttpRequest.status === 409) {
+        } else if (xmlHttpRequest.status === 401 || xmlHttpRequest.status === 409) {
             alert("danger", xmlHttpRequest.responseText);
         }
     }

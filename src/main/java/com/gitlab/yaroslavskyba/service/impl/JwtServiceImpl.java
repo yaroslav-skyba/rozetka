@@ -33,23 +33,22 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
-    public void createJwt(UserDto userDto) {
+    @Transactional
+    public String createJwt(UserDto userDto) {
         try {
+            final String jwtValue = generateJwtValue(userDto);
             final Jwt jwt = new Jwt();
             jwt.setUuid(UUID.randomUUID());
             jwt.setUser(userRepository.findUserByUuid(userDto.getUuid()).orElseThrow());
-            jwt.setValue(generateJwtValue(userDto));
+            jwt.setValue(jwtValue);
+            jwt.setExpiryDate(Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(jwtValue).getBody().getExpiration().toInstant());
 
             jwtRepository.saveAndFlush(jwt);
+
+            return jwtValue;
         } catch (Exception exception) {
             throw new JwtServiceException("An error occurred while creating a jwt", exception);
         }
-    }
-
-    @Override
-    public String generateJwtValue(UserDto userDto) {
-        return Jwts.builder().setSubject(userDto.getLogin()).setIssuer(Main.class.getPackageName()).setIssuedAt(new Date())
-            .setExpiration(new Date(System.currentTimeMillis() + 10_000_000_000L)).signWith(SignatureAlgorithm.HS512, JWT_SECRET).compact();
     }
 
     @Override
@@ -86,5 +85,10 @@ public class JwtServiceImpl implements JwtService {
         } catch (SignatureException signatureException) {
             return false;
         }
+    }
+
+    private String generateJwtValue(UserDto userDto) {
+        return Jwts.builder().setSubject(userDto.getLogin()).setIssuer(Main.class.getPackageName()).setIssuedAt(new Date())
+            .setExpiration(new Date(System.currentTimeMillis() + 10_000_000_000L)).signWith(SignatureAlgorithm.HS512, JWT_SECRET).compact();
     }
 }

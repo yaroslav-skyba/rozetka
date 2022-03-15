@@ -41,9 +41,7 @@ public class AuthController {
             final String username = loginDto.getUsername();
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, loginDto.getPassword()));
 
-            final String jwtValue = jwtService.generateJwtValue(userService.getUserByLogin(username));
-
-            return ResponseEntity.ok(jwtValue);
+            return ResponseEntity.ok(jwtService.createJwt(userService.getUserByLogin(username)));
         } catch (RuntimeException runtimeException) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("An incorrect login or password");
         }
