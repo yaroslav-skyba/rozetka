@@ -1,3 +1,8 @@
+function setAdminForm() {
+    setUserForm();
+    setRole();
+}
+
 onload = function () {
     const userToEdit = localStorage.getItem(userToEditStorageKey);
 
@@ -5,8 +10,7 @@ onload = function () {
         location.href = "/profile/admin/admin.html";
     }
 
-    setUserForm();
-    setRole();
+    setAdminForm();
 
     const userToEditParsed = JSON.parse(userToEdit);
 

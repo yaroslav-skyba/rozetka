@@ -1,6 +1,6 @@
 const xmlHttpRequest = new XMLHttpRequest();
 
-let currentUser = null;
+let currentUser;
 
 onload = function () {
     if (localStorage.getItem(currentUserRoleNameStorageKey) !== userRoleName) {
@@ -25,29 +25,11 @@ xmlHttpRequest.onreadystatechange = function () {
         if (xmlHttpRequest.status === 200) {
             alert("success", xmlHttpRequest.responseText);
 
-            const login = document.getElementById("login");
-            const newCurrentUser = {};
-            newCurrentUser[userUuidDtoKey] = currentUser[userUuidDtoKey];
-            newCurrentUser[userRoleUuidDtoKey] = currentUser[userRoleUuidDtoKey];
-            newCurrentUser[userLoginDtoKey] = login.value;
-            newCurrentUser[userPasswordDtoKey] = document.getElementById("password").value;
-            newCurrentUser[userEmailDtoKey] = document.getElementById("email").value;
-            newCurrentUser[userFirstNameDtoKey] = document.getElementById("firstName").value;
-            newCurrentUser[userLastNameDtoKey] = document.getElementById("secondName").value;
-            newCurrentUser[userBirthdayDtoKey] = document.getElementById("birthday").value;
-            localStorage.setItem(currentUserStorageKey, JSON.stringify(newCurrentUser));
+            const requestBody = createRequestBody(currentUser[userUuidDtoKey], document.getElementById("password").value);
+            requestBody[userRoleUuidDtoKey] = currentUser[userRoleUuidDtoKey];
+            localStorage.setItem(currentUserStorageKey, JSON.stringify(requestBody));
 
-            let isLoginChanged = false;
-
-            if (localStorage.getItem(editStorageKeyPrefix + login.id) !== newCurrentUser[userLoginDtoKey]) {
-                isLoginChanged = true;
-            }
-
-            for (const formControlElement of formControlElements) {
-                localStorage.removeItem(editStorageKeyPrefix + formControlElement.id);
-            }
-
-            if (isLoginChanged) {
+            if (localStorage.getItem(editStorageKeyPrefix + login.id) !== login.value) {
                 xmlHttpRequest.open("POST", jwtsApiUrl);
                 xmlHttpRequest.send(localStorage.getItem(jwtStorageKey));
             }
@@ -55,6 +37,10 @@ xmlHttpRequest.onreadystatechange = function () {
             localStorage.setItem(jwtStorageKey, xmlHttpRequest.responseText);
         } else if (xmlHttpRequest.status === 401 || xmlHttpRequest.status === 409) {
             alert("danger", xmlHttpRequest.responseText);
+        }
+
+        for (const formControlElement of formControlElements) {
+            localStorage.removeItem(editStorageKeyPrefix + formControlElement.id);
         }
     }
 }

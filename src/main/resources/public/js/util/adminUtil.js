@@ -1,25 +1,5 @@
 const xmlHttpRequest = new XMLHttpRequest();
 
-function setAdminForm(headlineInnerHtml, submitInnerHtml, storageKeyPrefix) {
-    if (!localStorage.getItem(rolesStorageKey)) {
-        location.href = "/profile/admin/admin.html";
-    }
-
-    setNavigation("../../index.html", "../../img/logo.png", "../../cart.html", "../../about.html",
-        "../../login.html", "../../registration.html", "admin.html", "../user.html");
-
-    for (const formControlElement of formControlElements) {
-        formControlElement.onchange = function () {
-            localStorage.setItem(storageKeyPrefix + formControlElement.id, formControlElement.value);
-        }
-    }
-
-    const role = document.getElementById("roleValue");
-    role.value = localStorage.getItem(storageKeyPrefix + role.id);
-
-    setUserInputs(headlineInnerHtml, submitInnerHtml, storageKeyPrefix);
-}
-
 function setRole() {
     if (localStorage.getItem(currentUserRoleNameStorageKey) !== adminRoleName) {
         location.href = "/";

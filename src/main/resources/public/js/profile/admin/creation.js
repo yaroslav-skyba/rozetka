@@ -1,7 +1,24 @@
 onload = function () {
     setUserForm();
     setRole();
-    setAdminForm("Create an account", "Create", creationStorageKeyPrefix);
+
+    if (!localStorage.getItem(rolesStorageKey)) {
+        location.href = "/profile/admin/admin.html";
+    }
+
+    setNavigation("../../index.html", "../../img/logo.png", "../../cart.html", "../../about.html",
+        "../../login.html", "../../registration.html", "admin.html", "../user.html");
+
+    for (const formControlElement of formControlElements) {
+        formControlElement.onchange = function () {
+            localStorage.setItem(creationStorageKeyPrefix + formControlElement.id, formControlElement.value);
+        }
+    }
+
+    const role = document.getElementById("roleValue");
+    role.value = localStorage.getItem(creationStorageKeyPrefix + role.id);
+
+    setUserInputs("Create an account", "Create", creationStorageKeyPrefix);
 
     document.getElementById("submit").onclick = function () {
         const password = document.getElementById("password");

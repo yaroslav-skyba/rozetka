@@ -144,10 +144,12 @@ public class User extends AbstractModel {
         this.role = role;
     }
 
+    @SuppressWarnings("unused")
     public Jwt getJwt() {
         return jwt;
     }
 
+    @SuppressWarnings("unused")
     public void setJwt(Jwt jwt) {
         this.jwt = jwt;
     }

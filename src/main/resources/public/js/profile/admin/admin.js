@@ -1,8 +1,8 @@
 const xmlHttpRequest = new XMLHttpRequest();
 
-let users = null;
-let userToDeleteUuid = null;
-let userApiUrl = null;
+let users;
+let userToDeleteUuid;
+let userApiUrl;
 
 onload = function () {
     if (localStorage.getItem(currentUserRoleNameStorageKey) !== adminRoleName) {

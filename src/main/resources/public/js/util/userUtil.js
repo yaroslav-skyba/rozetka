@@ -1,5 +1,11 @@
 const formControlElements = document.getElementsByClassName("form-control");
 
+let login;
+let email;
+let firstName;
+let lastName;
+let birthday;
+
 function setUserForm() {
     document.getElementById("main").innerHTML =
         `<section>
@@ -18,9 +24,9 @@ function setUserForm() {
                                     </div>
                                 
                                     <div class="form-outline mb-4">
-                                        <input id="secondName" class="form-control form-control-lg" required/>
-                                        <label class="form-label" for="secondName">A second name</label>
-                                        <div class="invalid-feedback">Please type a second name</div>
+                                        <input id="lastName" class="form-control form-control-lg" required/>
+                                        <label class="form-label" for="lastName">A last name</label>
+                                        <div class="invalid-feedback">Please type a last name</div>
                                     </div>
                                 
                                     <div class="form-outline mb-4">
@@ -67,33 +73,30 @@ function setUserForm() {
                 </div>
             </div>
         </section>`;
+
+    login = document.getElementById("login");
+    email = document.getElementById("email");
+    firstName = document.getElementById("firstName");
+    lastName = document.getElementById("lastName");
+    birthday = document.getElementById("birthday");
 }
 
 function setEditStorageItems(userToEditParsed) {
-    localStorage.setItem(editStorageKeyPrefix + document.getElementById("login").id, userToEditParsed[userLoginDtoKey]);
-    localStorage.setItem(editStorageKeyPrefix + document.getElementById("email").id, userToEditParsed[userEmailDtoKey]);
-    localStorage.setItem(editStorageKeyPrefix + document.getElementById("firstName").id, userToEditParsed[userFirstNameDtoKey]);
-    localStorage.setItem(editStorageKeyPrefix + document.getElementById("secondName").id, userToEditParsed[userLastNameDtoKey]);
-    localStorage.setItem(editStorageKeyPrefix + document.getElementById("birthday").id, userToEditParsed[userBirthdayDtoKey]);
+    localStorage.setItem(editStorageKeyPrefix + login.id, userToEditParsed[userLoginDtoKey]);
+    localStorage.setItem(editStorageKeyPrefix + email.id, userToEditParsed[userEmailDtoKey]);
+    localStorage.setItem(editStorageKeyPrefix + firstName.id, userToEditParsed[userFirstNameDtoKey]);
+    localStorage.setItem(editStorageKeyPrefix + lastName.id, userToEditParsed[userLastNameDtoKey]);
+    localStorage.setItem(editStorageKeyPrefix + birthday.id, userToEditParsed[userBirthdayDtoKey]);
 }
 
 function setUserInputs(headlineInnerHtml, submitInnerHtml, storageKeyPrefix) {
     document.getElementById("headline").innerHTML = headlineInnerHtml;
     document.getElementById("submit").innerHTML = submitInnerHtml;
 
-    const login = document.getElementById("login");
     login.value = localStorage.getItem(storageKeyPrefix + login.id);
-
-    const email = document.getElementById("email");
     email.value = localStorage.getItem(storageKeyPrefix + email.id);
-
-    const firstName = document.getElementById("firstName");
     firstName.value = localStorage.getItem(storageKeyPrefix + firstName.id);
-
-    const secondName = document.getElementById("secondName");
-    secondName.value = localStorage.getItem(storageKeyPrefix + secondName.id);
-
-    const birthday = document.getElementById("birthday");
+    lastName.value = localStorage.getItem(storageKeyPrefix + lastName.id);
     birthday.value = localStorage.getItem(storageKeyPrefix + birthday.id);
 }
 
@@ -102,6 +105,19 @@ function sendModificationRequest(httpMethod, url, body) {
     xmlHttpRequest.setRequestHeader("Content-Type", userMediaType);
     xmlHttpRequest.setRequestHeader("Authorization", localStorage.getItem(jwtStorageKey));
     xmlHttpRequest.send(JSON.stringify(body));
+}
+
+function createRequestBody(userUuid, passwordValue) {
+    const body = {};
+    body[userUuidDtoKey] = userUuid;
+    body[userLoginDtoKey] = login.value;
+    body[userPasswordDtoKey] = passwordValue;
+    body[userEmailDtoKey] = email.value;
+    body[userFirstNameDtoKey] = firstName.value;
+    body[userLastNameDtoKey] = lastName.value;
+    body[userBirthdayDtoKey] = birthday.value;
+
+    return body;
 }
 
 function createModificationRequestBody(userUuid, passwordValue) {
@@ -126,16 +142,7 @@ function createModificationRequestBody(userUuid, passwordValue) {
         return null;
     }
 
-    const body = {};
-    body[userUuidDtoKey] = userUuid;
-    body[userLoginDtoKey] = document.getElementById("login").value;
-    body[userPasswordDtoKey] = passwordValue;
-    body[userEmailDtoKey] = document.getElementById("email").value;
-    body[userFirstNameDtoKey] = document.getElementById("firstName").value;
-    body[userLastNameDtoKey] = document.getElementById("secondName").value;
-    body[userBirthdayDtoKey] = document.getElementById("birthday").value;
-
-    return body;
+    return createRequestBody(userUuid, passwordValue);
 }
 
 function createEditRequestBody(userToEditParsed) {
