@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,19 +16,20 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "o2n_refresh_jwt")
-public class RefreshJwt {
+@Table(name = "o2n_jwt")
+public class Jwt {
     @Id
-    @Column(name = "id_refresh_token")
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long idRefreshJwt;
+    @Column(name = "id_jwt")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long idJwt;
 
     @NotNull
     @Column(nullable = false, unique = true)
     private UUID uuid;
 
-    @OneToOne
-    @JoinColumn(name = "id_user")
+    @NotNull
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_user", nullable = false)
     private User user;
 
     @NotNull
@@ -48,21 +50,21 @@ public class RefreshJwt {
             return false;
         }
 
-        final RefreshJwt that = (RefreshJwt) o;
+        final Jwt that = (Jwt) o;
 
-        return idRefreshJwt.equals(that.idRefreshJwt) && uuid.equals(that.uuid) && Objects.equals(user, that.user)
-               && value.equals(that.value) && expiryDate.equals(that.expiryDate);
+        return idJwt.equals(that.idJwt) && uuid.equals(that.uuid) && user.equals(that.user) && value.equals(that.value)
+               && expiryDate.equals(that.expiryDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idRefreshJwt, uuid, user, value, expiryDate);
+        return Objects.hash(idJwt, uuid, user, value, expiryDate);
     }
 
     @Override
     public String toString() {
         return "RefreshToken{" +
-               "idRefreshToken=" + idRefreshJwt +
+               "idRefreshToken=" + idJwt +
                ", uuid=" + uuid +
                ", user=" + user +
                ", name='" + value + '\'' +
@@ -70,12 +72,14 @@ public class RefreshJwt {
                '}';
     }
 
-    public Long getIdRefreshJwt() {
-        return idRefreshJwt;
+    @SuppressWarnings("unused")
+    public Long getIdJwt() {
+        return idJwt;
     }
 
-    public void setIdRefreshJwt(Long idRefreshToken) {
-        this.idRefreshJwt = idRefreshToken;
+    @SuppressWarnings("unused")
+    public void setIdJwt(Long idRefreshToken) {
+        this.idJwt = idRefreshToken;
     }
 
     public UUID getUuid() {

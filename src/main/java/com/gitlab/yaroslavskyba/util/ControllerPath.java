@@ -6,6 +6,7 @@ public class ControllerPath {
 
     public static final String LOGINS = ROOT + "logins";
     public static final String REGISTRATIONS = ROOT + "registrations";
+    public static final String REFRESH_JWT = ROOT + "refresh-jwt";
     public static final String ORDERS = ROOT + "orders";
     public static final String PRODUCTS = ROOT + "products";
     public static final String PRODUCT = PRODUCTS + UUID;

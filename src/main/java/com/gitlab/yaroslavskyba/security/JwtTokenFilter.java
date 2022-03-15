@@ -1,5 +1,6 @@
 package com.gitlab.yaroslavskyba.security;
 
+import com.gitlab.yaroslavskyba.service.JwtService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,11 +24,11 @@ import java.util.NoSuchElementException;
 
 @Component
 public class JwtTokenFilter extends OncePerRequestFilter {
-    private final JwtTokenUtil jwtTokenUtil;
+    private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
 
-    public JwtTokenFilter(JwtTokenUtil jwtTokenUtil, UserDetailsService userDetailsService) {
-        this.jwtTokenUtil = jwtTokenUtil;
+    public JwtTokenFilter(JwtService jwtService, UserDetailsService userDetailsService) {
+        this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
     }
 
@@ -43,7 +44,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
         final String token = header.split(" ")[1].trim();
 
-        if (!jwtTokenUtil.validate(token)) {
+        if (!jwtService.isJwtValueValid(token)) {
             chain.doFilter(request, response);
             return;
         }
@@ -52,7 +53,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         Collection<? extends GrantedAuthority> authorities;
 
         try {
-            userDetails = userDetailsService.loadUserByUsername(jwtTokenUtil.getUsername(token));
+            userDetails = userDetailsService.loadUserByUsername(jwtService.getUsernameByJwtValue(token));
             authorities = userDetails.getAuthorities();
         } catch (NoSuchElementException noSuchElementException) {
             authorities = List.of();

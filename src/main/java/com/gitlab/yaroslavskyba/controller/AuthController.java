@@ -2,8 +2,9 @@ package com.gitlab.yaroslavskyba.controller;
 
 import com.gitlab.yaroslavskyba.dto.LoginDto;
 import com.gitlab.yaroslavskyba.dto.UserDto;
+import com.gitlab.yaroslavskyba.exception.JwtServiceException;
 import com.gitlab.yaroslavskyba.exception.UserServiceException;
-import com.gitlab.yaroslavskyba.security.JwtTokenUtil;
+import com.gitlab.yaroslavskyba.service.JwtService;
 import com.gitlab.yaroslavskyba.service.RoleService;
 import com.gitlab.yaroslavskyba.service.UserService;
 import com.gitlab.yaroslavskyba.util.ControllerPath;
@@ -21,17 +22,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(produces = org.springframework.http.MediaType.TEXT_PLAIN_VALUE)
 public class AuthController {
-    private final JwtTokenUtil jwtTokenUtil;
-    private final UserService userService;
-    private final RoleService roleService;
     private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
+    private final RoleService roleService;
+    private final UserService userService;
 
-    public AuthController(JwtTokenUtil jwtTokenUtil, UserService userService, RoleService roleService,
-                          AuthenticationManager authenticationManager) {
-        this.jwtTokenUtil = jwtTokenUtil;
-        this.userService = userService;
-        this.roleService = roleService;
+    public AuthController(AuthenticationManager authenticationManager, JwtService jwtService, RoleService roleService,
+                          UserService userService) {
         this.authenticationManager = authenticationManager;
+        this.jwtService = jwtService;
+        this.roleService = roleService;
+        this.userService = userService;
     }
 
     @PostMapping(value = ControllerPath.LOGINS, consumes = MediaType.LOGIN_REQUEST)
@@ -40,7 +41,9 @@ public class AuthController {
             final String username = loginDto.getUsername();
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, loginDto.getPassword()));
 
-            return ResponseEntity.ok(jwtTokenUtil.generateAccessToken(userService.getUserByLogin(username)));
+            final String jwtValue = jwtService.generateJwtValue(userService.getUserByLogin(username));
+
+            return ResponseEntity.ok(jwtValue);
         } catch (RuntimeException runtimeException) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("An incorrect login or password");
         }
@@ -55,6 +58,15 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.CREATED).body("You were successfully registered");
         } catch (UserServiceException userServiceException) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(userServiceException.getMessage());
+        }
+    }
+
+    @PostMapping(value = ControllerPath.REFRESH_JWT, consumes = org.springframework.http.MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<String> refreshJwtValue(@RequestBody String jwtValue) {
+        try {
+            return ResponseEntity.status(HttpStatus.CREATED).body(jwtService.refreshJwtValue(jwtValue));
+        } catch (JwtServiceException jwtServiceException) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(jwtServiceException.getMessage());
         }
     }
 }
