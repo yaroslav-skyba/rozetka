@@ -38,7 +38,7 @@ public class User extends AbstractModel {
     @JoinColumn(name = "id_role", nullable = false)
     private Role role;
 
-    @OneToOne(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.LAZY, optional = false)
+    @OneToOne(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.LAZY)
     private Jwt jwt;
 
     @NotNull
@@ -89,7 +89,7 @@ public class User extends AbstractModel {
 
         final User user = (User) o;
 
-        return idUser.equals(user.idUser) && uuid.equals(user.uuid) && role.equals(user.role) && jwt.equals(user.jwt)
+        return idUser.equals(user.idUser) && uuid.equals(user.uuid) && role.equals(user.role) && Objects.equals(jwt, user.jwt)
                && login.equals(user.login) && password.equals(user.password) && email.equals(user.email) && firstName.equals(user.firstName)
                && lastName.equals(user.lastName) && birthday.equals(user.birthday) && orderItemList.equals(user.orderItemList)
                && reviewList.equals(user.reviewList);

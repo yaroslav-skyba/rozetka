@@ -20,6 +20,7 @@ import java.util.UUID;
 
 @Service
 public class JwtServiceImpl implements JwtService {
+    private static final String TOKEN_TYPE = "Bearer ";
     private static final String JWT_SECRET = "qYrYaF92NupxVj-LnfqTXmdfoi19Zf-KpPIkUw-YzEWDRK32uRKpwHbH139__8XK";
 
     private final UserRepository userRepository;
@@ -40,7 +41,7 @@ public class JwtServiceImpl implements JwtService {
             final Jwt jwt = new Jwt();
             jwt.setUuid(UUID.randomUUID());
             jwt.setUser(userRepository.findUserByUuid(userDto.getUuid()).orElseThrow());
-            jwt.setValue(jwtValue);
+            jwt.setValue(TOKEN_TYPE + jwtValue);
             jwt.setExpiryDate(Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(jwtValue).getBody().getExpiration().toInstant());
 
             jwtRepository.saveAndFlush(jwt);
@@ -62,7 +63,7 @@ public class JwtServiceImpl implements JwtService {
                 throw new JwtServiceException("A jwt has been expired. Please make a new sign-in request");
             }
 
-            final String jwtValue = generateJwtValue(userService.getUserByLogin(jwt.getUser().getLogin()));
+            final String jwtValue = TOKEN_TYPE + generateJwtValue(userService.getUserByLogin(jwt.getUser().getLogin()));
             jwt.setValue(jwtValue);
             jwtRepository.saveAndFlush(jwt);
 

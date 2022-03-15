@@ -43,7 +43,7 @@ public class AuthController {
 
             return ResponseEntity.ok(jwtService.createJwt(userService.getUserByLogin(username)));
         } catch (RuntimeException runtimeException) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("An incorrect login or password");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(runtimeException.getMessage());
         }
     }
 

@@ -27,9 +27,8 @@ public class Jwt {
     @Column(nullable = false, unique = true)
     private UUID uuid;
 
-    @NotNull
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_user", nullable = false)
+    @JoinColumn(name = "id_user")
     private User user;
 
     @NotNull
@@ -52,7 +51,7 @@ public class Jwt {
 
         final Jwt that = (Jwt) o;
 
-        return idJwt.equals(that.idJwt) && uuid.equals(that.uuid) && user.equals(that.user) && value.equals(that.value)
+        return idJwt.equals(that.idJwt) && uuid.equals(that.uuid) && user.equals(that.user) && Objects.equals(user, that.user)
                && expiryDate.equals(that.expiryDate);
     }
 
