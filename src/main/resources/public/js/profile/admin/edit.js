@@ -1,8 +1,3 @@
-function setAdminForm() {
-    setUserForm();
-    setRole();
-}
-
 onload = function () {
     const userToEdit = localStorage.getItem(userToEditStorageKey);
 
@@ -22,7 +17,7 @@ onload = function () {
     }
 
     setEditStorageItems(userToEditParsed);
-    setAdminForm("Edit an account", "Save", editStorageKeyPrefix);
+    setAdminConfig("Edit an account", "Save", editStorageKeyPrefix);
 
     document.getElementById("submit").onclick = function () {
         localStorage.removeItem(userToEditStorageKey);

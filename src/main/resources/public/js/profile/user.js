@@ -1,5 +1,3 @@
-const xmlHttpRequest = new XMLHttpRequest();
-
 let currentUser;
 
 onload = function () {

@@ -1,3 +1,4 @@
+const xmlHttpRequest = new XMLHttpRequest();
 const formControlElements = document.getElementsByClassName("form-control");
 
 let login;

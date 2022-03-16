@@ -29,3 +29,7 @@ const userMediaType = "application/vnd.rozetka.user+json";
 
 const adminRoleName = "admin";
 const userRoleName = "user";
+
+function setContainer() {
+
+}
