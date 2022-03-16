@@ -31,16 +31,14 @@ const adminRoleName = "admin";
 const userRoleName = "user";
 
 function setContainer(content) {
-    document.getElementById("main").innerHTML =
-        `<section>
-            <div class="container">
-                <div class="row min-vh-100 justify-content-center align-items-center">
-                    <div class="col-12 col-md-9 col-lg-7 col-xl-6">
-                        <div class="card bg-dark btn-dark" style="border-radius: 15px">
-                            <div class="card-body p-5">` + content + `</div>
-                        </div>
+    document.getElementById("main").innerHTML +=
+        `<div class="container pt-3">
+            <div class="row justify-content-center">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+                    <div class="card bg-dark btn-dark" style="border-radius: 15px">
+                        <div class="card-body">` + content + `</div>
                     </div>
                 </div>
             </div>
-        </section>`;
+        </div>`;
 }

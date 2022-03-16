@@ -11,6 +11,37 @@ onload = function () {
 
     setNavigation("../../index.html", "../../img/logo.png", "../../cart.html", "../../about.html",
         "../../login.html", "../../registration.html", "admin.html", "../user.html");
+    setContainer(`
+        <div class="d-flex align-items-center">
+            <div class="text-white me-auto">     
+                Welcome, <span id="userName"></span>
+            </div>
+            
+            <button class="btn btn-dark btn-outline-success" type="button" onclick="location.href = 'creation.html'">Create a user</button>
+        </div>
+    `);
+
+    setContainer(`
+        <table class="w-100 table-dark">
+            <caption>List of users</caption>
+    
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Login</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">First Name</th>
+                    <th scope="col">Last Name</th>
+                    <th scope="col">Birthday</th>
+                    <th scope="col">Role</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+    
+            <tbody id="userTableContent"></tbody>
+        </table>
+    `);
+
     sendHttpRequest("GET", usersApiUrl);
 }
 
@@ -68,7 +99,7 @@ xmlHttpRequest.onreadystatechange = function () {
 
                     tr.append(actionsTd);
 
-                    document.getElementById("tableContent").append(tr);
+                    document.getElementById("userTableContent").append(tr);
                 }
             } else if (xmlHttpRequest.responseURL === userApiUrl) {
                 const userToEdit = localStorage.getItem(userToEditStorageKey);
