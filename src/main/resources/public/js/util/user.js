@@ -56,7 +56,7 @@ function setUserForm() {
                 <div id="role"></div>
                 
                 <div class="d-flex justify-content-center">
-                    <button class="btn btn-success btn-lg custom-gradient-2 text-body" id="submit"></button>
+                    <button class="` + buttonClasses + `" id="submit"></button>
                 </div>
             </div>
             

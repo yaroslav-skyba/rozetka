@@ -20,7 +20,7 @@ function setAdminForm() {
 
 function setAdminConfig(headlineInnerHtml, submitInnerHtml, storageKeyPrefix) {
     if (!localStorage.getItem(rolesStorageKey)) {
-        location.href = "/profile/admin/admin.html";
+        location.href = "/profile/admin/creation/user.html";
     }
 
     setNavigation("../../index.html", "../../img/logo.png", "../../cart.html", "../../about.html",
@@ -46,18 +46,4 @@ function appendRoleToBody(body) {
     }
 
     return body;
-}
-
-function setXmlHttpRequest(successStatus, storageKeyPrefix) {
-    if (xmlHttpRequest.readyState === 4) {
-        if (xmlHttpRequest.status === successStatus) {
-            for (const formControlElement of formControlElements) {
-                localStorage.removeItem(storageKeyPrefix + formControlElement.id);
-            }
-
-            alert("success", xmlHttpRequest.responseText);
-        } else if (xmlHttpRequest.status === 409) {
-            alert("danger", xmlHttpRequest.responseText);
-        }
-    }
 }

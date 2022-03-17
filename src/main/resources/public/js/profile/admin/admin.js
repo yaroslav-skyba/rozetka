@@ -11,35 +11,60 @@ onload = function () {
 
     setNavigation("../../index.html", "../../img/logo.png", "../../cart.html", "../../about.html",
         "../../login.html", "../../registration.html", "admin.html", "../user.html");
-    setContainer(`
-        <div class="d-flex align-items-center">
-            <div class="text-white me-auto">     
-                Welcome, <span id="userName"></span>
-            </div>
-            
-            <button class="btn btn-dark btn-outline-success" type="button" onclick="location.href = 'creation.html'">Create a user</button>
-        </div>
-    `);
+    setMainAttributes();
 
+    setContainer(`<div class="text-white">Welcome, <span id="userName"></span></div>`);
     setContainer(`
-        <table class="w-100 table-dark">
-            <caption>List of users</caption>
-    
+        <table class="` + tableClasses + `">
             <thead>
                 <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Login</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">First Name</th>
-                    <th scope="col">Last Name</th>
-                    <th scope="col">Birthday</th>
-                    <th scope="col">Role</th>
-                    <th scope="col">Actions</th>
+                    <th>#</th>
+                    <th>Login</th>
+                    <th>Email</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Birthday</th>
+                    <th>Role</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
     
             <tbody id="userTableContent"></tbody>
         </table>
+        
+        <button class="` + buttonClasses + `" type="button" onclick="location.href = '/profile/admin/creation/user.html'">
+            Create user
+        </button>
+    `);
+    setContainer(`
+        <table class="` + tableClasses + `">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                </tr>
+            </thead>
+    
+            <tbody id="roleTableContent"></tbody>
+        </table>
+        
+        <button class="` + buttonClasses + `" type="button" onclick="location.href = ''">Create role</button>
+    `)
+    setContainer(`
+        <table class="` + tableClasses + `">    
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+    
+            <tbody id="productTableContent"></tbody>
+        </table>
+        
+        <button class="` + buttonClasses + `" type="button" onclick="location.href = ''">Create product</button>
     `);
 
     sendHttpRequest("GET", usersApiUrl);
@@ -85,7 +110,7 @@ xmlHttpRequest.onreadystatechange = function () {
 
                     createButton("Edit", function () {
                         localStorage.setItem(userToEditStorageKey, JSON.stringify(users[i]));
-                        location.href = "/profile/admin/edit.html";
+                        location.href = "/profile/admin/user.html";
                     }, actionsTd);
                     actionsTd.append(" ");
                     createButton("Delete", function () {
@@ -98,7 +123,6 @@ xmlHttpRequest.onreadystatechange = function () {
                     }, actionsTd);
 
                     tr.append(actionsTd);
-
                     document.getElementById("userTableContent").append(tr);
                 }
             } else if (xmlHttpRequest.responseURL === userApiUrl) {
@@ -122,17 +146,17 @@ function sendHttpRequest(method, url) {
     xmlHttpRequest.send();
 }
 
-function createTd(fieldValue, tr) {
+function createTd(textContent, tr) {
     const td = document.createElement("td");
-    td.textContent = fieldValue;
+    td.textContent = textContent;
     tr.append(td);
 }
 
 function createButton(textContent, onclick, actionsTd) {
     const button = document.createElement("button");
     button.textContent = textContent;
-    button.className = buttonClasses;
     button.onclick = onclick;
+    button.className = buttonClasses;
 
     actionsTd.append(button);
 }
