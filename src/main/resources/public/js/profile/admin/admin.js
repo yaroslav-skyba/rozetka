@@ -1,5 +1,3 @@
-const xmlHttpRequest = new XMLHttpRequest();
-
 let users;
 let userToDeleteUuid;
 let userApiUrl;
@@ -15,7 +13,7 @@ onload = function () {
 
     setContainer(`<div class="text-white">Welcome, <span id="userName"></span></div>`);
     setContainer(`
-        <table class="` + tableClasses + `">
+        <table class="w-100 table-dark">
             <thead>
                 <tr>
                     <th>#</th>
@@ -32,12 +30,12 @@ onload = function () {
             <tbody id="userTableContent"></tbody>
         </table>
         
-        <button class="` + buttonClasses + `" type="button" onclick="location.href = '/profile/admin/creation/user.html'">
+        <button class="btn btn-dark btn-outline-success" type="button" onclick="location.href = '/profile/admin/creation/user.html'">
             Create user
         </button>
     `);
     setContainer(`
-        <table class="` + tableClasses + `">
+        <table class="w-100 table-dark">
             <thead>
                 <tr>
                     <th>#</th>
@@ -48,10 +46,10 @@ onload = function () {
             <tbody id="roleTableContent"></tbody>
         </table>
         
-        <button class="` + buttonClasses + `" type="button" onclick="location.href = ''">Create role</button>
+        <button class="btn btn-dark btn-outline-success" type="button" onclick="location.href = ''">Create role</button>
     `)
     setContainer(`
-        <table class="` + tableClasses + `">    
+        <table class="w-100 table-dark">    
             <thead>
                 <tr>
                     <th>#</th>
@@ -64,7 +62,7 @@ onload = function () {
             <tbody id="productTableContent"></tbody>
         </table>
         
-        <button class="` + buttonClasses + `" type="button" onclick="location.href = ''">Create product</button>
+        <button class="btn btn-dark btn-outline-success" type="button" onclick="location.href = ''">Create product</button>
     `);
 
     sendHttpRequest("GET", usersApiUrl);
@@ -85,7 +83,7 @@ xmlHttpRequest.onreadystatechange = function () {
                 const roleNameMap = new Map();
 
                 for (let i = 0; i < roles.length; i++) {
-                    roleNameMap.set(roles[i][roleUuidDtoKey], roles[i][roleNameDtoKey]);
+                    roleNameMap.set(roles[i]["uuid"], roles[i]["name"]);
                 }
 
                 localStorage.setItem(rolesStorageKey, JSON.stringify([...roleNameMap].reduce((acc, val) => {
@@ -156,7 +154,7 @@ function createButton(textContent, onclick, actionsTd) {
     const button = document.createElement("button");
     button.textContent = textContent;
     button.onclick = onclick;
-    button.className = buttonClasses;
+    button.className = "btn btn-dark btn-outline-success";
 
     actionsTd.append(button);
 }

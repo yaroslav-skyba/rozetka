@@ -28,7 +28,7 @@ xmlHttpRequest.onreadystatechange = function () {
             localStorage.setItem(currentUserStorageKey, JSON.stringify(requestBody));
 
             if (localStorage.getItem(editStorageKeyPrefix + login.id) !== login.value) {
-                xmlHttpRequest.open("POST", jwtsApiUrl);
+                xmlHttpRequest.open("POST", authorityApi + "jwts");
                 xmlHttpRequest.send(localStorage.getItem(jwtStorageKey));
             }
         } else if (xmlHttpRequest.status === 201) {

@@ -1,14 +1,10 @@
 onload = function () {
-    const userToEdit = localStorage.getItem(userToEditStorageKey);
+    redirectUnauthorized();
+    setAdminModificationForm();
 
-    if (!userToEdit) {
-        location.href = "/profile/admin/admin.html";
-    }
+    const userToEditParsed = JSON.parse(localStorage.getItem(userToEditStorageKey));
 
-    setAdminForm();
-
-    const userToEditParsed = JSON.parse(userToEdit);
-
+    setEditStorageItems(userToEditParsed);
     for (const [key, value] of Object.entries(JSON.parse(localStorage.getItem(rolesStorageKey)))) {
         if (key === userToEditParsed[userRoleUuidDtoKey]) {
             localStorage.setItem(editStorageKeyPrefix + document.getElementById("roleValue").id, value.toString());
@@ -16,13 +12,10 @@ onload = function () {
         }
     }
 
-    setEditStorageItems(userToEditParsed);
-    setAdminConfig("Edit an account", "Save", editStorageKeyPrefix);
-
     document.getElementById("submit").onclick = function () {
         localStorage.removeItem(userToEditStorageKey);
         sendModificationRequest("PUT", usersApiUrl + "/" + userToEditParsed[userUuidDtoKey],
-            appendRoleToBody(createEditRequestBody(userToEditParsed)));
+                                appendRoleToBody(createEditRequestBody(userToEditParsed)));
     }
 }
 

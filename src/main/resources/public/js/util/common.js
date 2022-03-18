@@ -1,43 +1,21 @@
+const xmlHttpRequest = new XMLHttpRequest();
+
 const jwtStorageKey = "jwt";
 const currentUserRoleNameStorageKey = "roleName";
 const currentUserStorageKey = "currentUser";
-const userToEditStorageKey = "userToEdit";
-const rolesStorageKey = "roles";
-
-const creationStorageKeyPrefix = "creation_";
-const editStorageKeyPrefix = "edit_";
-
-const roleUuidDtoKey = "uuid";
-const roleNameDtoKey = "name";
-const userUuidDtoKey = "uuid";
-const userRoleUuidDtoKey = "uuidRole";
-const userLoginDtoKey = "login";
-const userPasswordDtoKey = "password";
-const userEmailDtoKey = "email";
-const userFirstNameDtoKey = "firstName";
-const userLastNameDtoKey = "lastName";
-const userBirthdayDtoKey = "birthday";
 
 const authorityApi = "http://localhost:8080/api/v1/";
-const usersApiUrl = authorityApi + "users";
-const rolesApiUrl = authorityApi + "roles";
-const jwtsApiUrl = authorityApi + "jwts";
-
-const userMediaType = "application/vnd.rozetka.user+json";
 
 const adminRoleName = "admin";
 const userRoleName = "user";
 
-const tableClasses = "w-100 table-dark";
-const buttonClasses = "btn btn-dark btn-outline-success";
-
-function setNavigation(brandHref, brandImgSrc, cartHref, aboutHref, loginHref, registrationHref, adminHref, userHref) {
+function setNavigation(rootDestination, userDestination, adminDestination) {
     new Promise(resolve => setTimeout(resolve, 100)).then(() => {
         document.getElementById("header").innerHTML =
             `<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
                 <div class="container-fluid">
-                    <a class="navbar-brand" href="` + brandHref +`">
-                        <img src="` + brandImgSrc +`" alt="logo" width="50" height="50">
+                    <a class="navbar-brand" href="` + rootDestination + `index.html">
+                        <img src="` + rootDestination + `img/logo.png" alt="logo" width="50" height="50">
                     </a>
         
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
@@ -56,11 +34,11 @@ function setNavigation(brandHref, brandImgSrc, cartHref, aboutHref, loginHref, r
                             </li>
                             
                             <li class="nav-item">
-                                <a class="nav-link active" href="` + cartHref +`">Cart</a>
+                                <a class="nav-link active" href="` + rootDestination +`cart.html">Cart</a>
                             </li>
                             
                             <li class="nav-item">
-                                <a class="nav-link active" href="` + aboutHref +`">About</a>
+                                <a class="nav-link active" href="` + rootDestination + `about.html">About</a>
                             </li>
                         </ul>
         
@@ -73,7 +51,7 @@ function setNavigation(brandHref, brandImgSrc, cartHref, aboutHref, loginHref, r
             </nav>`;
 
         document.getElementById("footer").innerHTML =
-            `<footer class="bg-dark text-center text-white">
+            `<footer class="bg-dark text-center text-white mt-3">
                 <div class="container p-4 pb-0">
                     <section class="mb-4">
                         <a class="btn btn-outline-light btn-floating m-1" href="https://www.linkedin.com/in/yaroslavskyba" role="button">
@@ -98,28 +76,29 @@ function setNavigation(brandHref, brandImgSrc, cartHref, aboutHref, loginHref, r
 
         const navItem1 = document.getElementById("navItem1");
         const navItem2 = document.getElementById("navItem2");
+        const loginPath = rootDestination + "login.html";
 
         if (localStorage.getItem(jwtStorageKey) == null) {
             navItem1.innerHTML = "Login";
-            navItem1.href = loginHref;
+            navItem1.href = loginPath;
 
             navItem2.innerHTML = "Registration";
-            navItem2.href = registrationHref;
+            navItem2.href = rootDestination + "registration.html";
         } else {
             navItem1.innerHTML = "Profile";
 
             const roleName = localStorage.getItem(currentUserRoleNameStorageKey);
 
-            if (roleName === "admin") {
-                navItem1.href = adminHref;
-            } else if (roleName === "user") {
-                navItem1.href = userHref;
+            if (roleName === adminRoleName) {
+                navItem1.href = adminDestination + "admin.html";
+            } else if (roleName === userRoleName) {
+                navItem1.href = userDestination + "user.html";
             } else {
                 alert("Some errors occurred");
             }
 
             navItem2.innerHTML = "Logout";
-            navItem2.href = loginHref;
+            navItem2.href = loginPath;
             navItem2.onclick = function () {
                 localStorage.removeItem(jwtStorageKey);
                 localStorage.removeItem(currentUserRoleNameStorageKey);

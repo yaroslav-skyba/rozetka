@@ -1,41 +1,24 @@
-function setAdminForm() {
-    setUserForm();
+let role;
 
-    if (localStorage.getItem(currentUserRoleNameStorageKey) !== adminRoleName) {
-        location.href = "/";
-    }
+function setAdminModificationForm(headlineInnerHtml, submitInnerHtml, storageKeyPrefix) {
+    redirectUnauthorized();
+    setNavigation("../../../", "../../", "../");
+    setUserForm();
 
     document.getElementById("role").innerHTML =
         `<div class="form-outline mb-4">
             <select id="roleValue" class="form-control form-control-lg" required>
-                <option value="">-Select a role-</option>
-                <option value="user">User</option>
-                <option value="admin">Admin</option>
+                <option value="` + userRoleName + `">User</option>
+                <option value="` + adminRoleName + `">Admin</option>
             </select>
     
-            <label class="form-label" for="roleValue">A role</label>
+            <label for="roleValue">A role</label>
             <div class="invalid-feedback">Please select a role</div>
         </div>`;
-}
 
-function setAdminConfig(headlineInnerHtml, submitInnerHtml, storageKeyPrefix) {
-    if (!localStorage.getItem(rolesStorageKey)) {
-        location.href = "/profile/admin/creation/user.html";
-    }
-
-    setNavigation("../../index.html", "../../img/logo.png", "../../cart.html", "../../about.html",
-        "../../login.html", "../../registration.html", "admin.html", "../user.html");
-
-    for (const formControlElement of formControlElements) {
-        formControlElement.onchange = function () {
-            localStorage.setItem(storageKeyPrefix + formControlElement.id, formControlElement.value);
-        }
-    }
-
-    const role = document.getElementById("roleValue");
-    role.value = localStorage.getItem(storageKeyPrefix + role.id);
-
+    storageKeyPrefix = "user_" + storageKeyPrefix;
     setUserInputs(headlineInnerHtml, submitInnerHtml, storageKeyPrefix);
+    role.value = localStorage.getItem(storageKeyPrefix + role.id);
 }
 
 function appendRoleToBody(body) {

@@ -1,5 +1,15 @@
-const xmlHttpRequest = new XMLHttpRequest();
-const formControlElements = document.getElementsByClassName("form-control");
+//noinspection DuplicatedCode
+
+const userUuidDtoKey = "uuid";
+const userRoleUuidDtoKey = "uuidRole";
+const userLoginDtoKey = "login";
+const userPasswordDtoKey = "password";
+const userEmailDtoKey = "email";
+const userFirstNameDtoKey = "firstName";
+const userLastNameDtoKey = "lastName";
+const userBirthdayDtoKey = "birthday";
+
+const usersApiUrl = authorityApi + "users";
 
 let login;
 let email;
@@ -10,57 +20,58 @@ let birthday;
 function setUserForm() {
     setContainer(`
         <h2 class="text-uppercase text-center mb-5" id="headline"></h2>
-            <div id="form">
-                <div class="form-outline mb-4">
-                    <input id="firstName" class="form-control form-control-lg" required/>
-                    <label class="form-label" for="firstName">A first name</label>
-                    <div class="invalid-feedback">Please type a first name</div>
-                </div>
-            
-                <div class="form-outline mb-4">
-                    <input id="lastName" class="form-control form-control-lg" required/>
-                    <label class="form-label" for="lastName">A last name</label>
-                    <div class="invalid-feedback">Please type a last name</div>
-                </div>
-            
-                <div class="form-outline mb-4">
-                    <input id="login" class="form-control form-control-lg" required/>
-                    <label class="form-label" for="login">A login</label>
-                    <div class="invalid-feedback">Please type a login</div>
-                </div>
-            
-                <div class="form-outline mb-4">
-                    <input type="email" id="email" class="form-control form-control-lg" required/>
-                    <label class="form-label" for="email">An email</label>
-                    <div class="invalid-feedback">Please type an email ([text]@[text])</div>
-                </div>
-            
-                <div class="form-outline mb-4">
-                    <input type="date" id="birthday" class="form-control form-control-lg" required/>
-                    <label class="form-label" for="birthday">A birthday</label>
-                    <div class="invalid-feedback">Please select a birthday</div>
-                </div>
-            
-                <div class="form-outline mb-4">
-                    <input type="password" id="password" class="form-control form-control-lg"/>
-                    <label class="form-label" for="password">A password</label>
-                    <div class="invalid-feedback">Please type a password</div>
-                </div>
-                
-                <div class="form-outline mb-4">
-                    <input type="password" id="passwordConformation" class="form-control form-control-lg"/>
-                    <label class="form-label" for="passwordConformation">A password conformation</label>
-                    <div class="invalid-feedback">Please type a password conformation</div>
-                </div>
-    
-                <div id="role"></div>
-                
-                <div class="d-flex justify-content-center">
-                    <button class="` + buttonClasses + `" id="submit"></button>
-                </div>
+        
+        <div id="form">
+            <div class="form-outline mb-4">
+                <input id="firstName" class="form-control form-control-lg" required/>
+                <label for="firstName">A first name</label>
+                <div class="invalid-feedback">Please type a first name</div>
+            </div>
+        
+            <div class="form-outline mb-4">
+                <input id="lastName" class="form-control form-control-lg" required/>
+                <label for="lastName">A last name</label>
+                <div class="invalid-feedback">Please type a last name</div>
+            </div>
+        
+            <div class="form-outline mb-4">
+                <input id="login" class="form-control form-control-lg" required/>
+                <label for="login">A login</label>
+                <div class="invalid-feedback">Please type a login</div>
+            </div>
+        
+            <div class="form-outline mb-4">
+                <input type="email" id="email" class="form-control form-control-lg" required/>
+                <label for="email">An email</label>
+                <div class="invalid-feedback">Please type an email ([text]@[text])</div>
+            </div>
+        
+            <div class="form-outline mb-4">
+                <input type="date" id="birthday" class="form-control form-control-lg" required/>
+                <label for="birthday">A birthday</label>
+                <div class="invalid-feedback">Please select a birthday</div>
+            </div>
+        
+            <div class="form-outline mb-4">
+                <input type="password" id="password" class="form-control form-control-lg"/>
+                <label for="password">A password</label>
+                <div class="invalid-feedback">Please type a password</div>
             </div>
             
-            <div id="alert" class="mt-3"></div>
+            <div class="form-outline mb-4">
+                <input type="password" id="passwordConformation" class="form-control form-control-lg"/>
+                <label for="passwordConformation">A password conformation</label>
+                <div class="invalid-feedback">Please type a password conformation</div>
+            </div>
+
+            <div id="role"></div>
+            
+            <div class="d-flex justify-content-center">
+                <button class="btn btn-dark btn-outline-success" id="submit"></button>
+            </div>
+        </div>
+        
+        <div id="alert" class="mt-3"></div>
     `);
 
     login = document.getElementById("login");
@@ -79,8 +90,7 @@ function setEditStorageItems(userToEditParsed) {
 }
 
 function setUserInputs(headlineInnerHtml, submitInnerHtml, storageKeyPrefix) {
-    document.getElementById("headline").innerHTML = headlineInnerHtml;
-    document.getElementById("submit").innerHTML = submitInnerHtml;
+    configAdminModificationPage(headlineInnerHtml, submitInnerHtml, storageKeyPrefix);
 
     login.value = localStorage.getItem(storageKeyPrefix + login.id);
     email.value = localStorage.getItem(storageKeyPrefix + email.id);
@@ -91,7 +101,7 @@ function setUserInputs(headlineInnerHtml, submitInnerHtml, storageKeyPrefix) {
 
 function sendModificationRequest(httpMethod, url, body) {
     xmlHttpRequest.open(httpMethod, url);
-    xmlHttpRequest.setRequestHeader("Content-Type", userMediaType);
+    xmlHttpRequest.setRequestHeader("Content-Type", "application/vnd.rozetka.user+json");
     xmlHttpRequest.setRequestHeader("Authorization", localStorage.getItem(jwtStorageKey));
     xmlHttpRequest.send(JSON.stringify(body));
 }

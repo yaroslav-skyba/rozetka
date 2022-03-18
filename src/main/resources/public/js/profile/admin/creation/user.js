@@ -1,6 +1,6 @@
 onload = function () {
-    setAdminForm();
-    setAdminConfig("Create an account", "Create", creationStorageKeyPrefix);
+    redirectUnauthorized();
+    setAdminModificationForm();
 
     document.getElementById("submit").onclick = function () {
         const password = document.getElementById("password");
