@@ -5,6 +5,7 @@ const currentUserRoleNameStorageKey = "roleName";
 const currentUserStorageKey = "currentUser";
 
 const authorityApi = "http://localhost:8080/api/v1/";
+const rolesApiUrl = authorityApi + "roles";
 
 const contentTypeRoot = "application/vnd.rozetka.";
 const contentTypeSuffix = "+json";
@@ -112,15 +113,13 @@ function setNavigation(rootDestination, userDestination, adminDestination) {
 }
 
 function setMainAttributes() {
-    const main = document.getElementById("main");
-    main.className = "min-vh-100";
-    main.style.backgroundColor = "#201c24";
+    document.getElementById("main").style.backgroundColor = "#201c24";
 }
 
 function setContainer(content) {
     document.getElementById("main").innerHTML +=
-        `<div class="container py-xxl-5">
-            <div class="row">
+        `<div class="container">
+            <div class="row min-vh-100 align-items-center">
                 <div class="col">
                     <div class="card bg-dark text-white" style="border-radius: 15px">
                         <div class="card-body">` + content + `</div>

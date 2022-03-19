@@ -6,8 +6,6 @@ const rolesStorageKey = "roles";
 const creationStorageKeyPrefix = "creation_";
 const editStorageKeyPrefix = "edit_";
 
-const rolesApiUrl = authorityApi + "roles";
-
 function redirectUnauthorizedModification() {
     if (localStorage.getItem(currentUserRoleNameStorageKey) !== adminRoleName) {
         location.href = "/";
