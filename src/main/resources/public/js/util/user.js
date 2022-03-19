@@ -114,23 +114,13 @@ function createUserRequestBody(userUuid, passwordValue) {
 
 function createUserModificationRequestBody(userUuid, passwordValue) {
     for (const formOutlineElement of document.getElementsByClassName("form-outline")) {
-        const formControlElement = formOutlineElement.getElementsByClassName("form-control")[0];
-
-        if (!formControlElement.checkValidity()) {
-            alert("danger", formOutlineElement.getElementsByClassName("invalid-feedback")[0].innerHTML);
-            return null;
-        }
-
-        const maxElementLength = 255;
-
-        if (formControlElement.value.length > maxElementLength) {
-            alert("danger", "A field length should be equal or less than " + maxElementLength + " symbols");
+        if (!areInputsValid(formOutlineElement.getElementsByClassName("form-control")[0], formOutlineElement)) {
             return null;
         }
     }
 
     if (document.getElementById("password").value !== document.getElementById("passwordConformation").value) {
-        alert("danger", "Passwords do not match");
+        alert("danger", "Passwords should match");
         return null;
     }
 

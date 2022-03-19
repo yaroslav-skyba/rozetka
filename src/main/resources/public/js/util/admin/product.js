@@ -1,5 +1,9 @@
 //noinspection DuplicatedCode
 
+const productStorageKeyPrefix = "product_";
+const productsApiUrl = authorityApi + "products";
+const productContentType = contentTypeRoot + "product" + contentTypeSuffix;
+
 let name;
 let quantity;
 let price;
@@ -33,8 +37,9 @@ function setProductModificationForm(headlineInnerHtml, submitInnerHtml, storageK
             </div>
             
             <div class="form-outline mb-4">
-                <input id="discount" class="form-control form-control-lg"/>
+                <input id="discount" class="form-control form-control-lg" required/>
                 <label for="discount">A discount</label>
+                <div class="invalid-feedback">Please type a discount</div>
             </div>
             
             <div class="form-outline mb-4">
@@ -50,7 +55,13 @@ function setProductModificationForm(headlineInnerHtml, submitInnerHtml, storageK
         <div id="alert" class="mt-3"></div>
     `);
 
-    storageKeyPrefix = "product_" + storageKeyPrefix;
+    name = document.getElementById("name");
+    quantity = document.getElementById("quantity");
+    price = document.getElementById("price");
+    discount = document.getElementById("discount");
+    description = document.getElementById("description");
+
+    storageKeyPrefix = productStorageKeyPrefix + storageKeyPrefix;
     configModificationPage(headlineInnerHtml, submitInnerHtml, storageKeyPrefix);
 
     name.value = localStorage.getItem(storageKeyPrefix + name.id);
@@ -60,32 +71,41 @@ function setProductModificationForm(headlineInnerHtml, submitInnerHtml, storageK
     description.value = localStorage.getItem(storageKeyPrefix + description.id);
 }
 
-function createProductModificationRequestBody(userUuid, passwordValue) {
+function createProductModificationRequestBody(uuid) {
     for (const formOutlineElement of document.getElementsByClassName("form-outline")) {
         const formControlElement = formOutlineElement.getElementsByClassName("form-control")[0];
 
-        if (!formControlElement.checkValidity()) {
-            alert("danger", formOutlineElement.getElementsByClassName("invalid-feedback")[0].innerHTML);
+        if (!areInputsValid(formControlElement, formOutlineElement)) {
             return null;
         }
 
-        const maxElementLength = 255;
-
-        if (formControlElement.value.length > maxElementLength) {
-            alert("danger", "A field length should be equal or less than " + maxElementLength + " symbols");
-            return null;
-        }
+        const minFieldValue = 0;
 
         if (Number(formControlElement.value) < 0) {
-            alert("danger", "A field value cannot be negative");
+            alert("danger", "A field value should be " + minFieldValue + " or positive");
             return null;
         }
     }
 
     if (!Number.isInteger(Number(quantity.value))) {
-        alert("danger", "The quantity should be an integer");
+        alert("danger", "A quantity value should be an integer");
         return null;
     }
 
-    return createUserRequestBody(userUuid, passwordValue);
+    const maxDiscountValue = 100;
+
+    if (Number(discount.value) > maxDiscountValue) {
+        alert("danger", "A discount value should be " + maxDiscountValue + " or less");
+        return null;
+    }
+
+    const body = {};
+    body["uuid"] = uuid;
+    body["name"] = name.value;
+    body["quantity"] = quantity.value;
+    body["price"] = price.value;
+    body["discount"] = discount.value;
+    body["description"] = description.value;
+
+    return body;
 }

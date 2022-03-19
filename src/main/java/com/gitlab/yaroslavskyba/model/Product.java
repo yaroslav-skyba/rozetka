@@ -1,7 +1,5 @@
 package com.gitlab.yaroslavskyba.model;
 
-import org.hibernate.validator.constraints.Range;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,7 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.AssertTrue;
-import javax.validation.constraints.Digits;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
@@ -38,7 +36,7 @@ public class Product extends AbstractModel {
     private String name;
 
     @NotNull
-    @Range
+    @Min(0L)
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
 

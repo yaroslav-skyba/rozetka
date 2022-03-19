@@ -6,7 +6,9 @@ const currentUserStorageKey = "currentUser";
 
 const authorityApi = "http://localhost:8080/api/v1/";
 
-const userContentType = "application/vnd.rozetka.user+json";
+const contentTypeRoot = "application/vnd.rozetka.";
+const contentTypeSuffix = "+json";
+const userContentType = contentTypeRoot + "user" + contentTypeSuffix;
 
 const adminRoleName = "admin";
 const userRoleName = "user";
@@ -117,8 +119,8 @@ function setMainAttributes() {
 
 function setContainer(content) {
     document.getElementById("main").innerHTML +=
-        `<div class="container py-3">
-            <div class="row justify-content-center">
+        `<div class="container py-xxl-5">
+            <div class="row">
                 <div class="col">
                     <div class="card bg-dark text-white" style="border-radius: 15px">
                         <div class="card-body">` + content + `</div>
@@ -134,4 +136,20 @@ function alert(type, message) {
             ` + message +
             `<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" onclick="location.reload()"></button>
         </div>`;
+}
+
+function areInputsValid(formControlElement, formOutlineElement) {
+    if (!formControlElement.checkValidity()) {
+        alert("danger", formOutlineElement.getElementsByClassName("invalid-feedback")[0].innerHTML);
+        return false;
+    }
+
+    const maxElementLength = 255;
+
+    if (formControlElement.value.length > maxElementLength) {
+        alert("danger", "A field length should be equal or less than " + maxElementLength + " symbols");
+        return false;
+    }
+
+    return true;
 }

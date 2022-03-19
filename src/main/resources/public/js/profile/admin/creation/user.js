@@ -10,11 +10,9 @@ onload = function () {
 
         const body = createUserModificationRequestBody(null, password.value);
 
-        if (!body) {
-            return;
+        if (body) {
+            sendModificationRequest("POST", usersApiUrl, appendRoleToBody(body), userContentType);
         }
-
-        sendModificationRequest("POST", usersApiUrl, appendRoleToBody(body), userContentType);
     }
 }
 
