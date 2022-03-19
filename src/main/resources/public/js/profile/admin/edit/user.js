@@ -1,10 +1,10 @@
 onload = function () {
-    redirectUnauthorized();
-    setAdminModificationForm();
+    redirectUnauthorizedModification();
+    setUserModificationForm();
 
     const userToEditParsed = JSON.parse(localStorage.getItem(userToEditStorageKey));
 
-    setEditStorageItems(userToEditParsed);
+    setUserEditStorageItems(userToEditParsed);
     for (const [key, value] of Object.entries(JSON.parse(localStorage.getItem(rolesStorageKey)))) {
         if (key === userToEditParsed[userRoleUuidDtoKey]) {
             localStorage.setItem(editStorageKeyPrefix + document.getElementById("roleValue").id, value.toString());
@@ -15,10 +15,10 @@ onload = function () {
     document.getElementById("submit").onclick = function () {
         localStorage.removeItem(userToEditStorageKey);
         sendModificationRequest("PUT", usersApiUrl + "/" + userToEditParsed[userUuidDtoKey],
-                                appendRoleToBody(createEditRequestBody(userToEditParsed)));
+                                appendRoleToBody(createUserEditRequestBody(userToEditParsed)), userContentType);
     }
 }
 
 xmlHttpRequest.onreadystatechange = function () {
-    setXmlHttpRequest(200, editStorageKeyPrefix);
+    setModificationXmlHttpRequest(200, editStorageKeyPrefix);
 }

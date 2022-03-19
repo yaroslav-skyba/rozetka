@@ -1,7 +1,7 @@
 let name;
 
 function setRoleModificationForm(headlineInnerHtml, submitInnerHtml, storageKeyPrefix) {
-    redirectUnauthorized();
+    redirectUnauthorizedModification();
     setNavigation("../../../", "../../", "../");
 
     setContainer(`
@@ -23,6 +23,6 @@ function setRoleModificationForm(headlineInnerHtml, submitInnerHtml, storageKeyP
     `);
 
     storageKeyPrefix = "role_" + storageKeyPrefix;
-    configAdminModificationPage(headlineInnerHtml, submitInnerHtml, storageKeyPrefix);
+    configModificationPage(headlineInnerHtml, submitInnerHtml, storageKeyPrefix);
     name.value = localStorage.getItem(storageKeyPrefix + name.id);
 }

@@ -7,7 +7,7 @@ let discount;
 let description;
 
 function setProductModificationForm(headlineInnerHtml, submitInnerHtml, storageKeyPrefix) {
-    redirectUnauthorized();
+    redirectUnauthorizedModification();
     setNavigation("../../../", "../../", "../");
 
     setContainer(`
@@ -51,11 +51,36 @@ function setProductModificationForm(headlineInnerHtml, submitInnerHtml, storageK
     `);
 
     storageKeyPrefix = "product_" + storageKeyPrefix;
-    configAdminModificationPage(headlineInnerHtml, submitInnerHtml, storageKeyPrefix);
+    configModificationPage(headlineInnerHtml, submitInnerHtml, storageKeyPrefix);
 
     name.value = localStorage.getItem(storageKeyPrefix + name.id);
     quantity.value = localStorage.getItem(storageKeyPrefix + quantity.id);
     price.value = localStorage.getItem(storageKeyPrefix + price.id);
     discount.value = localStorage.getItem(storageKeyPrefix + discount.id);
     description.value = localStorage.getItem(storageKeyPrefix + description.id);
+}
+
+function createProductModificationRequestBody(userUuid, passwordValue) {
+    for (const formOutlineElement of document.getElementsByClassName("form-outline")) {
+        const formControlElement = formOutlineElement.getElementsByClassName("form-control")[0];
+
+        if (!formControlElement.checkValidity()) {
+            alert("danger", formOutlineElement.getElementsByClassName("invalid-feedback")[0].innerHTML);
+            return null;
+        }
+
+        const maxElementLength = 255;
+
+        if (formControlElement.value.length > maxElementLength) {
+            alert("danger", "A field length should be equal or less than " + maxElementLength + " symbols");
+            return null;
+        }
+
+        if (Number(formControlElement.value) < 0) {
+            alert("danger", "A field value cannot be negative");
+            return null;
+        }
+    }
+
+    return createUserRequestBody(userUuid, passwordValue);
 }

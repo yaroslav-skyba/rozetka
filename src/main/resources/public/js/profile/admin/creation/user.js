@@ -1,6 +1,6 @@
 onload = function () {
-    redirectUnauthorized();
-    setAdminModificationForm();
+    redirectUnauthorizedModification();
+    setUserModificationForm("create a user", "Create", creationStorageKeyPrefix);
 
     document.getElementById("submit").onclick = function () {
         const password = document.getElementById("password");
@@ -8,16 +8,16 @@ onload = function () {
         password.required = true;
         document.getElementById("passwordConformation").required = true;
 
-        const body = createModificationRequestBody(null, password.value);
+        const body = createUserModificationRequestBody(null, password.value);
 
         if (!body) {
             return;
         }
 
-        sendModificationRequest("POST", usersApiUrl, appendRoleToBody(body));
+        sendModificationRequest("POST", usersApiUrl, appendRoleToBody(body), userContentType);
     }
 }
 
 xmlHttpRequest.onreadystatechange = function () {
-    setXmlHttpRequest(201, creationStorageKeyPrefix);
+    setModificationXmlHttpRequest(201, userStorageKeyPrefix + creationStorageKeyPrefix);
 }

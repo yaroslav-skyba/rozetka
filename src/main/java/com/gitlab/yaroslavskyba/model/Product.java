@@ -47,7 +47,7 @@ public class Product extends AbstractModel {
 
     @Min(0)
     @Max(100)
-    private Integer discount;
+    private Float discount;
 
     @Size(max = 1024)
     @Column(name = "description", length = 1024)
@@ -138,11 +138,11 @@ public class Product extends AbstractModel {
         this.price = price;
     }
 
-    public Integer getDiscount() {
+    public Float getDiscount() {
         return discount;
     }
 
-    public void setDiscount(Integer discount) {
+    public void setDiscount(Float discount) {
         this.discount = discount;
     }
 

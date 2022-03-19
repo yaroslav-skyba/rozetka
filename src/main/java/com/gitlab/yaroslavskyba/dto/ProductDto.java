@@ -8,14 +8,14 @@ public class ProductDto {
     private String name;
     private Integer quantity;
     private Float price;
-    private Integer discount;
+    private Float discount;
     private String description;
 
     @SuppressWarnings("unused")
     public ProductDto() {
     }
 
-    public ProductDto(UUID uuid, String name, Integer quantity, Float price, Integer discount, String description) {
+    public ProductDto(UUID uuid, String name, Integer quantity, Float price, Float discount, String description) {
         this.uuid = uuid;
         this.name = name;
         this.quantity = quantity;
@@ -74,7 +74,7 @@ public class ProductDto {
         return price;
     }
 
-    public Integer getDiscount() {
+    public Float getDiscount() {
         return discount;
     }
 

@@ -8,7 +8,7 @@ const editStorageKeyPrefix = "edit_";
 
 const rolesApiUrl = authorityApi + "roles";
 
-function redirectUnauthorized() {
+function redirectUnauthorizedModification() {
     if (localStorage.getItem(currentUserRoleNameStorageKey) !== adminRoleName) {
         location.href = "/";
     }
@@ -18,7 +18,9 @@ function redirectUnauthorized() {
     }
 }
 
-function configAdminModificationPage(headlineInnerHtml, submitInnerHtml, storageKeyPrefix) {
+function configModificationPage(headlineInnerHtml, submitInnerHtml, storageKeyPrefix) {
+    setMainAttributes();
+
     document.getElementById("headline").innerHTML = headlineInnerHtml;
     document.getElementById("submit").innerHTML = submitInnerHtml;
 
@@ -29,7 +31,14 @@ function configAdminModificationPage(headlineInnerHtml, submitInnerHtml, storage
     }
 }
 
-function setXmlHttpRequest(successStatus, storageKeyPrefix) {
+function sendModificationRequest(httpMethod, url, body, contentType) {
+    xmlHttpRequest.open(httpMethod, url);
+    xmlHttpRequest.setRequestHeader("Content-Type", contentType);
+    xmlHttpRequest.setRequestHeader("Authorization", localStorage.getItem(jwtStorageKey));
+    xmlHttpRequest.send(JSON.stringify(body));
+}
+
+function setModificationXmlHttpRequest(successStatus, storageKeyPrefix) {
     if (xmlHttpRequest.readyState === 4) {
         if (xmlHttpRequest.status === successStatus) {
             for (const formControlElement of document.getElementsByClassName("form-control")) {

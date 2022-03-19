@@ -81,7 +81,7 @@ function setUserForm() {
     birthday = document.getElementById("birthday");
 }
 
-function setEditStorageItems(userToEditParsed) {
+function setUserEditStorageItems(userToEditParsed) {
     localStorage.setItem(editStorageKeyPrefix + login.id, userToEditParsed[userLoginDtoKey]);
     localStorage.setItem(editStorageKeyPrefix + email.id, userToEditParsed[userEmailDtoKey]);
     localStorage.setItem(editStorageKeyPrefix + firstName.id, userToEditParsed[userFirstNameDtoKey]);
@@ -90,7 +90,7 @@ function setEditStorageItems(userToEditParsed) {
 }
 
 function setUserInputs(headlineInnerHtml, submitInnerHtml, storageKeyPrefix) {
-    configAdminModificationPage(headlineInnerHtml, submitInnerHtml, storageKeyPrefix);
+    configModificationPage(headlineInnerHtml, submitInnerHtml, storageKeyPrefix);
 
     login.value = localStorage.getItem(storageKeyPrefix + login.id);
     email.value = localStorage.getItem(storageKeyPrefix + email.id);
@@ -99,14 +99,7 @@ function setUserInputs(headlineInnerHtml, submitInnerHtml, storageKeyPrefix) {
     birthday.value = localStorage.getItem(storageKeyPrefix + birthday.id);
 }
 
-function sendModificationRequest(httpMethod, url, body) {
-    xmlHttpRequest.open(httpMethod, url);
-    xmlHttpRequest.setRequestHeader("Content-Type", "application/vnd.rozetka.user+json");
-    xmlHttpRequest.setRequestHeader("Authorization", localStorage.getItem(jwtStorageKey));
-    xmlHttpRequest.send(JSON.stringify(body));
-}
-
-function createRequestBody(userUuid, passwordValue) {
+function createUserRequestBody(userUuid, passwordValue) {
     const body = {};
     body[userUuidDtoKey] = userUuid;
     body[userLoginDtoKey] = login.value;
@@ -119,7 +112,7 @@ function createRequestBody(userUuid, passwordValue) {
     return body;
 }
 
-function createModificationRequestBody(userUuid, passwordValue) {
+function createUserModificationRequestBody(userUuid, passwordValue) {
     for (const formOutlineElement of document.getElementsByClassName("form-outline")) {
         const formControlElement = formOutlineElement.getElementsByClassName("form-control")[0];
 
@@ -131,7 +124,7 @@ function createModificationRequestBody(userUuid, passwordValue) {
         const maxElementLength = 255;
 
         if (formControlElement.value.length > maxElementLength) {
-            alert("danger", "A field should be equal or less than " + maxElementLength + " symbols");
+            alert("danger", "A field length should be equal or less than " + maxElementLength + " symbols");
             return null;
         }
     }
@@ -141,15 +134,15 @@ function createModificationRequestBody(userUuid, passwordValue) {
         return null;
     }
 
-    return createRequestBody(userUuid, passwordValue);
+    return createUserRequestBody(userUuid, passwordValue);
 }
 
-function createEditRequestBody(userToEditParsed) {
+function createUserEditRequestBody(userToEditParsed) {
     let passwordValue = document.getElementById("password").value;
 
     if (!passwordValue) {
         passwordValue = null;
     }
 
-    return createModificationRequestBody(userToEditParsed[userUuidDtoKey], passwordValue);
+    return createUserModificationRequestBody(userToEditParsed[userUuidDtoKey], passwordValue);
 }

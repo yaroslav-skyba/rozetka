@@ -1,7 +1,9 @@
+const userStorageKeyPrefix = "user_";
+
 let role;
 
-function setAdminModificationForm(headlineInnerHtml, submitInnerHtml, storageKeyPrefix) {
-    redirectUnauthorized();
+function setUserModificationForm(headlineInnerHtml, submitInnerHtml, storageKeyPrefix) {
+    redirectUnauthorizedModification();
     setNavigation("../../../", "../../", "../");
     setUserForm();
 
@@ -16,7 +18,9 @@ function setAdminModificationForm(headlineInnerHtml, submitInnerHtml, storageKey
             <div class="invalid-feedback">Please select a role</div>
         </div>`;
 
-    storageKeyPrefix = "user_" + storageKeyPrefix;
+    role = document.getElementById("roleValue");
+
+    storageKeyPrefix = userStorageKeyPrefix + storageKeyPrefix;
     setUserInputs(headlineInnerHtml, submitInnerHtml, storageKeyPrefix);
     role.value = localStorage.getItem(storageKeyPrefix + role.id);
 }

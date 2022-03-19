@@ -6,6 +6,8 @@ const currentUserStorageKey = "currentUser";
 
 const authorityApi = "http://localhost:8080/api/v1/";
 
+const userContentType = "application/vnd.rozetka.user+json";
+
 const adminRoleName = "admin";
 const userRoleName = "user";
 
@@ -51,7 +53,7 @@ function setNavigation(rootDestination, userDestination, adminDestination) {
             </nav>`;
 
         document.getElementById("footer").innerHTML =
-            `<footer class="bg-dark text-center text-white mt-3">
+            `<footer class="bg-dark text-white text-center">
                 <div class="container p-4 pb-0">
                     <section class="mb-4">
                         <a class="btn btn-outline-light btn-floating m-1" href="https://www.linkedin.com/in/yaroslavskyba" role="button">
@@ -115,10 +117,10 @@ function setMainAttributes() {
 
 function setContainer(content) {
     document.getElementById("main").innerHTML +=
-        `<div class="container pt-3">
+        `<div class="container py-3">
             <div class="row justify-content-center">
                 <div class="col">
-                    <div class="card bg-dark" style="border-radius: 15px">
+                    <div class="card bg-dark text-white" style="border-radius: 15px">
                         <div class="card-body">` + content + `</div>
                     </div>
                 </div>

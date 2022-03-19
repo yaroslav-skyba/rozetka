@@ -10,11 +10,12 @@ onload = function () {
     setNavigation("../index.html", "../img/logo.png", "../cart.html", "../about.html", "../login.html",
         "../registration.html", "admin/admin.html", "user.html");
     setUserForm();
-    setEditStorageItems(currentUser);
+    setUserEditStorageItems(currentUser);
     setUserInputs("Edit your profile", "Save", editStorageKeyPrefix);
 
     document.getElementById("submit").onclick = function () {
-        sendModificationRequest("PUT", usersApiUrl + "/" + currentUser[userUuidDtoKey], createEditRequestBody(currentUser));
+        sendModificationRequest("PUT", usersApiUrl + "/" + currentUser[userUuidDtoKey], createUserEditRequestBody(currentUser),
+                                userContentType);
     }
 }
 
@@ -23,7 +24,7 @@ xmlHttpRequest.onreadystatechange = function () {
         if (xmlHttpRequest.status === 200) {
             alert("success", xmlHttpRequest.responseText);
 
-            const requestBody = createRequestBody(currentUser[userUuidDtoKey], document.getElementById("password").value);
+            const requestBody = createUserRequestBody(currentUser[userUuidDtoKey], document.getElementById("password").value);
             requestBody[userRoleUuidDtoKey] = currentUser[userRoleUuidDtoKey];
             localStorage.setItem(currentUserStorageKey, JSON.stringify(requestBody));
 
