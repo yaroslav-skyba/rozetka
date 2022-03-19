@@ -82,5 +82,10 @@ function createProductModificationRequestBody(userUuid, passwordValue) {
         }
     }
 
+    if (!Number.isInteger(Number(quantity.value))) {
+        alert("danger", "The quantity should be an integer");
+        return null;
+    }
+
     return createUserRequestBody(userUuid, passwordValue);
 }
