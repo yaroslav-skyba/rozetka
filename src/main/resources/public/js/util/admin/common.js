@@ -36,6 +36,12 @@ function sendModificationRequest(httpMethod, url, body, contentType) {
     xmlHttpRequest.send(JSON.stringify(body));
 }
 
+function sendCreationRequest(body, url, contentType) {
+    if (body) {
+        sendModificationRequest("POST", url, body, contentType);
+    }
+}
+
 function setModificationXmlHttpRequest(successStatus, storageKeyPrefix) {
     if (xmlHttpRequest.readyState === 4) {
         if (xmlHttpRequest.status === successStatus) {

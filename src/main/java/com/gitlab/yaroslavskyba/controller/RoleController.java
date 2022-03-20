@@ -30,7 +30,7 @@ public class RoleController {
     public ResponseEntity<String> createRole(@RequestBody RoleDto roleDto) {
         try {
             roleService.createRole(roleDto);
-            return ResponseEntity.status(HttpStatus.CREATED).body("A product has been successfully created");
+            return ResponseEntity.status(HttpStatus.CREATED).body("A role has been successfully created");
         } catch (RoleServiceException roleServiceException) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(roleServiceException.getMessage());
         }

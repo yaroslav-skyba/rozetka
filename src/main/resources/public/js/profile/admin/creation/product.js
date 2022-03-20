@@ -3,11 +3,7 @@ onload = function () {
     setProductModificationForm("create a product", "Create", creationStorageKeyPrefix);
 
     document.getElementById("submit").onclick = function () {
-        const body = createProductModificationRequestBody(null);
-
-        if (body) {
-            sendModificationRequest("POST", productsApiUrl, body, productContentType);
-        }
+        sendCreationRequest(createProductModificationRequestBody(null), productsApiUrl, productStorageKeyPrefix);
     }
 }
 
