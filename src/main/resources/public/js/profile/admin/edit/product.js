@@ -1,29 +1,19 @@
 // noinspection DuplicatedCode
 
-const storageKeyPrefix = productStorageKeyPrefix + editStorageKeyPrefix;
+const storageKey = productStorageKeyPrefix + editStorageKeyPrefix;
 
 onload = function () {
-    redirectUnauthorizedModification();
-    setProductModificationForm("edit a product", "Edit", editStorageKeyPrefix);
+    redirectUnauthorizedModification(storageKey);
 
-    const productToEditParsed = JSON.parse(localStorage.getItem(productToEditStorageKey));
-
-    if (!productToEditParsed[productDescriptionDtoKey]) {
-        productToEditParsed[productDescriptionDtoKey] = "";
-    }
-
-    localStorage.setItem(storageKeyPrefix + name.id, productToEditParsed[productNameDtoKey]);
-    localStorage.setItem(storageKeyPrefix + quantity.id, productToEditParsed[productQuantityDtoKey]);
-    localStorage.setItem(storageKeyPrefix + price.id, productToEditParsed[productPriceDtoKey]);
-    localStorage.setItem(storageKeyPrefix + discount.id, productToEditParsed[productDiscountDtoKey]);
-    localStorage.setItem(storageKeyPrefix + description.id, productToEditParsed[productDescriptionDtoKey]);
+    const uuid = JSON.parse(localStorage.getItem(storageKey))[productUuidDtoKey];
+    setProductModificationForm("edit a product", "Edit", uuid, editStorageKeyPrefix);
 
     document.getElementById("submit").onclick = function () {
-        sendModificationRequestIfBodyNotNull("PUT", createProductModificationRequestBody(productToEditParsed[productUuidDtoKey]),
-                                             productsApiUrl + "/" + productToEditParsed[productUuidDtoKey], productContentType);
+        sendModificationRequestIfBodyNotNull("PUT", createProductModificationRequestBody(uuid), productsApiUrl + "/" + uuid,
+                                             productContentType);
     }
 }
 
 xmlHttpRequest.onreadystatechange = function () {
-    setCreationXmlHttpRequest(200, storageKeyPrefix, productToEditStorageKey);
+    setModificationXmlHttpRequest(200, storageKey);
 }

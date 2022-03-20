@@ -13,15 +13,25 @@ const productsApiUrl = authorityApi + "products";
 
 const productContentType = contentTypeRoot + "product" + contentTypeSuffix;
 
-const productToEditStorageKey = "productToEdit";
-
 let name;
 let quantity;
 let price;
 let discount;
 let description;
 
-function setProductModificationForm(headlineInnerHtml, submitInnerHtml, storageKeyPrefix) {
+function createProduct(uuid) {
+    const product = {};
+    product[productUuidDtoKey] = uuid;
+    product[productNameDtoKey] = name.value;
+    product[productQuantityDtoKey] = quantity.value;
+    product[productPriceDtoKey] = price.value;
+    product[productDiscountDtoKey] = discount.value;
+    product[productDescriptionDtoKey] = description.value;
+
+    return product;
+}
+
+function setProductModificationForm(headlineInnerHtml, submitInnerHtml, uuid, modificationStorageKeyPrefix) {
     redirectUnauthorizedModification();
     setNavigation("../../../", "../../", "../");
 
@@ -66,20 +76,26 @@ function setProductModificationForm(headlineInnerHtml, submitInnerHtml, storageK
         <div id="alert" class="mt-3"></div>
     `);
 
+    configModificationPage(headlineInnerHtml, submitInnerHtml);
+
     name = document.getElementById("name");
     quantity = document.getElementById("quantity");
     price = document.getElementById("price");
     discount = document.getElementById("discount");
     description = document.getElementById("description");
 
-    storageKeyPrefix = productStorageKeyPrefix + storageKeyPrefix;
-    configModificationPage(headlineInnerHtml, submitInnerHtml, storageKeyPrefix);
+    const product = localStorage.getItem(productStorageKeyPrefix + modificationStorageKeyPrefix);
+    name.value = product[productNameDtoKey];
+    quantity.value = product[productQuantityDtoKey];
+    price.value = product[productPriceDtoKey];
+    discount.value = product[productDiscountDtoKey];
+    description.value = product[productDescriptionDtoKey];
 
-    name.value = localStorage.getItem(storageKeyPrefix + name.id);
-    quantity.value = localStorage.getItem(storageKeyPrefix + quantity.id);
-    price.value = localStorage.getItem(storageKeyPrefix + price.id);
-    discount.value = localStorage.getItem(storageKeyPrefix + discount.id);
-    description.value = localStorage.getItem(storageKeyPrefix + description.id);
+    for (const formControlElement of formControlElements) {
+        formControlElement.onchange = function () {
+            createProduct(uuid);
+        }
+    }
 }
 
 function createProductModificationRequestBody(uuid) {
@@ -110,13 +126,5 @@ function createProductModificationRequestBody(uuid) {
         return null;
     }
 
-    const body = {};
-    body[productUuidDtoKey] = uuid;
-    body[productNameDtoKey] = name.value;
-    body[productQuantityDtoKey] = quantity.value;
-    body[productPriceDtoKey] = price.value;
-    body[productDiscountDtoKey] = discount.value;
-    body[productDescriptionDtoKey] = description.value;
-
-    return body;
+    return createProduct(uuid);
 }

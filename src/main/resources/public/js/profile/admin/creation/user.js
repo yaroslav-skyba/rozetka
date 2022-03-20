@@ -1,5 +1,6 @@
 onload = function () {
     redirectUnauthorizedModification();
+    redirectUnauthorizedUser();
     setUserModificationForm("create a user", "Create", creationStorageKeyPrefix);
 
     document.getElementById("submit").onclick = function () {

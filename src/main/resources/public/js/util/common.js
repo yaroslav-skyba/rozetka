@@ -1,12 +1,13 @@
 const xmlHttpRequest = new XMLHttpRequest();
 
 const userStorageKeyPrefix = "user_";
-const creationStorageKeyPrefix = "creation_";
-const editStorageKeyPrefix = "edit_";
+const creationStorageKeyPrefix = "creation";
+const editStorageKeyPrefix = "edit";
 
 const jwtStorageKey = "jwt";
 const currentUserRoleNameStorageKey = "roleName";
 const currentUserStorageKey = "currentUser";
+const rolesStorageKey = "roles";
 
 const authorityApi = "http://localhost:8080/api/v1/";
 const rolesApiUrl = authorityApi + "roles";
@@ -139,6 +140,12 @@ function alert(type, message) {
             ` + message +
             `<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" onclick="location.reload()"></button>
         </div>`;
+}
+
+function redirectUnauthorizedUser() {
+    if (!localStorage.getItem(rolesStorageKey)) {
+        location.href = "/profile/admin/admin.html";
+    }
 }
 
 function areInputsValid(formControlElement, formOutlineElement) {

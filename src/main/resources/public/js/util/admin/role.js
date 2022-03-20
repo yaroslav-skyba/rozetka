@@ -28,7 +28,7 @@ function setRoleModificationForm(headlineInnerHtml, submitInnerHtml, storageKeyP
     name = document.getElementById("name");
 
     storageKeyPrefix = "role_" + storageKeyPrefix;
-    configModificationPage(headlineInnerHtml, submitInnerHtml, storageKeyPrefix);
+    configModificationPage(headlineInnerHtml, submitInnerHtml);
 
     name.value = localStorage.getItem(storageKeyPrefix + name.id);
 }

@@ -91,7 +91,7 @@ function setUserEditStorageItems(userToEditParsed) {
 }
 
 function setUserInputs(headlineInnerHtml, submitInnerHtml, storageKeyPrefix) {
-    configModificationPage(headlineInnerHtml, submitInnerHtml, storageKeyPrefix);
+    configModificationPage(headlineInnerHtml, submitInnerHtml);
 
     login.value = localStorage.getItem(storageKeyPrefix + login.id);
     email.value = localStorage.getItem(storageKeyPrefix + email.id);

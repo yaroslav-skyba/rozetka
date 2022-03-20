@@ -1,6 +1,6 @@
 onload = function () {
     redirectUnauthorizedModification();
-    setProductModificationForm("create a product", "Create", creationStorageKeyPrefix);
+    setProductModificationForm();
 
     document.getElementById("submit").onclick = function () {
         sendModificationRequestIfBodyNotNull("POST", createProductModificationRequestBody(null), productsApiUrl, productContentType);
