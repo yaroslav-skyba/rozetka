@@ -1,6 +1,8 @@
+const storageKey = productStorageKeyPrefix + creationStorageKeyPrefix;
+
 onload = function () {
-    redirectUnauthorizedModification();
-    setProductModificationForm();
+    redirectUnauthorizedUser();
+    setProductModificationForm("create a product", "Create", storageKey, null);
 
     document.getElementById("submit").onclick = function () {
         sendModificationRequestIfBodyNotNull("POST", createProductModificationRequestBody(null), productsApiUrl, productContentType);
@@ -8,5 +10,5 @@ onload = function () {
 }
 
 xmlHttpRequest.onreadystatechange = function () {
-    setModificationXmlHttpRequest(201, productStorageKeyPrefix + creationStorageKeyPrefix);
+    setModificationXmlHttpRequest(201, storageKey);
 }

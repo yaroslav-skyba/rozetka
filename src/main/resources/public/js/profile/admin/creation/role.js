@@ -1,6 +1,8 @@
+const storageKey = roleStorageKeyPrefix + creationStorageKeyPrefix;
+
 onload = function () {
-    redirectUnauthorizedModification();
-    setRoleModificationForm("create a role", "Create", creationStorageKeyPrefix);
+    redirectUnauthorizedUser();
+    setRoleModificationForm("create a role", "Create", storageKey, null);
 
     document.getElementById("submit").onclick = function () {
         sendModificationRequestIfBodyNotNull("POST", createRoleModificationRequestBody(null), rolesApiUrl, roleContentType);
@@ -8,5 +10,5 @@ onload = function () {
 }
 
 xmlHttpRequest.onreadystatechange = function () {
-    setModificationXmlHttpRequest(201, roleStorageKeyPrefix + creationStorageKeyPrefix);
+    setModificationXmlHttpRequest(201, storageKey);
 }

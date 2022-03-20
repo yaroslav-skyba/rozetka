@@ -31,10 +31,8 @@ function createProduct(uuid) {
     return product;
 }
 
-function setProductModificationForm(headlineInnerHtml, submitInnerHtml, uuid, modificationStorageKeyPrefix) {
-    redirectUnauthorizedModification();
+function setProductModificationForm(headlineInnerHtml, submitInnerHtml, storageKey, uuid) {
     setNavigation("../../../", "../../", "../");
-
     setContainer(`
         <h2 class="text-uppercase text-center mb-5" id="headline"></h2>
         
@@ -84,16 +82,19 @@ function setProductModificationForm(headlineInnerHtml, submitInnerHtml, uuid, mo
     discount = document.getElementById("discount");
     description = document.getElementById("description");
 
-    const product = localStorage.getItem(productStorageKeyPrefix + modificationStorageKeyPrefix);
-    name.value = product[productNameDtoKey];
-    quantity.value = product[productQuantityDtoKey];
-    price.value = product[productPriceDtoKey];
-    discount.value = product[productDiscountDtoKey];
-    description.value = product[productDescriptionDtoKey];
+    const product = JSON.parse(localStorage.getItem(storageKey));
+
+    if (product) {
+        name.value = product[productNameDtoKey];
+        quantity.value = product[productQuantityDtoKey];
+        price.value = product[productPriceDtoKey];
+        discount.value = product[productDiscountDtoKey];
+        description.value = product[productDescriptionDtoKey];
+    }
 
     for (const formControlElement of formControlElements) {
         formControlElement.onchange = function () {
-            createProduct(uuid);
+            localStorage.setItem(storageKey, JSON.stringify(createProduct(uuid)));
         }
     }
 }

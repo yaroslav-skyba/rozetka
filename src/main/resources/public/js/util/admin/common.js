@@ -2,11 +2,13 @@ const formControlElements = document.getElementsByClassName("form-control");
 
 const userToEditStorageKey = "userToEdit";
 
-function redirectUnauthorizedModification(storageKey) {
+function redirectUnauthorizedUser() {
     if (localStorage.getItem(currentUserRoleNameStorageKey) !== adminRoleName) {
         location.href = "/";
     }
+}
 
+function redirectUnreadyUser(storageKey) {
     if (!localStorage.getItem(storageKey)) {
         location.href = "/profile/admin/admin.html";
     }

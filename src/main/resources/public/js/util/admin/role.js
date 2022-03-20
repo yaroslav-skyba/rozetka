@@ -1,12 +1,22 @@
 const roleStorageKeyPrefix = "role_";
+
 const roleContentType = contentTypeRoot + "role" + contentTypeSuffix;
+
+const roleUuidDtoKey = "uuid";
+const roleNameDtoKey = "name";
 
 let name;
 
-function setRoleModificationForm(headlineInnerHtml, submitInnerHtml, storageKeyPrefix) {
-    redirectUnauthorizedModification();
-    setNavigation("../../../", "../../", "../");
+function createRole(uuid) {
+    const role = {};
+    role[roleUuidDtoKey] = uuid;
+    role[roleNameDtoKey] = name.value;
 
+    return role;
+}
+
+function setRoleModificationForm(headlineInnerHtml, submitInnerHtml, storageKey, uuid) {
+    setNavigation("../../../", "../../", "../");
     setContainer(`
         <h2 class="text-uppercase text-center mb-5" id="headline"></h2>
         
@@ -25,30 +35,24 @@ function setRoleModificationForm(headlineInnerHtml, submitInnerHtml, storageKeyP
         <div id="alert" class="mt-3"></div>
     `);
 
+    configModificationPage(headlineInnerHtml, submitInnerHtml);
     name = document.getElementById("name");
 
-    storageKeyPrefix = "role_" + storageKeyPrefix;
-    configModificationPage(headlineInnerHtml, submitInnerHtml);
+    const role = JSON.parse(localStorage.getItem(storageKey));
 
-    name.value = localStorage.getItem(storageKeyPrefix + name.id);
+    if (role) {
+        name.value = role[roleNameDtoKey];
+    }
+
+    name.onchange = function () {
+        localStorage.setItem(storageKey, JSON.stringify(createRole(uuid)));
+    }
 }
 
 function createRoleModificationRequestBody(uuid) {
-    if (!name.checkValidity()) {
-        alert("danger", document.getElementsByClassName("invalid-feedback")[0].innerHTML);
-        return false;
+    if (!areInputsValid(name, document)) {
+        return null;
     }
 
-    const maxElementLength = 255;
-
-    if (name.value.length > maxElementLength) {
-        alert("danger", "A field length should be equal or less than " + maxElementLength + " symbols");
-        return false;
-    }
-
-    const body = {};
-    body["uuid"] = uuid;
-    body["name"] = name.value;
-
-    return body;
+    return createRole(uuid);
 }

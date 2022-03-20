@@ -1,7 +1,6 @@
 let role;
 
-function setUserModificationForm(headlineInnerHtml, submitInnerHtml, storageKeyPrefix) {
-    redirectUnauthorizedModification();
+function setUserModificationForm(storageKey, headlineInnerHtml, submitInnerHtml, uuid) {
     setNavigation("../../../", "../../", "../");
     setUserForm();
 
@@ -18,7 +17,6 @@ function setUserModificationForm(headlineInnerHtml, submitInnerHtml, storageKeyP
 
     role = document.getElementById("roleValue");
 
-    storageKeyPrefix = userStorageKeyPrefix + storageKeyPrefix;
     setUserInputs(headlineInnerHtml, submitInnerHtml, storageKeyPrefix);
     role.value = localStorage.getItem(storageKeyPrefix + role.id);
 }

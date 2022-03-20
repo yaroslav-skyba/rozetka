@@ -1,5 +1,5 @@
 onload = function () {
-    redirectUnauthorizedModification();
+    redirectUnauthorizedUser();
     redirectUnauthorizedUser();
     setUserModificationForm("create a user", "Create", creationStorageKeyPrefix);
 
