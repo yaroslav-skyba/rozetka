@@ -1,6 +1,6 @@
 onload = function () {
     redirectUnauthorizedModification();
-    setUserModificationForm();
+    setUserModificationForm("edit a user", "Edit", editStorageKeyPrefix);
 
     const userToEditParsed = JSON.parse(localStorage.getItem(userToEditStorageKey));
 
@@ -14,8 +14,8 @@ onload = function () {
 
     document.getElementById("submit").onclick = function () {
         localStorage.removeItem(userToEditStorageKey);
-        sendModificationRequest("PUT", usersApiUrl + "/" + userToEditParsed[userUuidDtoKey],
-                                appendRoleToBody(createUserEditRequestBody(userToEditParsed)), userContentType);
+        sendModificationRequestIfBodyNotNull("PUT", appendRoleToBody(createUserEditRequestBody(userToEditParsed)),
+                                             usersApiUrl + "/" + userToEditParsed[userUuidDtoKey], userContentType);
     }
 }
 

@@ -3,9 +3,6 @@ const formControlElements = document.getElementsByClassName("form-control");
 const userToEditStorageKey = "userToEdit";
 const rolesStorageKey = "roles";
 
-const creationStorageKeyPrefix = "creation_";
-const editStorageKeyPrefix = "edit_";
-
 function redirectUnauthorizedModification() {
     if (localStorage.getItem(currentUserRoleNameStorageKey) !== adminRoleName) {
         location.href = "/";
@@ -36,20 +33,36 @@ function sendModificationRequest(httpMethod, url, body, contentType) {
     xmlHttpRequest.send(JSON.stringify(body));
 }
 
-function sendCreationRequest(body, url, contentType) {
+function sendModificationRequestIfBodyNotNull(httpMethod, body, url, contentType) {
     if (body) {
-        sendModificationRequest("POST", url, body, contentType);
+        sendModificationRequest(httpMethod, url, body, contentType);
     }
+}
+
+function removeStorageItems(storageKeyPrefix) {
+    for (const formControlElement of document.getElementsByClassName("form-control")) {
+        localStorage.removeItem(storageKeyPrefix + formControlElement.id);
+    }
+
+    alert("success", xmlHttpRequest.responseText);
+    location.href = "/profile/admin/admin.html";
 }
 
 function setModificationXmlHttpRequest(successStatus, storageKeyPrefix) {
     if (xmlHttpRequest.readyState === 4) {
         if (xmlHttpRequest.status === successStatus) {
-            for (const formControlElement of document.getElementsByClassName("form-control")) {
-                localStorage.removeItem(storageKeyPrefix + formControlElement.id);
-            }
+            removeStorageItems(storageKeyPrefix);
+        } else if (xmlHttpRequest.status === 409) {
+            alert("danger", xmlHttpRequest.responseText);
+        }
+    }
+}
 
-            alert("success", xmlHttpRequest.responseText);
+function setCreationXmlHttpRequest(successStatus, storageKeyPrefix, storageKey) {
+    if (xmlHttpRequest.readyState === 4) {
+        if (xmlHttpRequest.status === successStatus) {
+            localStorage.removeItem(storageKey);
+            removeStorageItems(storageKeyPrefix);
         } else if (xmlHttpRequest.status === 409) {
             alert("danger", xmlHttpRequest.responseText);
         }

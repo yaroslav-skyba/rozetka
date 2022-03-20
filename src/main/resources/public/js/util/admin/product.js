@@ -1,8 +1,19 @@
 //noinspection DuplicatedCode
 
+const productUuidDtoKey = "uuid";
+const productNameDtoKey = "name";
+const productQuantityDtoKey = "quantity";
+const productPriceDtoKey = "price";
+const productDiscountDtoKey = "discount";
+const productDescriptionDtoKey = "description";
+
 const productStorageKeyPrefix = "product_";
+
 const productsApiUrl = authorityApi + "products";
+
 const productContentType = contentTypeRoot + "product" + contentTypeSuffix;
+
+const productToEditStorageKey = "productToEdit";
 
 let name;
 let quantity;
@@ -100,12 +111,12 @@ function createProductModificationRequestBody(uuid) {
     }
 
     const body = {};
-    body["uuid"] = uuid;
-    body["name"] = name.value;
-    body["quantity"] = quantity.value;
-    body["price"] = price.value;
-    body["discount"] = discount.value;
-    body["description"] = description.value;
+    body[productUuidDtoKey] = uuid;
+    body[productNameDtoKey] = name.value;
+    body[productQuantityDtoKey] = quantity.value;
+    body[productPriceDtoKey] = price.value;
+    body[productDiscountDtoKey] = discount.value;
+    body[productDescriptionDtoKey] = description.value;
 
     return body;
 }

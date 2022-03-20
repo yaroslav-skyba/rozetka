@@ -82,11 +82,12 @@ function setUserForm() {
 }
 
 function setUserEditStorageItems(userToEditParsed) {
-    localStorage.setItem(editStorageKeyPrefix + login.id, userToEditParsed[userLoginDtoKey]);
-    localStorage.setItem(editStorageKeyPrefix + email.id, userToEditParsed[userEmailDtoKey]);
-    localStorage.setItem(editStorageKeyPrefix + firstName.id, userToEditParsed[userFirstNameDtoKey]);
-    localStorage.setItem(editStorageKeyPrefix + lastName.id, userToEditParsed[userLastNameDtoKey]);
-    localStorage.setItem(editStorageKeyPrefix + birthday.id, userToEditParsed[userBirthdayDtoKey]);
+    const storageKeyPrefix = userStorageKeyPrefix + editStorageKeyPrefix;
+    localStorage.setItem(storageKeyPrefix + login.id, userToEditParsed[userLoginDtoKey]);
+    localStorage.setItem(storageKeyPrefix + email.id, userToEditParsed[userEmailDtoKey]);
+    localStorage.setItem(storageKeyPrefix + firstName.id, userToEditParsed[userFirstNameDtoKey]);
+    localStorage.setItem(storageKeyPrefix + lastName.id, userToEditParsed[userLastNameDtoKey]);
+    localStorage.setItem(storageKeyPrefix + birthday.id, userToEditParsed[userBirthdayDtoKey]);
 }
 
 function setUserInputs(headlineInnerHtml, submitInnerHtml, storageKeyPrefix) {

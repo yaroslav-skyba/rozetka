@@ -8,7 +8,8 @@ onload = function () {
         password.required = true;
         document.getElementById("passwordConformation").required = true;
 
-        sendCreationRequest(appendRoleToBody(createUserModificationRequestBody(null, password.value)), usersApiUrl, userContentType);
+        sendModificationRequestIfBodyNotNull("POST", appendRoleToBody(createUserModificationRequestBody(null, password.value)),
+                                             usersApiUrl, userContentType);
     }
 }
 

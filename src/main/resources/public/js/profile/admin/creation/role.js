@@ -3,7 +3,7 @@ onload = function () {
     setRoleModificationForm("create a role", "Create", creationStorageKeyPrefix);
 
     document.getElementById("submit").onclick = function () {
-        sendCreationRequest(createRoleModificationRequestBody(null), rolesApiUrl, roleContentType);
+        sendModificationRequestIfBodyNotNull("POST", createRoleModificationRequestBody(null), rolesApiUrl, roleContentType);
     }
 }
 

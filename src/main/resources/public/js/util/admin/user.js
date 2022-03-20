@@ -1,5 +1,3 @@
-const userStorageKeyPrefix = "user_";
-
 let role;
 
 function setUserModificationForm(headlineInnerHtml, submitInnerHtml, storageKeyPrefix) {
