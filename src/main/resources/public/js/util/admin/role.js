@@ -44,12 +44,12 @@ function setRoleModificationForm(headlineInnerHtml, submitInnerHtml, storageKey,
         name.value = role[roleNameDtoKey];
     }
 
-    name.onchange = function () {
-        localStorage.setItem(storageKey, JSON.stringify(createRole(uuid)));
-    }
+    setFormControlElementOnchange(storageKey, function () {
+        return createRole(uuid);
+    });
 }
 
-function createRoleModificationRequestBody(uuid) {
+function createNullableRole(uuid) {
     if (!areInputsValid(name, document)) {
         return null;
     }

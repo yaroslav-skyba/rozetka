@@ -1,11 +1,11 @@
 const storageKey = productStorageKeyPrefix + creationStorageKeyPrefix;
 
 onload = function () {
-    redirectUnauthorizedUser();
+    redirectUnauthorized();
     setProductModificationForm("create a product", "Create", storageKey, null);
 
     document.getElementById("submit").onclick = function () {
-        sendModificationRequestIfBodyNotNull("POST", createProductModificationRequestBody(null), productsApiUrl, productContentType);
+        sendModificationRequestIfBodyNotNull("POST", createNullableProduct(null), productsApiUrl, productContentType);
     }
 }
 

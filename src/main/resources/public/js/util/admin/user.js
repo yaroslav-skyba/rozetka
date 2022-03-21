@@ -1,8 +1,8 @@
 let role;
 
-function setUserModificationForm(headlineInnerHtml, submitInnerHtml, storageKey, uuid) {
+function setUserAdminModificationForm(headlineInnerHtml, submitInnerHtml, storageKey, uuid) {
     setNavigation("../../../", "../../", "../");
-    setUserForm();
+    setUserModificationForm();
 
     document.getElementById("role").innerHTML =
         `<div class="form-outline mb-4">
@@ -16,15 +16,21 @@ function setUserModificationForm(headlineInnerHtml, submitInnerHtml, storageKey,
         </div>`;
 
     role = document.getElementById("roleValue");
-    role.value = setUserInputs(headlineInnerHtml, submitInnerHtml, storageKey)[userRoleUuidDtoKey];
+
+    const user = setUserFormInputs(headlineInnerHtml, submitInnerHtml, storageKey);
+    role.value = user[userRoleUuidDtoKey];
+
+    setFormControlElementOnchange(storageKey, function () {
+        return createUser(uuid, user[userPasswordDtoKey]);
+    });
 }
 
-function appendRoleToBody(body) {
+function appendRoleUuidToUser(user) {
     for (const [key, value] of Object.entries(JSON.parse(localStorage.getItem(rolesStorageKey)))) {
         if (value === document.getElementById("roleValue").value) {
-            body[userRoleUuidDtoKey] = key;
+            user[userRoleUuidDtoKey] = key;
         }
     }
 
-    return body;
+    return user;
 }

@@ -1,11 +1,11 @@
 const storageKey = roleStorageKeyPrefix + creationStorageKeyPrefix;
 
 onload = function () {
-    redirectUnauthorizedUser();
+    redirectUnauthorized();
     setRoleModificationForm("create a role", "Create", storageKey, null);
 
     document.getElementById("submit").onclick = function () {
-        sendModificationRequestIfBodyNotNull("POST", createRoleModificationRequestBody(null), rolesApiUrl, roleContentType);
+        sendModificationRequestIfBodyNotNull("POST", createNullableRole(null), rolesApiUrl, roleContentType);
     }
 }
 

@@ -142,7 +142,7 @@ function alert(type, message) {
         </div>`;
 }
 
-function redirectUnauthorizedUser() {
+function redirectWithoutRoles() {
     if (!localStorage.getItem(rolesStorageKey)) {
         location.href = "/profile/admin/admin.html";
     }

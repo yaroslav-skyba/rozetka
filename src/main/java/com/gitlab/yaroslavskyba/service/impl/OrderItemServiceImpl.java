@@ -1,7 +1,7 @@
 package com.gitlab.yaroslavskyba.service.impl;
 
 import com.gitlab.yaroslavskyba.dto.OrderItemDto;
-import com.gitlab.yaroslavskyba.exception.OrderItemServiceException;
+import com.gitlab.yaroslavskyba.exception.OrderServiceException;
 import com.gitlab.yaroslavskyba.model.Order;
 import com.gitlab.yaroslavskyba.model.OrderItem;
 import com.gitlab.yaroslavskyba.model.Product;
@@ -50,6 +50,7 @@ public class OrderItemServiceImpl implements OrderItemService {
 
                 entityManager.detach(product);
                 product.setQuantity(orderItemProductQuantity);
+                product.setPrice(product.getPrice() * product.getDiscount() / 100);
 
                 final OrderItem orderItem = new OrderItem();
                 orderItem.setUuid(UUID.randomUUID());
@@ -59,7 +60,7 @@ public class OrderItemServiceImpl implements OrderItemService {
                 orderItemRepository.saveAndFlush(orderItem);
             }
         } catch (Exception exception) {
-            throw new OrderItemServiceException("An error occurred while creating an order item list", exception);
+            throw new OrderServiceException("An error occurred while creating an order item list", exception);
         }
     }
 }

@@ -17,7 +17,7 @@ let firstName;
 let lastName;
 let birthday;
 
-function setUserForm() {
+function setUserModificationForm() {
     setContainer(`
         <h2 class="text-uppercase text-center mb-5" id="headline"></h2>
         
@@ -81,16 +81,7 @@ function setUserForm() {
     birthday = document.getElementById("birthday");
 }
 
-function setUserEditStorageItems(userToEditParsed) {
-    const storageKeyPrefix = userStorageKeyPrefix + editStorageKeyPrefix;
-    localStorage.setItem(storageKeyPrefix + login.id, userToEditParsed[userLoginDtoKey]);
-    localStorage.setItem(storageKeyPrefix + email.id, userToEditParsed[userEmailDtoKey]);
-    localStorage.setItem(storageKeyPrefix + firstName.id, userToEditParsed[userFirstNameDtoKey]);
-    localStorage.setItem(storageKeyPrefix + lastName.id, userToEditParsed[userLastNameDtoKey]);
-    localStorage.setItem(storageKeyPrefix + birthday.id, userToEditParsed[userBirthdayDtoKey]);
-}
-
-function setUserInputs(headlineInnerHtml, submitInnerHtml, storageKey) {
+function setUserFormInputs(headlineInnerHtml, submitInnerHtml, storageKey) {
     configModificationPage(headlineInnerHtml, submitInnerHtml);
 
     const user = JSON.parse(localStorage.getItem(storageKey));
@@ -106,20 +97,20 @@ function setUserInputs(headlineInnerHtml, submitInnerHtml, storageKey) {
     return user;
 }
 
-function createUserRequestBody(userUuid, passwordValue) {
-    const body = {};
-    body[userUuidDtoKey] = userUuid;
-    body[userLoginDtoKey] = login.value;
-    body[userPasswordDtoKey] = passwordValue;
-    body[userEmailDtoKey] = email.value;
-    body[userFirstNameDtoKey] = firstName.value;
-    body[userLastNameDtoKey] = lastName.value;
-    body[userBirthdayDtoKey] = birthday.value;
+function createUser(userUuid, passwordValue) {
+    const user = {};
+    user[userUuidDtoKey] = userUuid;
+    user[userLoginDtoKey] = login.value;
+    user[userPasswordDtoKey] = passwordValue;
+    user[userEmailDtoKey] = email.value;
+    user[userFirstNameDtoKey] = firstName.value;
+    user[userLastNameDtoKey] = lastName.value;
+    user[userBirthdayDtoKey] = birthday.value;
 
-    return body;
+    return user;
 }
 
-function createUserModificationRequestBody(userUuid, passwordValue) {
+function createNullableUser(userUuid, passwordValue) {
     for (const formOutlineElement of document.getElementsByClassName("form-outline")) {
         if (!areInputsValid(formOutlineElement.getElementsByClassName("form-control")[0], formOutlineElement)) {
             return null;
@@ -131,15 +122,15 @@ function createUserModificationRequestBody(userUuid, passwordValue) {
         return null;
     }
 
-    return createUserRequestBody(userUuid, passwordValue);
+    return createUser(userUuid, passwordValue);
 }
 
-function createUserEditRequestBody(userToEditParsed) {
+function createUserToEdit(userToEditParsed) {
     let passwordValue = document.getElementById("password").value;
 
     if (!passwordValue) {
         passwordValue = null;
     }
 
-    return createUserModificationRequestBody(userToEditParsed[userUuidDtoKey], passwordValue);
+    return createNullableUser(userToEditParsed[userUuidDtoKey], passwordValue);
 }

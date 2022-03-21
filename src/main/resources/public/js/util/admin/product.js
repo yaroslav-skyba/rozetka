@@ -92,14 +92,12 @@ function setProductModificationForm(headlineInnerHtml, submitInnerHtml, storageK
         description.value = product[productDescriptionDtoKey];
     }
 
-    for (const formControlElement of formControlElements) {
-        formControlElement.onchange = function () {
-            localStorage.setItem(storageKey, JSON.stringify(createProduct(uuid)));
-        }
-    }
+    setFormControlElementOnchange(storageKey, function () {
+        return createProduct(uuid);
+    });
 }
 
-function createProductModificationRequestBody(uuid) {
+function createNullableProduct(uuid) {
     for (const formOutlineElement of document.getElementsByClassName("form-outline")) {
         const formControlElement = formOutlineElement.getElementsByClassName("form-control")[0];
 

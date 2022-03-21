@@ -1,7 +1,7 @@
 package com.gitlab.yaroslavskyba.controller;
 
 import com.gitlab.yaroslavskyba.dto.OrderItemDto;
-import com.gitlab.yaroslavskyba.exception.OrderItemServiceException;
+import com.gitlab.yaroslavskyba.exception.OrderServiceException;
 import com.gitlab.yaroslavskyba.service.OrderItemService;
 import com.gitlab.yaroslavskyba.util.ControllerPath;
 import com.gitlab.yaroslavskyba.util.MediaType;
@@ -31,8 +31,8 @@ public class OrderController {
         try {
             orderItemService.createOrderItemList(orderItemDtoList);
             return ResponseEntity.status(HttpStatus.CREATED).body("An order item list has been successfully created");
-        } catch (OrderItemServiceException orderItemServiceException) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(orderItemServiceException.getMessage());
+        } catch (OrderServiceException orderServiceException) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(orderServiceException.getMessage());
         }
     }
 }
