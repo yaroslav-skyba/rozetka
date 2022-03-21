@@ -1,6 +1,6 @@
 let role;
 
-function setUserModificationForm(storageKey, headlineInnerHtml, submitInnerHtml, uuid) {
+function setUserModificationForm(headlineInnerHtml, submitInnerHtml, storageKey, uuid) {
     setNavigation("../../../", "../../", "../");
     setUserForm();
 
@@ -16,9 +16,7 @@ function setUserModificationForm(storageKey, headlineInnerHtml, submitInnerHtml,
         </div>`;
 
     role = document.getElementById("roleValue");
-
-    setUserInputs(headlineInnerHtml, submitInnerHtml, storageKeyPrefix);
-    role.value = localStorage.getItem(storageKeyPrefix + role.id);
+    role.value = setUserInputs(headlineInnerHtml, submitInnerHtml, storageKey)[userRoleUuidDtoKey];
 }
 
 function appendRoleToBody(body) {

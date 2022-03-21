@@ -1,7 +1,7 @@
 onload = function () {
     redirectUnauthorizedUser();
     redirectUnauthorizedUser();
-    setUserModificationForm("edit a user", "Edit", editStorageKeyPrefix);
+    setUserModificationForm("Edit", editStorageKeyPrefix, "edit a user");
 
     const userToEditParsed = JSON.parse(localStorage.getItem(userToEditStorageKey));
 

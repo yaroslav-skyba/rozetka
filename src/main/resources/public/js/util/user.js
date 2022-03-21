@@ -90,18 +90,20 @@ function setUserEditStorageItems(userToEditParsed) {
     localStorage.setItem(storageKeyPrefix + birthday.id, userToEditParsed[userBirthdayDtoKey]);
 }
 
-function setUserInputs(headlineInnerHtml, submitInnerHtml, storageKey, storageKeyPrefix) {
+function setUserInputs(headlineInnerHtml, submitInnerHtml, storageKey) {
     configModificationPage(headlineInnerHtml, submitInnerHtml);
 
     const user = JSON.parse(localStorage.getItem(storageKey));
 
     if (user) {
         login.value = user[userLoginDtoKey];
-        email.value = localStorage.getItem(storageKeyPrefix + email.id);
-        firstName.value = localStorage.getItem(storageKeyPrefix + firstName.id);
-        lastName.value = localStorage.getItem(storageKeyPrefix + lastName.id);
-        birthday.value = localStorage.getItem(storageKeyPrefix + birthday.id);
+        email.value = user[userEmailDtoKey];
+        firstName.value = user[userFirstNameDtoKey];
+        lastName.value = user[userLastNameDtoKey];
+        birthday.value = user[userBirthdayDtoKey];
     }
+
+    return user;
 }
 
 function createUserRequestBody(userUuid, passwordValue) {

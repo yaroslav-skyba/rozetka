@@ -1,7 +1,7 @@
 onload = function () {
     redirectUnauthorizedUser();
     redirectUnauthorizedUser();
-    setUserModificationForm("create a user", "Create", creationStorageKeyPrefix);
+    setUserModificationForm("Create", creationStorageKeyPrefix, "create a user");
 
     document.getElementById("submit").onclick = function () {
         const password = document.getElementById("password");
