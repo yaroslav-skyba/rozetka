@@ -12,12 +12,14 @@ const userBirthdayDtoKey = "birthday";
 const usersApiUrl = authorityApi + "users";
 
 let login;
+let password;
+let passwordConformation;
 let email;
 let firstName;
 let lastName;
 let birthday;
 
-function setUserModificationForm() {
+function configUserModificationPage() {
     setContainer(`
         <h2 class="text-uppercase text-center mb-5" id="headline"></h2>
         
@@ -75,6 +77,8 @@ function setUserModificationForm() {
     `);
 
     login = document.getElementById("login");
+    password = document.getElementById("password");
+    passwordConformation = document.getElementById("passwordConformation");
     email = document.getElementById("email");
     firstName = document.getElementById("firstName");
     lastName = document.getElementById("lastName");
@@ -112,12 +116,12 @@ function createUser(userUuid, passwordValue) {
 
 function createNullableUser(userUuid, passwordValue) {
     for (const formOutlineElement of document.getElementsByClassName("form-outline")) {
-        if (!areInputsValid(formOutlineElement.getElementsByClassName("form-control")[0], formOutlineElement)) {
+        if (!areFormInputsValid(formOutlineElement.getElementsByClassName("form-control")[0], formOutlineElement)) {
             return null;
         }
     }
 
-    if (document.getElementById("password").value !== document.getElementById("passwordConformation").value) {
+    if (password.value !== passwordConformation.value) {
         alert("danger", "Passwords should match");
         return null;
     }
@@ -126,7 +130,7 @@ function createNullableUser(userUuid, passwordValue) {
 }
 
 function createUserToEdit(userToEditParsed) {
-    let passwordValue = document.getElementById("password").value;
+    let passwordValue = password.value;
 
     if (!passwordValue) {
         passwordValue = null;

@@ -42,7 +42,7 @@ function sendModificationRequestIfBodyNotNull(httpMethod, body, url, contentType
     }
 }
 
-function setModificationXmlHttpRequest(successStatus, storageKey) {
+function receiveModificationResponse(successStatus, storageKey) {
     if (xmlHttpRequest.readyState === 4) {
         if (xmlHttpRequest.status === successStatus) {
             localStorage.removeItem(storageKey);

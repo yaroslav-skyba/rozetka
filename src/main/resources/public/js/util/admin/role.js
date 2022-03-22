@@ -15,7 +15,7 @@ function createRole(uuid) {
     return role;
 }
 
-function setRoleModificationForm(headlineInnerHtml, submitInnerHtml, storageKey, uuid) {
+function configRoleModificationPage(headlineInnerHtml, submitInnerHtml, storageKey, uuid) {
     setNavigation("../../../", "../../", "../");
     setContainer(`
         <h2 class="text-uppercase text-center mb-5" id="headline"></h2>
@@ -50,7 +50,7 @@ function setRoleModificationForm(headlineInnerHtml, submitInnerHtml, storageKey,
 }
 
 function createNullableRole(uuid) {
-    if (!areInputsValid(name, document)) {
+    if (!areFormInputsValid(name, document)) {
         return null;
     }
 

@@ -2,7 +2,7 @@ let role;
 
 function setUserAdminModificationForm(headlineInnerHtml, submitInnerHtml, storageKey, uuid) {
     setNavigation("../../../", "../../", "../");
-    setUserModificationForm();
+    configUserModificationPage();
 
     document.getElementById("role").innerHTML =
         `<div class="form-outline mb-4">

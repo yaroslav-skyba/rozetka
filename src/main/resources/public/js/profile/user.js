@@ -9,7 +9,7 @@ onload = function () {
 
     setNavigation("../index.html", "../img/logo.png", "../cart.html", "../about.html", "../login.html",
         "../registration.html", "admin/admin.html", "user.html");
-    setUserModificationForm();
+    configUserModificationPage();
     setUserEditStorageItems(currentUser);
     setUserFormInputs("Edit your profile", "Save", editStorageKeyPrefix);
 
@@ -24,7 +24,7 @@ xmlHttpRequest.onreadystatechange = function () {
         if (xmlHttpRequest.status === 200) {
             alert("success", xmlHttpRequest.responseText);
 
-            const requestBody = createUser(currentUser[userUuidDtoKey], document.getElementById("password").value);
+            const requestBody = createUser(currentUser[userUuidDtoKey], password.value);
             requestBody[userRoleUuidDtoKey] = currentUser[userRoleUuidDtoKey];
             localStorage.setItem(currentUserStorageKey, JSON.stringify(requestBody));
 

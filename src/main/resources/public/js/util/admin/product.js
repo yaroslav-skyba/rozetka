@@ -31,7 +31,7 @@ function createProduct(uuid) {
     return product;
 }
 
-function setProductModificationForm(headlineInnerHtml, submitInnerHtml, storageKey, uuid) {
+function configProductModificationPage(headlineInnerHtml, submitInnerHtml, storageKey, uuid) {
     setNavigation("../../../", "../../", "../");
     setContainer(`
         <h2 class="text-uppercase text-center mb-5" id="headline"></h2>
@@ -101,7 +101,7 @@ function createNullableProduct(uuid) {
     for (const formOutlineElement of document.getElementsByClassName("form-outline")) {
         const formControlElement = formOutlineElement.getElementsByClassName("form-control")[0];
 
-        if (!areInputsValid(formControlElement, formOutlineElement)) {
+        if (!areFormInputsValid(formControlElement, formOutlineElement)) {
             return null;
         }
 

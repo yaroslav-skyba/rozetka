@@ -148,7 +148,7 @@ function redirectWithoutRoles() {
     }
 }
 
-function areInputsValid(formControlElement, formOutlineElement) {
+function areFormInputsValid(formControlElement, formOutlineElement) {
     if (!formControlElement.checkValidity()) {
         alert("danger", formOutlineElement.getElementsByClassName("invalid-feedback")[0].innerHTML);
         return false;

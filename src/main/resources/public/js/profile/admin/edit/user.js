@@ -21,5 +21,5 @@ onload = function () {
 }
 
 xmlHttpRequest.onreadystatechange = function () {
-    setModificationXmlHttpRequest(200, editStorageKeyPrefix);
+    receiveModificationResponse(200, editStorageKeyPrefix);
 }
