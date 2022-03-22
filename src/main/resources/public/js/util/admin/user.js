@@ -1,6 +1,6 @@
 let role;
 
-function setUserAdminModificationForm(headlineInnerHtml, submitInnerHtml, storageKey, uuid) {
+function configUserAdminModificationPage(headlineInnerHtml, submitInnerHtml, storageKey, uuid) {
     setNavigation("../../../", "../../", "../");
     configUserModificationPage();
 

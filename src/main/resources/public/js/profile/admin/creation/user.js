@@ -1,7 +1,10 @@
+const storageKey = userStorageKeyPrefix + creationStorageKeyPrefix;
+
 onload = function () {
     redirectUnauthorized();
-    redirectUnauthorized();
-    setUserAdminModificationForm("Create", creationStorageKeyPrefix, "create a user");
+    redirectWithoutRoles();
+
+    configUserAdminModificationPage("create a user", submitInnerHtmlCreation, storageKey, null);
 
     document.getElementById("submit").onclick = function () {
         password.required = true;
@@ -13,5 +16,5 @@ onload = function () {
 }
 
 xmlHttpRequest.onreadystatechange = function () {
-    receiveModificationResponse(201, userStorageKeyPrefix + creationStorageKeyPrefix);
+    receiveModificationResponse(201, storageKey);
 }

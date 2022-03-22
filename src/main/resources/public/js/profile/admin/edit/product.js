@@ -1,5 +1,3 @@
-// noinspection DuplicatedCode
-
 const storageKey = productStorageKeyPrefix + editStorageKeyPrefix;
 
 onload = function () {
@@ -10,8 +8,7 @@ onload = function () {
     configProductModificationPage("edit a product", "Edit", storageKey, uuid);
 
     document.getElementById("submit").onclick = function () {
-        sendModificationRequestIfBodyNotNull("PUT", createNullableProduct(uuid), productsApiUrl + "/" + uuid,
-                                             productContentType);
+        sendModificationRequestIfBodyNotNull("PUT", createNullableProduct(uuid), productsApiUrl + "/" + uuid, productContentType);
     }
 }
 

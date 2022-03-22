@@ -19,9 +19,9 @@ let price;
 let discount;
 let description;
 
-function createProduct(uuid) {
+function createProduct(productUuid) {
     const product = {};
-    product[productUuidDtoKey] = uuid;
+    product[productUuidDtoKey] = productUuid;
     product[productNameDtoKey] = name.value;
     product[productQuantityDtoKey] = quantity.value;
     product[productPriceDtoKey] = price.value;
@@ -31,7 +31,7 @@ function createProduct(uuid) {
     return product;
 }
 
-function configProductModificationPage(headlineInnerHtml, submitInnerHtml, storageKey, uuid) {
+function configProductModificationPage(headlineInnerHtml, submitInnerHtml, storageKey, productUuid) {
     setNavigation("../../../", "../../", "../");
     setContainer(`
         <h2 class="text-uppercase text-center mb-5" id="headline"></h2>
@@ -93,11 +93,11 @@ function configProductModificationPage(headlineInnerHtml, submitInnerHtml, stora
     }
 
     setFormControlElementOnchange(storageKey, function () {
-        return createProduct(uuid);
+        return createProduct(productUuid);
     });
 }
 
-function createNullableProduct(uuid) {
+function createNullableProduct(productUuid) {
     for (const formOutlineElement of document.getElementsByClassName("form-outline")) {
         const formControlElement = formOutlineElement.getElementsByClassName("form-control")[0];
 
@@ -125,5 +125,5 @@ function createNullableProduct(uuid) {
         return null;
     }
 
-    return createProduct(uuid);
+    return createProduct(productUuid);
 }

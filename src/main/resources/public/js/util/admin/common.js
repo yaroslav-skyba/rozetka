@@ -1,6 +1,7 @@
 const formControlElements = document.getElementsByClassName("form-control");
 
-const userToEditStorageKey = "userToEdit";
+const submitInnerHtmlCreation = "Create";
+const submitInnerHtmlEdit = "Edit";
 
 function redirectUnauthorized() {
     if (localStorage.getItem(currentUserRoleNameStorageKey) !== adminRoleName) {

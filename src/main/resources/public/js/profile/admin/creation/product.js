@@ -2,7 +2,7 @@ const storageKey = productStorageKeyPrefix + creationStorageKeyPrefix;
 
 onload = function () {
     redirectUnauthorized();
-    configProductModificationPage("create a product", "Create", storageKey, null);
+    configProductModificationPage("create a product", submitInnerHtmlCreation, storageKey, null);
 
     document.getElementById("submit").onclick = function () {
         sendModificationRequestIfBodyNotNull("POST", createNullableProduct(null), productsApiUrl, productContentType);
