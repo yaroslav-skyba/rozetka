@@ -13,7 +13,7 @@ onload = function () {
     setUserEditStorageItems(currentUser);
     setUserFormInputs("Edit your profile", "Save", editStorageKeyPrefix);
 
-    document.getElementById("submit").onclick = function () {
+    submit.onclick = function () {
         sendModificationRequest("PUT", usersApiUrl + "/" + currentUser[userUuidDtoKey], createUserToEdit(currentUser),
                                 userContentType);
     }

@@ -6,7 +6,7 @@ onload = function () {
 
     configUserAdminModificationPage("create a user", submitInnerHtmlCreation, storageKey, null);
 
-    document.getElementById("submit").onclick = function () {
+    submit.onclick = function () {
         password.required = true;
         passwordConformation.required = true;
 

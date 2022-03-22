@@ -1,3 +1,4 @@
+const submit = document.getElementById("submit");
 const formControlElements = document.getElementsByClassName("form-control");
 
 const submitInnerHtmlCreation = "Create";
@@ -19,7 +20,7 @@ function configModificationPage(headlineInnerHtml, submitInnerHtml) {
     setMainAttributes();
 
     document.getElementById("headline").innerHTML = headlineInnerHtml;
-    document.getElementById("submit").innerHTML = submitInnerHtml;
+    submit.innerHTML = submitInnerHtml;
 }
 
 function setFormControlElementOnchange(storageKey, create) {

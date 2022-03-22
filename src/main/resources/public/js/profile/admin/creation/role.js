@@ -4,7 +4,7 @@ onload = function () {
     redirectUnauthorized();
     configRoleModificationPage("create a role", submitInnerHtmlCreation, storageKey, null);
 
-    document.getElementById("submit").onclick = function () {
+    submit.onclick = function () {
         sendModificationRequestIfBodyNotNull("POST", createNullableRole(null), rolesApiUrl, roleContentType);
     }
 }

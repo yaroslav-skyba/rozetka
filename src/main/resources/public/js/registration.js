@@ -3,4 +3,4 @@ setNavigation("index.html", "img/logo.png", "cart.html", "about.html", "login.ht
 configUserModificationPage();
 
 document.getElementById("headline").innerHTML = "Create an account";
-document.getElementById("submit").innerHTML = "Register";
+submit.innerHTML = "Register";
