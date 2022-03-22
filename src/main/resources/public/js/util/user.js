@@ -101,9 +101,10 @@ function setUserFormInputs(headlineInnerHtml, submitInnerHtml, storageKey) {
     return user;
 }
 
-function createUser(userUuid, passwordValue) {
+function createUser(uuid, roleUuid, passwordValue) {
     const user = {};
-    user[userUuidDtoKey] = userUuid;
+    user[userUuidDtoKey] = uuid;
+    user[userRoleUuidDtoKey] = roleUuid;
     user[userLoginDtoKey] = login.value;
     user[userPasswordDtoKey] = passwordValue;
     user[userEmailDtoKey] = email.value;
@@ -114,7 +115,7 @@ function createUser(userUuid, passwordValue) {
     return user;
 }
 
-function createNullableUser(userUuid, passwordValue) {
+function createNullableUser(uuid, passwordValue) {
     for (const formOutlineElement of document.getElementsByClassName("form-outline")) {
         if (!areFormInputsValid(formOutlineElement.getElementsByClassName("form-control")[0], formOutlineElement)) {
             return null;
@@ -126,7 +127,7 @@ function createNullableUser(userUuid, passwordValue) {
         return null;
     }
 
-    return createUser(userUuid, passwordValue);
+    return createUser(uuid, passwordValue);
 }
 
 function createUserToEdit(userToEditParsed) {

@@ -5,7 +5,7 @@ onload = function () {
     redirectUnready(storageKey);
 
     const uuid = JSON.parse(localStorage.getItem(storageKey))[roleUuidDtoKey];
-    configRoleModificationPage("edit a role", submitInnerHtmlEdit, storageKey, uuid);
+    configRoleModificationPage("edit a role", innerHtmlEditSubmit, storageKey, uuid);
 
     submit.onclick = function () {
         sendModificationRequestIfBodyNotNull("PUT", createNullableRole(uuid), rolesApiUrl + "/" + uuid, roleContentType);

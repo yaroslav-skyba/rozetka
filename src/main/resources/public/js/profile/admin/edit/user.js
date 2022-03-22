@@ -5,11 +5,11 @@ onload = function () {
     redirectUnready(storageKey);
     redirectWithoutRoles();
 
-    configUserAdminModificationPage("edit a user", submitInnerHtmlEdit, storageKey, null);
+    configUserAdminModificationPage("edit a user", innerHtmlEditSubmit, storageKey, null);
 
     submit.onclick = function () {
         const userToEditParsed = JSON.parse(localStorage.getItem(storageKey));
-        sendModificationRequestIfBodyNotNull("PUT", appendRoleUuidToUser(createUserToEdit(userToEditParsed)),
+        sendModificationRequestIfBodyNotNull("PUT", createUserToEdit(userToEditParsed),
                                              usersApiUrl + "/" + userToEditParsed[userUuidDtoKey], userContentType);
     }
 }

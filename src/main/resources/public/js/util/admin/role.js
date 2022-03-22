@@ -2,9 +2,6 @@ const roleStorageKeyPrefix = "role_";
 
 const roleContentType = contentTypeRoot + "role" + contentTypeSuffix;
 
-const roleUuidDtoKey = "uuid";
-const roleNameDtoKey = "name";
-
 let name;
 
 function createRole(uuid) {

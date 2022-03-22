@@ -2,7 +2,7 @@ const storageKey = roleStorageKeyPrefix + creationStorageKeyPrefix;
 
 onload = function () {
     redirectUnauthorized();
-    configRoleModificationPage("create a role", submitInnerHtmlCreation, storageKey, null);
+    configRoleModificationPage("create a role", innerHtmlCreationSubmit, storageKey, null);
 
     submit.onclick = function () {
         sendModificationRequestIfBodyNotNull("POST", createNullableRole(null), rolesApiUrl, roleContentType);

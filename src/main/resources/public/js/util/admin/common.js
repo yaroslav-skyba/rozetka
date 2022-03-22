@@ -1,8 +1,12 @@
-const submit = document.getElementById("submit");
 const formControlElements = document.getElementsByClassName("form-control");
 
-const submitInnerHtmlCreation = "Create";
-const submitInnerHtmlEdit = "Edit";
+const roleUuidDtoKey = "uuid";
+const roleNameDtoKey = "name";
+
+const innerHtmlCreationSubmit = "Create";
+const innerHtmlEditSubmit = "Edit";
+
+let submit;
 
 function redirectUnauthorized() {
     if (localStorage.getItem(currentUserRoleNameStorageKey) !== adminRoleName) {
@@ -18,8 +22,9 @@ function redirectUnready(storageKey) {
 
 function configModificationPage(headlineInnerHtml, submitInnerHtml) {
     setMainAttributes();
-
     document.getElementById("headline").innerHTML = headlineInnerHtml;
+
+    submit = document.getElementById("submit");
     submit.innerHTML = submitInnerHtml;
 }
 

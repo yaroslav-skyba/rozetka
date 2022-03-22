@@ -6,31 +6,40 @@ function configUserAdminModificationPage(headlineInnerHtml, submitInnerHtml, sto
 
     document.getElementById("role").innerHTML =
         `<div class="form-outline mb-4">
-            <select id="roleValue" class="form-control form-control-lg" required>
-                <option value="` + userRoleName + `">User</option>
-                <option value="` + adminRoleName + `">Admin</option>
-            </select>
-    
+            <select id="roleValue" class="form-control form-control-lg" required></select> 
             <label for="roleValue">A role</label>
             <div class="invalid-feedback">Please select a role</div>
         </div>`;
 
     role = document.getElementById("roleValue");
 
-    const user = setUserFormInputs(headlineInnerHtml, submitInnerHtml, storageKey);
-    role.value = user[userRoleUuidDtoKey];
+    const roleValues = Object.values(JSON.parse(localStorage.getItem(rolesStorageKey)));
 
-    setFormControlElementOnchange(storageKey, function () {
-        return createUser(uuid, user[userPasswordDtoKey]);
-    });
-}
-
-function appendRoleUuidToUser(user) {
-    for (const [key, value] of Object.entries(JSON.parse(localStorage.getItem(rolesStorageKey)))) {
-        if (value === document.getElementById("roleValue").value) {
-            user[userRoleUuidDtoKey] = key;
-        }
+    for (const roleValue of roleValues) {
+        role.innerHTML +=
+            `<option value="` + roleValue[roleNameDtoKey] + `">`
+                + roleValue[roleNameDtoKey].charAt(0).toUpperCase() + roleValue[roleNameDtoKey].slice(1) +
+            `</option`;
     }
 
-    return user;
+    const user = setUserFormInputs(headlineInnerHtml, submitInnerHtml, storageKey);
+
+    let roleUuid = null;
+    let password = null;
+
+    if (user) {
+        for (const roleValue of roleValues) {
+            if (roleValue[roleNameDtoKey] === role.value) {
+                role.value = roleValue[roleNameDtoKey];
+                roleUuid = roleValue[roleUuidDtoKey];
+                break;
+            }
+        }
+
+        password = user[userPasswordDtoKey];
+    }
+
+    setFormControlElementOnchange(storageKey, function () {
+        return createUser(uuid, roleUuid, password);
+    });
 }

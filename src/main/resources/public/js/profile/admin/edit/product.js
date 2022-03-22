@@ -5,7 +5,7 @@ onload = function () {
     redirectUnready(storageKey);
 
     const uuid = JSON.parse(localStorage.getItem(storageKey))[productUuidDtoKey];
-    configProductModificationPage("edit a product", submitInnerHtmlEdit, storageKey, uuid);
+    configProductModificationPage("edit a product", innerHtmlEditSubmit, storageKey, uuid);
 
     submit.onclick = function () {
         sendModificationRequestIfBodyNotNull("PUT", createNullableProduct(uuid), productsApiUrl + "/" + uuid, productContentType);
