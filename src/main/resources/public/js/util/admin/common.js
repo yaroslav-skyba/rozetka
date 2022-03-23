@@ -14,8 +14,8 @@ function redirectUnauthorized() {
     }
 }
 
-function redirectUnready(storageKey) {
-    if (!localStorage.getItem(storageKey)) {
+function redirectUnready(modificationStorageKey) {
+    if (!localStorage.getItem(modificationStorageKey)) {
         location.href = "/profile/admin/admin.html";
     }
 }
@@ -45,10 +45,12 @@ function sendModificationHttpRequest(body, httpMethod, url, contentType) {
     }
 }
 
-function receiveModificationHttpResponse(successStatus, storageKey) {
+function receiveModificationHttpResponse(successStatus, modificationStorageKey) {
     if (xmlHttpRequest.readyState === 4) {
         if (xmlHttpRequest.status === successStatus) {
-            localStorage.removeItem(storageKey);
+            localStorage.removeItem(modificationStorageKey);
+            localStorage.removeItem(rolesStorageKey);
+
             alert("success", xmlHttpRequest.responseText);
         } else if (xmlHttpRequest.status === 409) {
             alert("danger", xmlHttpRequest.responseText);

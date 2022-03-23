@@ -8,7 +8,7 @@ onload = function () {
     configRoleModificationPage("edit a role", innerHtmlEditSubmit, storageKey, uuid);
 
     submit.onclick = function () {
-        sendModificationRequestIfBodyNotNull("PUT", createNullableRole(uuid), rolesApiUrl + "/" + uuid, roleContentType);
+        sendModificationRequestIfBodyNotNull("PUT", getRole(), rolesApiUrl + "/" + uuid, roleContentType);
     }
 }
 

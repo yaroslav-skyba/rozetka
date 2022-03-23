@@ -12,7 +12,15 @@ function createRole(uuid) {
     return role;
 }
 
-function configRoleModificationPage(headlineInnerHtml, submitInnerHtml, storageKey, uuid) {
+function getRole(roleStorageKey) {
+    if (!areFormInputsValid(name, document)) {
+        return null;
+    }
+
+    return JSON.parse(localStorage.getItem(roleStorageKey));
+}
+
+function configRoleModificationPage(headlineInnerHtml, submitInnerHtml, roleStorageKey, uuid) {
     setNavigation("../../../", "../../", "../");
     setContainer(`
         <h2 class="text-uppercase text-center mb-5" id="headline"></h2>
@@ -32,24 +40,16 @@ function configRoleModificationPage(headlineInnerHtml, submitInnerHtml, storageK
         <div id="alert" class="mt-3"></div>
     `);
 
-    configModificationPage(headlineInnerHtml, submitInnerHtml);
     name = document.getElementById("name");
+    configModificationPage(headlineInnerHtml, submitInnerHtml);
 
-    const role = JSON.parse(localStorage.getItem(storageKey));
+    const role = JSON.parse(localStorage.getItem(roleStorageKey));
 
     if (role) {
         name.value = role[roleNameDtoKey];
     }
 
-    setFormControlElementOnchange(storageKey, function () {
+    setFormControlElementOnchange(roleStorageKey, function () {
         return createRole(uuid);
     });
-}
-
-function createNullableRole(uuid) {
-    if (!areFormInputsValid(name, document)) {
-        return null;
-    }
-
-    return createRole(uuid);
 }

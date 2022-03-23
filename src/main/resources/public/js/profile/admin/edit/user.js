@@ -5,11 +5,11 @@ onload = function () {
     redirectUnready(userStorageKey);
     redirectWithoutRoles();
 
-    configUserAdminModificationPage(userStorageKey, "edit a user", innerHtmlEditSubmit, null);
+    const uuid = JSON.parse(localStorage.getItem(userStorageKey))[userUuidDtoKey];
+    configUserAdminModificationPage(userStorageKey, "edit a user", innerHtmlEditSubmit, uuid);
 
     submit.onclick = function () {
-        sendModificationHttpRequest(getUser(userStorageKey),"PUT",
-                                    usersApiUrl + "/" + JSON.parse(localStorage.getItem(userStorageKey))[userUuidDtoKey], userContentType);
+        sendModificationHttpRequest(getUser(userStorageKey),"PUT", usersApiUrl + "/" + uuid, userContentType);
     }
 }
 

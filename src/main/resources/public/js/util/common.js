@@ -142,12 +142,6 @@ function alert(type, message) {
         </div>`;
 }
 
-function redirectWithoutRoles() {
-    if (!localStorage.getItem(rolesStorageKey)) {
-        location.href = "/profile/admin/admin.html";
-    }
-}
-
 function areFormInputsValid(formControlElement, formOutlineElement) {
     if (!formControlElement.checkValidity()) {
         alert("danger", formOutlineElement.getElementsByClassName("invalid-feedback")[0].innerHTML);

@@ -1,14 +1,14 @@
-const storageKey = roleStorageKeyPrefix + creationStorageKeySuffix;
+const roleStorageKey = roleStorageKeyPrefix + creationStorageKeySuffix;
 
 onload = function () {
     redirectUnauthorized();
-    configRoleModificationPage("create a role", innerHtmlCreationSubmit, storageKey, null);
+    configRoleModificationPage("create a role", innerHtmlCreationSubmit, roleStorageKey, null);
 
     submit.onclick = function () {
-        sendModificationRequestIfBodyNotNull("POST", createNullableRole(null), rolesApiUrl, roleContentType);
+        sendModificationHttpRequest(getRole(roleStorageKey),"POST", rolesApiUrl, roleContentType);
     }
 }
 
 xmlHttpRequest.onreadystatechange = function () {
-    receiveModificationHttpResponse(201, storageKey);
+    receiveModificationHttpResponse(201, roleStorageKey);
 }
