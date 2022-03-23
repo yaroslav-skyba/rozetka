@@ -1,16 +1,5 @@
 //noinspection DuplicatedCode
 
-const productUuidDtoKey = "uuid";
-const productNameDtoKey = "name";
-const productQuantityDtoKey = "quantity";
-const productPriceDtoKey = "price";
-const productDiscountDtoKey = "discount";
-const productDescriptionDtoKey = "description";
-
-const productStorageKeyPrefix = "product_";
-
-const productsApiUrl = authorityApi + "products";
-
 const productContentType = contentTypeRoot + "product" + contentTypeSuffix;
 
 let name;

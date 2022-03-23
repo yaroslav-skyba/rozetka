@@ -1,8 +1,5 @@
 const formControlElements = document.getElementsByClassName("form-control");
 
-const roleUuidDtoKey = "uuid";
-const roleNameDtoKey = "name";
-
 const innerHtmlCreationSubmit = "Create";
 const innerHtmlEditSubmit = "Edit";
 

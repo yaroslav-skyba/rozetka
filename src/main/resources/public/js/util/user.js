@@ -1,16 +1,5 @@
 //noinspection DuplicatedCode
 
-const usersApiUrl = authorityApi + "users";
-
-const userUuidDtoKey = "uuid";
-const userRoleUuidDtoKey = "uuidRole";
-const userLoginDtoKey = "login";
-const userPasswordDtoKey = "password";
-const userEmailDtoKey = "email";
-const userFirstNameDtoKey = "firstName";
-const userLastNameDtoKey = "lastName";
-const userBirthdayDtoKey = "birthday";
-
 let login;
 let password;
 let passwordConformation;

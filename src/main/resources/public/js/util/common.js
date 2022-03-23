@@ -1,6 +1,9 @@
 const xmlHttpRequest = new XMLHttpRequest();
 
 const userStorageKeyPrefix = "user_";
+const roleStorageKeyPrefix = "role_";
+const productStorageKeyPrefix = "product_";
+
 const creationStorageKeySuffix = "creation";
 const editStorageKeySuffix = "edit";
 
@@ -10,11 +13,32 @@ const currentUserStorageKey = "currentUser";
 const rolesStorageKey = "roles";
 
 const authorityApi = "http://localhost:8080/api/v1/";
+const usersApiUrl = authorityApi + "users";
 const rolesApiUrl = authorityApi + "roles";
+const productsApiUrl = authorityApi + "products";
 
 const contentTypeRoot = "application/vnd.rozetka.";
 const contentTypeSuffix = "+json";
 const userContentType = contentTypeRoot + "user" + contentTypeSuffix;
+
+const userUuidDtoKey = "uuid";
+const userRoleUuidDtoKey = "uuidRole";
+const userLoginDtoKey = "login";
+const userPasswordDtoKey = "password";
+const userEmailDtoKey = "email";
+const userFirstNameDtoKey = "firstName";
+const userLastNameDtoKey = "lastName";
+const userBirthdayDtoKey = "birthday";
+
+const roleUuidDtoKey = "uuid";
+const roleNameDtoKey = "name";
+
+const productUuidDtoKey = "uuid";
+const productNameDtoKey = "name";
+const productQuantityDtoKey = "quantity";
+const productPriceDtoKey = "price";
+const productDiscountDtoKey = "discount";
+const productDescriptionDtoKey = "description";
 
 const adminRoleName = "admin";
 const userRoleName = "user";

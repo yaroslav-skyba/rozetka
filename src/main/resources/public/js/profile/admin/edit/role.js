@@ -1,17 +1,17 @@
-const storageKey = roleStorageKeyPrefix + editStorageKeySuffix;
+const roleStorageKey = roleStorageKeyPrefix + editStorageKeySuffix;
 
 onload = function () {
     redirectUnauthorized();
-    redirectUnready(storageKey);
+    redirectUnready(roleStorageKey);
 
-    const uuid = JSON.parse(localStorage.getItem(storageKey))[roleUuidDtoKey];
-    configRoleModificationPage("edit a role", innerHtmlEditSubmit, storageKey, uuid);
+    const uuid = JSON.parse(localStorage.getItem(roleStorageKey))[roleUuidDtoKey];
+    configRoleModificationPage("edit a role", innerHtmlEditSubmit, roleStorageKey, uuid);
 
     submit.onclick = function () {
-        sendModificationRequestIfBodyNotNull("PUT", getRole(), rolesApiUrl + "/" + uuid, roleContentType);
+        sendModificationHttpRequest(getRole(roleStorageKey),"PUT", rolesApiUrl + "/" + uuid, roleContentType);
     }
 }
 
 xmlHttpRequest.onreadystatechange = function () {
-    receiveModificationHttpResponse(200, storageKey);
+    receiveModificationHttpResponse(200, roleStorageKey);
 }

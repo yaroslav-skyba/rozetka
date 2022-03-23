@@ -1,5 +1,3 @@
-const roleStorageKeyPrefix = "role_";
-
 const roleContentType = contentTypeRoot + "role" + contentTypeSuffix;
 
 let name;
