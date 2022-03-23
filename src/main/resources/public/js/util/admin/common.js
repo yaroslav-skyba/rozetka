@@ -36,7 +36,7 @@ function setFormControlElementOnchange(storageKey, create) {
     }
 }
 
-function sendModificationRequest(body, httpMethod, url, contentType) {
+function sendModificationHttpRequest(body, httpMethod, url, contentType) {
     if (body) {
         xmlHttpRequest.open(httpMethod, url);
         xmlHttpRequest.setRequestHeader("Content-Type", contentType);
@@ -45,7 +45,7 @@ function sendModificationRequest(body, httpMethod, url, contentType) {
     }
 }
 
-function receiveModificationResponse(successStatus, storageKey) {
+function receiveModificationHttpResponse(successStatus, storageKey) {
     if (xmlHttpRequest.readyState === 4) {
         if (xmlHttpRequest.status === successStatus) {
             localStorage.removeItem(storageKey);

@@ -1,19 +1,19 @@
-const storageKey = userStorageKeyPrefix + creationStorageKeyPrefix;
+const userStorageKey = userStorageKeyPrefix + creationStorageKeySuffix;
 
 onload = function () {
     redirectUnauthorized();
     redirectWithoutRoles();
 
-    configUserAdminModificationPage("create a user", innerHtmlCreationSubmit, storageKey, null);
+    configUserAdminModificationPage(userStorageKey, "create a user", innerHtmlCreationSubmit, null);
 
     submit.onclick = function () {
         password.required = true;
         passwordConformation.required = true;
 
-        sendModificationRequest("POST", createUser(storageKey), usersApiUrl, userContentType);
+        sendModificationHttpRequest(getUser(userStorageKey),"POST",  usersApiUrl, userContentType);
     }
 }
 
 xmlHttpRequest.onreadystatechange = function () {
-    receiveModificationResponse(201, storageKey);
+    receiveModificationHttpResponse(201, userStorageKey);
 }

@@ -86,10 +86,10 @@ function configUserModificationPage(rootDestination, userDestination, adminDesti
     birthday = document.getElementById("birthday");
 }
 
-function setUserFormInputs(headlineInnerHtml, submitInnerHtml, storageKey, uuid, roleUuid) {
+function setUserFormInputs(headlineInnerHtml, submitInnerHtml, userStorageKey) {
     configModificationPage(headlineInnerHtml, submitInnerHtml);
 
-    const user = JSON.parse(localStorage.getItem(storageKey));
+    const user = JSON.parse(localStorage.getItem(userStorageKey));
 
     if (user) {
         login.value = user[userLoginDtoKey];
@@ -98,29 +98,28 @@ function setUserFormInputs(headlineInnerHtml, submitInnerHtml, storageKey, uuid,
         lastName.value = user[userLastNameDtoKey];
         birthday.value = user[userBirthdayDtoKey];
     }
-
-    setFormControlElementOnchange(storageKey, function () {
-        let passwordValue = password.value;
-
-        if (!passwordValue) {
-            passwordValue = null;
-        }
-
-        const user = {};
-        user[userUuidDtoKey] = uuid;
-        user[userRoleUuidDtoKey] = roleUuid;
-        user[userLoginDtoKey] = login.value;
-        user[userPasswordDtoKey] = passwordValue;
-        user[userEmailDtoKey] = email.value;
-        user[userFirstNameDtoKey] = firstName.value;
-        user[userLastNameDtoKey] = lastName.value;
-        user[userBirthdayDtoKey] = birthday.value;
-
-        return user;
-    });
 }
 
-function createUser(userStorageKey) {
+function createUser(uuid) {
+    let passwordValue = password.value;
+
+    if (!passwordValue) {
+        passwordValue = null;
+    }
+
+    const user = {};
+    user[userUuidDtoKey] = uuid;
+    user[userLoginDtoKey] = login.value;
+    user[userPasswordDtoKey] = passwordValue;
+    user[userEmailDtoKey] = email.value;
+    user[userFirstNameDtoKey] = firstName.value;
+    user[userLastNameDtoKey] = lastName.value;
+    user[userBirthdayDtoKey] = birthday.value;
+
+    return user;
+}
+
+function getUser(userStorageKey) {
     for (const formOutlineElement of document.getElementsByClassName("form-outline")) {
         if (!areFormInputsValid(formOutlineElement.getElementsByClassName("form-control")[0], formOutlineElement)) {
             return null;

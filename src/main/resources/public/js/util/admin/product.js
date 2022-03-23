@@ -19,18 +19,6 @@ let price;
 let discount;
 let description;
 
-function createProduct(uuid) {
-    const product = {};
-    product[productUuidDtoKey] = uuid;
-    product[productNameDtoKey] = name.value;
-    product[productQuantityDtoKey] = quantity.value;
-    product[productPriceDtoKey] = price.value;
-    product[productDiscountDtoKey] = discount.value;
-    product[productDescriptionDtoKey] = description.value;
-
-    return product;
-}
-
 function configProductModificationPage(headlineInnerHtml, submitInnerHtml, storageKey, uuid) {
     setNavigation("../../../", "../../", "../");
     setContainer(`
@@ -95,6 +83,18 @@ function configProductModificationPage(headlineInnerHtml, submitInnerHtml, stora
     setFormControlElementOnchange(storageKey, function () {
         return createProduct(uuid);
     });
+}
+
+function createProduct(uuid) {
+    const product = {};
+    product[productUuidDtoKey] = uuid;
+    product[productNameDtoKey] = name.value;
+    product[productQuantityDtoKey] = quantity.value;
+    product[productPriceDtoKey] = price.value;
+    product[productDiscountDtoKey] = discount.value;
+    product[productDescriptionDtoKey] = description.value;
+
+    return product;
 }
 
 function createNullableProduct(uuid) {

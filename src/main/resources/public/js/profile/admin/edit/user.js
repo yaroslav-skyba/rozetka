@@ -1,18 +1,18 @@
-const storageKey = userStorageKeyPrefix + editStorageKeyPrefix;
+const userStorageKey = userStorageKeyPrefix + editStorageKeySuffix;
 
 onload = function () {
     redirectUnauthorized();
-    redirectUnready(storageKey);
+    redirectUnready(userStorageKey);
     redirectWithoutRoles();
 
-    configUserAdminModificationPage("edit a user", innerHtmlEditSubmit, storageKey, null);
+    configUserAdminModificationPage(userStorageKey, "edit a user", innerHtmlEditSubmit, null);
 
     submit.onclick = function () {
-        sendModificationRequest("PUT", createUser(storageKey),
-                                usersApiUrl + "/" + JSON.parse(localStorage.getItem(storageKey))[userUuidDtoKey], userContentType);
+        sendModificationHttpRequest(getUser(userStorageKey),"PUT",
+                                    usersApiUrl + "/" + JSON.parse(localStorage.getItem(userStorageKey))[userUuidDtoKey], userContentType);
     }
 }
 
 xmlHttpRequest.onreadystatechange = function () {
-    receiveModificationResponse(200, storageKey);
+    receiveModificationHttpResponse(200, userStorageKey);
 }

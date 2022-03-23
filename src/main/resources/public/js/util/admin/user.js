@@ -1,6 +1,6 @@
 let role;
 
-function configUserAdminModificationPage(headlineInnerHtml, submitInnerHtml, storageKey, uuid) {
+function configUserAdminModificationPage(userStorageKey, headlineInnerHtml, submitInnerHtml, uuid) {
     configUserModificationPage("../../../", "../../", "../");
 
     document.getElementById("role").innerHTML =
@@ -21,14 +21,17 @@ function configUserAdminModificationPage(headlineInnerHtml, submitInnerHtml, sto
             `</option`;
     }
 
-    let roleUuid = null;
+    const user = JSON.parse(localStorage.getItem(userStorageKey));
 
-    for (const roleValue of roleValues) {
-        if (roleValue[roleNameDtoKey] === role.value) {
-            roleUuid = roleValue[roleUuidDtoKey];
-            break;
-        }
+    if (user) {
+        role.value = roleValues.find(value => value[roleUuidDtoKey] === user[userRoleUuidDtoKey])[roleNameDtoKey];
     }
 
-    setUserFormInputs(headlineInnerHtml, submitInnerHtml, storageKey, uuid, roleUuid);
+    setUserFormInputs(headlineInnerHtml, submitInnerHtml, userStorageKey);
+    setFormControlElementOnchange(userStorageKey, function () {
+        const user = createUser(uuid);
+        user[userRoleUuidDtoKey] = roleValues.find(value => value[roleNameDtoKey] === role.value)[roleUuidDtoKey];
+
+        return user;
+    });
 }

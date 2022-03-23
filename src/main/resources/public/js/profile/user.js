@@ -11,10 +11,10 @@ onload = function () {
         "../registration.html", "admin/admin.html", "user.html");
     configUserModificationPage();
     setUserEditStorageItems(currentUser);
-    setUserFormInputs("Edit your profile", "Save", editStorageKeyPrefix);
+    setUserFormInputs("Edit your profile", "Save", editStorageKeySuffix);
 
     submit.onclick = function () {
-        sendModificationRequest(createUserToEdit(), "PUT", usersApiUrl + "/" + currentUser[userUuidDtoKey], userContentType);
+        sendModificationHttpRequest(createUserToEdit(), "PUT", usersApiUrl + "/" + currentUser[userUuidDtoKey], userContentType);
     }
 }
 
@@ -23,11 +23,11 @@ xmlHttpRequest.onreadystatechange = function () {
         if (xmlHttpRequest.status === 200) {
             alert("success", xmlHttpRequest.responseText);
 
-            const requestBody = createUser(currentUser[userUuidDtoKey], currentUser[userRoleUuidDtoKey], password.value);
+            const requestBody = getUser(currentUser[userUuidDtoKey], currentUser[userRoleUuidDtoKey], password.value);
             requestBody[userRoleUuidDtoKey] = currentUser[userRoleUuidDtoKey];
             localStorage.setItem(currentUserStorageKey, JSON.stringify(requestBody));
 
-            if (localStorage.getItem(editStorageKeyPrefix + login.id) !== login.value) {
+            if (localStorage.getItem(editStorageKeySuffix + login.id) !== login.value) {
                 xmlHttpRequest.open("POST", authorityApi + "jwts");
                 xmlHttpRequest.send(localStorage.getItem(jwtStorageKey));
             }
@@ -38,7 +38,7 @@ xmlHttpRequest.onreadystatechange = function () {
         }
 
         for (const formControlElement of formControlElements) {
-            localStorage.removeItem(editStorageKeyPrefix + formControlElement.id);
+            localStorage.removeItem(editStorageKeySuffix + formControlElement.id);
         }
     }
 }

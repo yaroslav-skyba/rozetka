@@ -1,4 +1,4 @@
-const storageKey = productStorageKeyPrefix + creationStorageKeyPrefix;
+const storageKey = productStorageKeyPrefix + creationStorageKeySuffix;
 
 onload = function () {
     redirectUnauthorized();
@@ -10,5 +10,5 @@ onload = function () {
 }
 
 xmlHttpRequest.onreadystatechange = function () {
-    receiveModificationResponse(201, storageKey);
+    receiveModificationHttpResponse(201, storageKey);
 }

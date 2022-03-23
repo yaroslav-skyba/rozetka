@@ -1,8 +1,8 @@
 const xmlHttpRequest = new XMLHttpRequest();
 
 const userStorageKeyPrefix = "user_";
-const creationStorageKeyPrefix = "creation";
-const editStorageKeyPrefix = "edit";
+const creationStorageKeySuffix = "creation";
+const editStorageKeySuffix = "edit";
 
 const jwtStorageKey = "jwt";
 const currentUserRoleNameStorageKey = "roleName";
