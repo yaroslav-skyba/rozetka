@@ -8,9 +8,8 @@ onload = function () {
     configUserAdminModificationPage("edit a user", innerHtmlEditSubmit, storageKey, null);
 
     submit.onclick = function () {
-        const userToEditParsed = JSON.parse(localStorage.getItem(storageKey));
-        sendModificationRequestIfBodyNotNull("PUT", createUserToEdit(userToEditParsed),
-                                             usersApiUrl + "/" + userToEditParsed[userUuidDtoKey], userContentType);
+        sendModificationRequest("PUT", createUser(storageKey),
+                                usersApiUrl + "/" + JSON.parse(localStorage.getItem(storageKey))[userUuidDtoKey], userContentType);
     }
 }
 

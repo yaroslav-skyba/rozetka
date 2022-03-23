@@ -10,7 +10,7 @@ onload = function () {
         password.required = true;
         passwordConformation.required = true;
 
-        sendModificationRequestIfBodyNotNull("POST", createNullableUser(null, password.value), usersApiUrl, userContentType);
+        sendModificationRequest("POST", createUser(storageKey), usersApiUrl, userContentType);
     }
 }
 

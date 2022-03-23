@@ -36,16 +36,12 @@ function setFormControlElementOnchange(storageKey, create) {
     }
 }
 
-function sendModificationRequest(httpMethod, url, body, contentType) {
-    xmlHttpRequest.open(httpMethod, url);
-    xmlHttpRequest.setRequestHeader("Content-Type", contentType);
-    xmlHttpRequest.setRequestHeader("Authorization", localStorage.getItem(jwtStorageKey));
-    xmlHttpRequest.send(JSON.stringify(body));
-}
-
-function sendModificationRequestIfBodyNotNull(httpMethod, body, url, contentType) {
+function sendModificationRequest(body, httpMethod, url, contentType) {
     if (body) {
-        sendModificationRequest(httpMethod, url, body, contentType);
+        xmlHttpRequest.open(httpMethod, url);
+        xmlHttpRequest.setRequestHeader("Content-Type", contentType);
+        xmlHttpRequest.setRequestHeader("Authorization", localStorage.getItem(jwtStorageKey));
+        xmlHttpRequest.send(JSON.stringify(body));
     }
 }
 

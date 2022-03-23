@@ -1,5 +1,7 @@
 //noinspection DuplicatedCode
 
+const usersApiUrl = authorityApi + "users";
+
 const userUuidDtoKey = "uuid";
 const userRoleUuidDtoKey = "uuidRole";
 const userLoginDtoKey = "login";
@@ -9,8 +11,6 @@ const userFirstNameDtoKey = "firstName";
 const userLastNameDtoKey = "lastName";
 const userBirthdayDtoKey = "birthday";
 
-const usersApiUrl = authorityApi + "users";
-
 let login;
 let password;
 let passwordConformation;
@@ -19,7 +19,8 @@ let firstName;
 let lastName;
 let birthday;
 
-function configUserModificationPage() {
+function configUserModificationPage(rootDestination, userDestination, adminDestination) {
+    setNavigation(rootDestination, userDestination, adminDestination);
     setContainer(`
         <h2 class="text-uppercase text-center mb-5" id="headline"></h2>
         
@@ -85,7 +86,7 @@ function configUserModificationPage() {
     birthday = document.getElementById("birthday");
 }
 
-function setUserFormInputs(headlineInnerHtml, submitInnerHtml, storageKey) {
+function setUserFormInputs(headlineInnerHtml, submitInnerHtml, storageKey, uuid, roleUuid) {
     configModificationPage(headlineInnerHtml, submitInnerHtml);
 
     const user = JSON.parse(localStorage.getItem(storageKey));
@@ -98,24 +99,28 @@ function setUserFormInputs(headlineInnerHtml, submitInnerHtml, storageKey) {
         birthday.value = user[userBirthdayDtoKey];
     }
 
-    return user;
+    setFormControlElementOnchange(storageKey, function () {
+        let passwordValue = password.value;
+
+        if (!passwordValue) {
+            passwordValue = null;
+        }
+
+        const user = {};
+        user[userUuidDtoKey] = uuid;
+        user[userRoleUuidDtoKey] = roleUuid;
+        user[userLoginDtoKey] = login.value;
+        user[userPasswordDtoKey] = passwordValue;
+        user[userEmailDtoKey] = email.value;
+        user[userFirstNameDtoKey] = firstName.value;
+        user[userLastNameDtoKey] = lastName.value;
+        user[userBirthdayDtoKey] = birthday.value;
+
+        return user;
+    });
 }
 
-function createUser(uuid, roleUuid, passwordValue) {
-    const user = {};
-    user[userUuidDtoKey] = uuid;
-    user[userRoleUuidDtoKey] = roleUuid;
-    user[userLoginDtoKey] = login.value;
-    user[userPasswordDtoKey] = passwordValue;
-    user[userEmailDtoKey] = email.value;
-    user[userFirstNameDtoKey] = firstName.value;
-    user[userLastNameDtoKey] = lastName.value;
-    user[userBirthdayDtoKey] = birthday.value;
-
-    return user;
-}
-
-function createNullableUser(uuid, passwordValue) {
+function createUser(userStorageKey) {
     for (const formOutlineElement of document.getElementsByClassName("form-outline")) {
         if (!areFormInputsValid(formOutlineElement.getElementsByClassName("form-control")[0], formOutlineElement)) {
             return null;
@@ -127,15 +132,5 @@ function createNullableUser(uuid, passwordValue) {
         return null;
     }
 
-    return createUser(uuid, passwordValue);
-}
-
-function createUserToEdit(userToEditParsed) {
-    let passwordValue = password.value;
-
-    if (!passwordValue) {
-        passwordValue = null;
-    }
-
-    return createNullableUser(userToEditParsed[userUuidDtoKey], passwordValue);
+    return JSON.parse(localStorage.getItem(userStorageKey));
 }

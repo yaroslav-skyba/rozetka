@@ -14,8 +14,7 @@ onload = function () {
     setUserFormInputs("Edit your profile", "Save", editStorageKeyPrefix);
 
     submit.onclick = function () {
-        sendModificationRequest("PUT", usersApiUrl + "/" + currentUser[userUuidDtoKey], createUserToEdit(currentUser),
-                                userContentType);
+        sendModificationRequest(createUserToEdit(), "PUT", usersApiUrl + "/" + currentUser[userUuidDtoKey], userContentType);
     }
 }
 
@@ -24,7 +23,7 @@ xmlHttpRequest.onreadystatechange = function () {
         if (xmlHttpRequest.status === 200) {
             alert("success", xmlHttpRequest.responseText);
 
-            const requestBody = createUser(currentUser[userUuidDtoKey], password.value);
+            const requestBody = createUser(currentUser[userUuidDtoKey], currentUser[userRoleUuidDtoKey], password.value);
             requestBody[userRoleUuidDtoKey] = currentUser[userRoleUuidDtoKey];
             localStorage.setItem(currentUserStorageKey, JSON.stringify(requestBody));
 
