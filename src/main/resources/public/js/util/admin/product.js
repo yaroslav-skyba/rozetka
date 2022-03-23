@@ -19,7 +19,50 @@ let price;
 let discount;
 let description;
 
-function configProductModificationPage(headlineInnerHtml, submitInnerHtml, storageKey, uuid) {
+function createProduct(uuid) {
+    const product = {};
+    product[productUuidDtoKey] = uuid;
+    product[productNameDtoKey] = name.value;
+    product[productQuantityDtoKey] = quantity.value;
+    product[productPriceDtoKey] = price.value;
+    product[productDiscountDtoKey] = discount.value;
+    product[productDescriptionDtoKey] = description.value;
+
+    return product;
+}
+
+function getProduct(productStorageKey) {
+    for (const formOutlineElement of document.getElementsByClassName("form-outline")) {
+        const formControlElement = formOutlineElement.getElementsByClassName("form-control")[0];
+
+        if (!areFormInputsValid(formControlElement, formOutlineElement)) {
+            return null;
+        }
+
+        const minFieldValue = 0;
+
+        if (Number(formControlElement.value) < 0) {
+            alert("danger", "A field value should be " + minFieldValue + " or positive");
+            return null;
+        }
+    }
+
+    if (!Number.isInteger(Number(quantity.value))) {
+        alert("danger", "A quantity value should be an integer");
+        return null;
+    }
+
+    const maxDiscountValue = 100;
+
+    if (Number(discount.value) > maxDiscountValue) {
+        alert("danger", "A discount value should be " + maxDiscountValue + " or less");
+        return null;
+    }
+
+    return JSON.parse(localStorage.getItem(productStorageKey));
+}
+
+function configProductModificationPage(headlineInnerHtml, submitInnerHtml, productStorageKey, uuid) {
     setNavigation("../../../", "../../", "../");
     setContainer(`
         <h2 class="text-uppercase text-center mb-5" id="headline"></h2>
@@ -62,15 +105,15 @@ function configProductModificationPage(headlineInnerHtml, submitInnerHtml, stora
         <div id="alert" class="mt-3"></div>
     `);
 
-    configModificationPage(headlineInnerHtml, submitInnerHtml);
-
     name = document.getElementById("name");
     quantity = document.getElementById("quantity");
     price = document.getElementById("price");
     discount = document.getElementById("discount");
     description = document.getElementById("description");
 
-    const product = JSON.parse(localStorage.getItem(storageKey));
+    configModificationPage(headlineInnerHtml, submitInnerHtml);
+
+    const product = JSON.parse(localStorage.getItem(productStorageKey));
 
     if (product) {
         name.value = product[productNameDtoKey];
@@ -80,50 +123,7 @@ function configProductModificationPage(headlineInnerHtml, submitInnerHtml, stora
         description.value = product[productDescriptionDtoKey];
     }
 
-    setFormControlElementOnchange(storageKey, function () {
+    setFormControlElementOnchange(productStorageKey, function () {
         return createProduct(uuid);
     });
-}
-
-function createProduct(uuid) {
-    const product = {};
-    product[productUuidDtoKey] = uuid;
-    product[productNameDtoKey] = name.value;
-    product[productQuantityDtoKey] = quantity.value;
-    product[productPriceDtoKey] = price.value;
-    product[productDiscountDtoKey] = discount.value;
-    product[productDescriptionDtoKey] = description.value;
-
-    return product;
-}
-
-function createNullableProduct(uuid) {
-    for (const formOutlineElement of document.getElementsByClassName("form-outline")) {
-        const formControlElement = formOutlineElement.getElementsByClassName("form-control")[0];
-
-        if (!areFormInputsValid(formControlElement, formOutlineElement)) {
-            return null;
-        }
-
-        const minFieldValue = 0;
-
-        if (Number(formControlElement.value) < 0) {
-            alert("danger", "A field value should be " + minFieldValue + " or positive");
-            return null;
-        }
-    }
-
-    if (!Number.isInteger(Number(quantity.value))) {
-        alert("danger", "A quantity value should be an integer");
-        return null;
-    }
-
-    const maxDiscountValue = 100;
-
-    if (Number(discount.value) > maxDiscountValue) {
-        alert("danger", "A discount value should be " + maxDiscountValue + " or less");
-        return null;
-    }
-
-    return createProduct(uuid);
 }

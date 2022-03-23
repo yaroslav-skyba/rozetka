@@ -8,7 +8,7 @@ onload = function () {
     configProductModificationPage("edit a product", innerHtmlEditSubmit, storageKey, uuid);
 
     submit.onclick = function () {
-        sendModificationRequestIfBodyNotNull("PUT", createNullableProduct(uuid), productsApiUrl + "/" + uuid, productContentType);
+        sendModificationRequestIfBodyNotNull("PUT", getProduct(), productsApiUrl + "/" + uuid, productContentType);
     }
 }
 

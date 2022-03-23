@@ -19,6 +19,40 @@ let firstName;
 let lastName;
 let birthday;
 
+function createUser(uuid) {
+    let passwordValue = password.value;
+
+    if (!passwordValue) {
+        passwordValue = null;
+    }
+
+    const user = {};
+    user[userUuidDtoKey] = uuid;
+    user[userLoginDtoKey] = login.value;
+    user[userPasswordDtoKey] = passwordValue;
+    user[userEmailDtoKey] = email.value;
+    user[userFirstNameDtoKey] = firstName.value;
+    user[userLastNameDtoKey] = lastName.value;
+    user[userBirthdayDtoKey] = birthday.value;
+
+    return user;
+}
+
+function getUser(userStorageKey) {
+    for (const formOutlineElement of document.getElementsByClassName("form-outline")) {
+        if (!areFormInputsValid(formOutlineElement.getElementsByClassName("form-control")[0], formOutlineElement)) {
+            return null;
+        }
+    }
+
+    if (password.value !== passwordConformation.value) {
+        alert("danger", "Passwords should match");
+        return null;
+    }
+
+    return JSON.parse(localStorage.getItem(userStorageKey));
+}
+
 function configUserModificationPage(rootDestination, userDestination, adminDestination) {
     setNavigation(rootDestination, userDestination, adminDestination);
     setContainer(`
@@ -98,38 +132,4 @@ function setUserFormInputs(headlineInnerHtml, submitInnerHtml, userStorageKey) {
         lastName.value = user[userLastNameDtoKey];
         birthday.value = user[userBirthdayDtoKey];
     }
-}
-
-function createUser(uuid) {
-    let passwordValue = password.value;
-
-    if (!passwordValue) {
-        passwordValue = null;
-    }
-
-    const user = {};
-    user[userUuidDtoKey] = uuid;
-    user[userLoginDtoKey] = login.value;
-    user[userPasswordDtoKey] = passwordValue;
-    user[userEmailDtoKey] = email.value;
-    user[userFirstNameDtoKey] = firstName.value;
-    user[userLastNameDtoKey] = lastName.value;
-    user[userBirthdayDtoKey] = birthday.value;
-
-    return user;
-}
-
-function getUser(userStorageKey) {
-    for (const formOutlineElement of document.getElementsByClassName("form-outline")) {
-        if (!areFormInputsValid(formOutlineElement.getElementsByClassName("form-control")[0], formOutlineElement)) {
-            return null;
-        }
-    }
-
-    if (password.value !== passwordConformation.value) {
-        alert("danger", "Passwords should match");
-        return null;
-    }
-
-    return JSON.parse(localStorage.getItem(userStorageKey));
 }

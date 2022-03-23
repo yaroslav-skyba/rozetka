@@ -1,14 +1,14 @@
-const storageKey = productStorageKeyPrefix + creationStorageKeySuffix;
+const productStorageKey = productStorageKeyPrefix + creationStorageKeySuffix;
 
 onload = function () {
     redirectUnauthorized();
-    configProductModificationPage("create a product", innerHtmlCreationSubmit, storageKey, null);
+    configProductModificationPage("create a product", innerHtmlCreationSubmit, productStorageKey, null);
 
     submit.onclick = function () {
-        sendModificationRequestIfBodyNotNull("POST", createNullableProduct(null), productsApiUrl, productContentType);
+        sendModificationHttpRequest(getProduct(productStorageKey),"POST", productsApiUrl, productContentType);
     }
 }
 
 xmlHttpRequest.onreadystatechange = function () {
-    receiveModificationHttpResponse(201, storageKey);
+    receiveModificationHttpResponse(201, productStorageKey);
 }
