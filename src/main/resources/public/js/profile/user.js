@@ -14,8 +14,7 @@ onload = function () {
     });
 
     submit.onclick = function () {
-        sendModificationHttpRequest(createUser(currentUser[userUuidDtoKey]), "PUT", usersApiUrl + "/" + currentUser[userUuidDtoKey],
-                                    userContentType);
+        sendModificationHttpRequest(getUser(currentUserStorageKey),"PUT", usersApiUrl + "/" + currentUser[userUuidDtoKey], userContentType);
     }
 }
 
@@ -25,7 +24,7 @@ xmlHttpRequest.onreadystatechange = function () {
             alert("success", xmlHttpRequest.responseText);
 
             if (login.value !== userLogin) {
-                xmlHttpRequest.open("POST", authorityApi + "refresh-jwt");
+                xmlHttpRequest.open("POST", authorityApi + "jwts");
                 xmlHttpRequest.send(localStorage.getItem(jwtStorageKey));
             }
         } else if (xmlHttpRequest.status === 201) {
