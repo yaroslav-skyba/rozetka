@@ -5,12 +5,6 @@ const innerHtmlEditSubmit = "Edit";
 
 let submit;
 
-function redirectUnauthorized() {
-    if (localStorage.getItem(currentUserRoleNameStorageKey) !== adminRoleName) {
-        location.href = "/";
-    }
-}
-
 function redirectUnready(modificationStorageKey) {
     if (!localStorage.getItem(modificationStorageKey)) {
         location.href = "/profile/admin/admin.html";

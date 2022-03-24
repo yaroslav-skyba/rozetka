@@ -42,6 +42,7 @@ onload = function () {
                 <tr>
                     <th>#</th>
                     <th>Name</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
     
@@ -60,6 +61,7 @@ onload = function () {
                     <th>Name</th>
                     <th>Price</th>
                     <th>Quantity</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
     

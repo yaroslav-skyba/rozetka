@@ -1,5 +1,7 @@
 const xmlHttpRequest = new XMLHttpRequest();
 
+const main = document.getElementById("main");
+
 const userStorageKeyPrefix = "user_";
 const roleStorageKeyPrefix = "role_";
 const productStorageKeyPrefix = "product_";
@@ -42,6 +44,12 @@ const productDescriptionDtoKey = "description";
 
 const adminRoleName = "admin";
 const userRoleName = "user";
+
+function redirectUnauthorized() {
+    if (localStorage.getItem(currentUserRoleNameStorageKey) !== adminRoleName) {
+        location.href = "/";
+    }
+}
 
 function setNavigation(rootDestination, userDestination, adminDestination) {
     new Promise(resolve => setTimeout(resolve, 100)).then(() => {
@@ -142,15 +150,16 @@ function setNavigation(rootDestination, userDestination, adminDestination) {
 }
 
 function setMainAttributes() {
-    document.getElementById("main").style.backgroundColor = "#201c24";
+    main.style.backgroundColor = "#201c24";
+    main.className = "min-vh-100";
 }
 
 function setContainer(content) {
-    document.getElementById("main").innerHTML +=
+    main.innerHTML +=
         `<div class="container">
-            <div class="row min-vh-100 align-items-center">
+            <div class="row">
                 <div class="col">
-                    <div class="card bg-dark text-white" style="border-radius: 15px">
+                    <div class="card bg-dark text-white" style="border-radius: 15px; border-color: #198754">
                         <div class="card-body">` + content + `</div>
                     </div>
                 </div>
