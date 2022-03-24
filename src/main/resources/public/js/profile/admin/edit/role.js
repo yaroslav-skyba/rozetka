@@ -1,7 +1,7 @@
 const roleStorageKey = roleStorageKeyPrefix + editStorageKeySuffix;
 
 onload = function () {
-    redirectUnauthorized();
+    redirectUnauthorized(adminRoleName);;
     redirectUnready(roleStorageKey);
 
     const uuid = JSON.parse(localStorage.getItem(roleStorageKey))[roleUuidDtoKey];

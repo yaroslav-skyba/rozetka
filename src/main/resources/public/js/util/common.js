@@ -45,8 +45,8 @@ const productDescriptionDtoKey = "description";
 const adminRoleName = "admin";
 const userRoleName = "user";
 
-function redirectUnauthorized() {
-    if (localStorage.getItem(currentUserRoleNameStorageKey) !== adminRoleName) {
+function redirectUnauthorized(roleName) {
+    if (localStorage.getItem(currentUserRoleNameStorageKey) !== roleName) {
         location.href = "/";
     }
 }
@@ -154,6 +154,22 @@ function setMainAttributes() {
     main.className = "min-vh-100";
 }
 
+function configModificationPage(headlineInnerHtml, submitInnerHtml) {
+    setMainAttributes();
+    document.getElementById("headline").innerHTML = headlineInnerHtml;
+
+    submit = document.getElementById("submit");
+    submit.innerHTML = submitInnerHtml;
+}
+
+function setFormControlElementOnchange(storageKey, create) {
+    for (const formControlElement of document.getElementsByClassName("form-control")) {
+        formControlElement.onchange = function () {
+            localStorage.setItem(storageKey, JSON.stringify(create()));
+        }
+    }
+}
+
 function setContainer(content) {
     main.innerHTML +=
         `<div class="container">
@@ -165,6 +181,15 @@ function setContainer(content) {
                 </div>
             </div>
         </div>`;
+}
+
+function sendModificationHttpRequest(body, httpMethod, url, contentType) {
+    if (body) {
+        xmlHttpRequest.open(httpMethod, url);
+        xmlHttpRequest.setRequestHeader("Content-Type", contentType);
+        xmlHttpRequest.setRequestHeader("Authorization", localStorage.getItem(jwtStorageKey));
+        xmlHttpRequest.send(JSON.stringify(body));
+    }
 }
 
 function alert(type, message) {

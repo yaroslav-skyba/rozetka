@@ -1,5 +1,11 @@
 let role;
 
+function redirectWithoutRoles() {
+    if (!localStorage.getItem(rolesStorageKey)) {
+        location.href = "/profile/admin/admin.html";
+    }
+}
+
 function configUserAdminModificationPage(userStorageKey, headlineInnerHtml, submitInnerHtml, uuid) {
     configUserModificationPage("../../../", "../../", "../");
 

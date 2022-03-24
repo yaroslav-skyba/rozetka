@@ -1,7 +1,7 @@
 const userStorageKey = userStorageKeyPrefix + editStorageKeySuffix;
 
 onload = function () {
-    redirectUnauthorized();
+    redirectUnauthorized(adminRoleName);
     redirectUnready(userStorageKey);
     redirectWithoutRoles();
 

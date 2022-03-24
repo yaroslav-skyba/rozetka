@@ -9,7 +9,7 @@ let roleApiUrl;
 let productApiUrl;
 
 onload = function () {
-    redirectUnauthorized();
+    redirectUnauthorized(adminRoleName);
     setNavigation("../../", "../", "");
     setMainAttributes();
 

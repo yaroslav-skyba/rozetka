@@ -1,7 +1,7 @@
 const productStorageKey = productStorageKeyPrefix + editStorageKeySuffix;
 
 onload = function () {
-    redirectUnauthorized();
+    redirectUnauthorized(adminRoleName);;
     redirectUnready(productStorageKey);
 
     const uuid = JSON.parse(localStorage.getItem(productStorageKey))[productUuidDtoKey];

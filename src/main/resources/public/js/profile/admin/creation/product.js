@@ -1,7 +1,7 @@
 const productStorageKey = productStorageKeyPrefix + creationStorageKeySuffix;
 
 onload = function () {
-    redirectUnauthorized();
+    redirectUnauthorized(adminRoleName);
     configProductModificationPage("create a product", innerHtmlCreationSubmit, productStorageKey, null);
 
     submit.onclick = function () {

@@ -1,7 +1,7 @@
 const roleStorageKey = roleStorageKeyPrefix + creationStorageKeySuffix;
 
 onload = function () {
-    redirectUnauthorized();
+    redirectUnauthorized(adminRoleName);;
     configRoleModificationPage("create a role", innerHtmlCreationSubmit, roleStorageKey, null);
 
     submit.onclick = function () {

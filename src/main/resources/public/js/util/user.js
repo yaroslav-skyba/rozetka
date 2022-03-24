@@ -8,12 +8,6 @@ let firstName;
 let lastName;
 let birthday;
 
-function redirectWithoutRoles() {
-    if (!localStorage.getItem(rolesStorageKey)) {
-        location.href = "/profile/admin/admin.html";
-    }
-}
-
 function createUser(uuid) {
     let passwordValue = password.value;
 
@@ -23,6 +17,7 @@ function createUser(uuid) {
 
     const user = {};
     user[userUuidDtoKey] = uuid;
+    user[userRoleUuidDtoKey] = null;
     user[userLoginDtoKey] = login.value;
     user[userPasswordDtoKey] = passwordValue;
     user[userEmailDtoKey] = email.value;
