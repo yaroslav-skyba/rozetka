@@ -27,7 +27,7 @@ public class Role extends AbstractModel {
     private UUID uuid;
 
     @NotNull
-    @Column(name = "name_role", unique = true, nullable = false)
+    @Column(name = "name", unique = true, nullable = false)
     private String name;
 
     @OneToMany(mappedBy = "role", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)

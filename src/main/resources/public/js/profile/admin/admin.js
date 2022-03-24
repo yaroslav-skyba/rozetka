@@ -96,8 +96,6 @@ xmlHttpRequest.onreadystatechange = function () {
                 const roles = JSON.parse(xmlHttpRequest.responseText);
 
                 for (let i = 0; i < users.length; i++) {
-                    users[i][userBirthdayDtoKey] = new Date(users[i][userBirthdayDtoKey]).toISOString().split('T')[0];
-
                     const tr = document.createElement("tr");
                     appendTd(i + 1, tr);
                     appendTd(users[i][userLoginDtoKey], tr);

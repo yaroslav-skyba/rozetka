@@ -1,6 +1,6 @@
 package com.gitlab.yaroslavskyba.dto;
 
-import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -12,14 +12,14 @@ public class UserDto {
     private String email;
     private String firstName;
     private String lastName;
-    private Timestamp birthday;
+    private LocalDate birthday;
 
     @SuppressWarnings("unused")
     public UserDto() {
     }
 
     public UserDto(UUID uuid, UUID uuidRole, String login, String password, String email, String firstName, String lastName,
-                   Timestamp birthday) {
+                   LocalDate birthday) {
         this.uuid = uuid;
         this.uuidRole = uuidRole;
         this.login = login;
@@ -103,7 +103,7 @@ public class UserDto {
         return lastName;
     }
 
-    public Timestamp getBirthday() {
+    public LocalDate getBirthday() {
         return birthday;
     }
 }

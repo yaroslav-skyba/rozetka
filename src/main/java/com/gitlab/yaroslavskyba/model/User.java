@@ -15,7 +15,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -68,8 +68,8 @@ public class User extends AbstractModel {
     private String lastName;
 
     @NotNull
-    @Column(nullable = false)
-    private Timestamp birthday;
+    @Column(nullable = false, columnDefinition = "DATE")
+    private LocalDate birthday;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private final List<OrderItem> orderItemList = new ArrayList<>();
@@ -194,11 +194,11 @@ public class User extends AbstractModel {
         this.lastName = lastName;
     }
 
-    public Timestamp getBirthday() {
+    public LocalDate getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(Timestamp birthday) {
+    public void setBirthday(LocalDate birthday) {
         this.birthday = birthday;
     }
 
