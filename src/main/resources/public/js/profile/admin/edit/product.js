@@ -1,17 +1,13 @@
 const productStorageKey = productStorageKeyPrefix + editStorageKeySuffix;
 
 onload = function () {
-    redirectUnauthorized(adminRoleName);;
     redirectUnready(productStorageKey);
 
     const uuid = JSON.parse(localStorage.getItem(productStorageKey))[productUuidDtoKey];
-    configProductModificationPage("edit a product", innerHtmlEditSubmit, productStorageKey, uuid);
-
-    submit.onclick = function () {
-        sendModificationHttpRequest(getProduct(productStorageKey),"PUT", productsApiUrl + "/" + uuid, productContentType);
-    }
+    sendProductModificationHttpRequest("edit a product", "Edit", productStorageKey, uuid, "PUT",
+                                       productsApiUrl + "/" + uuid);
 }
 
 xmlHttpRequest.onreadystatechange = function () {
-    receiveModificationHttpResponse(200, productStorageKey);
+    receiveProductModificationHttpRequest(productStorageKey);
 }

@@ -7,6 +7,9 @@ let quantity;
 let price;
 let discount;
 let description;
+let img;
+
+let successResponseText;
 
 function createProduct(uuid) {
     const product = {};
@@ -16,6 +19,7 @@ function createProduct(uuid) {
     product[productPriceDtoKey] = price.value;
     product[productDiscountDtoKey] = discount.value;
     product[productDescriptionDtoKey] = description.value;
+    product[productImgDtoKey] = img.value;
 
     return product;
 }
@@ -86,6 +90,12 @@ function configProductModificationPage(headlineInnerHtml, submitInnerHtml, produ
                 <label for="description">A description</label>
             </div>
             
+            <div class="form-outline mb-4">
+                <input type="file" accept=".png" id="img" class="form-control form-control-lg" required/>
+                <label for="img">An image</label>
+                <div class="invalid-feedback">Please upload un image</div>
+            </div>
+            
             <div class="d-flex justify-content-center">
                 <button class="btn btn-dark btn-outline-success" id="submit"></button>
             </div>
@@ -99,6 +109,7 @@ function configProductModificationPage(headlineInnerHtml, submitInnerHtml, produ
     price = document.getElementById("price");
     discount = document.getElementById("discount");
     description = document.getElementById("description");
+    img = document.getElementById("img");
 
     configModificationPage(headlineInnerHtml, submitInnerHtml);
 
@@ -110,9 +121,41 @@ function configProductModificationPage(headlineInnerHtml, submitInnerHtml, produ
         price.value = product[productPriceDtoKey];
         discount.value = product[productDiscountDtoKey];
         description.value = product[productDescriptionDtoKey];
+        img.value = product[productImgDtoKey];
     }
 
     setFormControlElementOnchange(productStorageKey, function () {
         return createProduct(uuid);
     });
+}
+
+function sendProductModificationHttpRequest(headlineInnerHtml, submitInnerHtml, productStorageKey, uuid, httpMethod, url) {
+    redirectUnauthorized(adminRoleName);
+    configProductModificationPage(headlineInnerHtml, submitInnerHtml, productStorageKey, uuid);
+
+    submit.onclick = function () {
+        const product = getProduct(productStorageKey);
+
+        delete product[productImgDtoKey];
+        sendModificationHttpRequest(product, httpMethod, url, productContentType);
+    }
+}
+
+function receiveProductModificationHttpRequest(productStorageKey) {
+    if (xmlHttpRequest.readyState === 4) {
+        if (xmlHttpRequest.status === 201) {
+            if (xmlHttpRequest.responseURL === productApiUrl) {
+                successResponseText = xmlHttpRequest.responseText;
+
+                const product = JSON.parse(localStorage.getItem(productStorageKey));
+                sendModificationHttpRequest(product[productImgDtoKey],"POST", productsApiUrl + "/" + product[productUuidDtoKey] + "/img",
+                                           "image/png");
+            } else {
+                localStorage.removeItem(productStorageKey);
+                alert("success", successResponseText);
+            }
+        } else if (xmlHttpRequest.status === 409) {
+            alert("danger", xmlHttpRequest.responseText);
+        }
+    }
 }

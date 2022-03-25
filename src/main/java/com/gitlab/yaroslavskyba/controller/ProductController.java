@@ -2,6 +2,7 @@ package com.gitlab.yaroslavskyba.controller;
 
 import com.gitlab.yaroslavskyba.dto.ProductDto;
 import com.gitlab.yaroslavskyba.dto.ReviewDto;
+import com.gitlab.yaroslavskyba.exception.ProductImgServiceException;
 import com.gitlab.yaroslavskyba.exception.ProductServiceException;
 import com.gitlab.yaroslavskyba.exception.ReviewServiceException;
 import com.gitlab.yaroslavskyba.service.ProductImgService;
@@ -85,11 +86,21 @@ public class ProductController {
         }
     }
 
+    @PostMapping(value = ControllerPath.PRODUCT_IMG, consumes = org.springframework.http.MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<String> createProductImg(@PathVariable UUID uuid, @RequestBody String img) {
+        try {
+            productImgService.createProductImg(uuid, img);
+            return ResponseEntity.status(HttpStatus.CREATED).body("A product image has been successfully created");
+        } catch (ProductImgServiceException productImgServiceException) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(productImgServiceException.getMessage());
+        }
+    }
+
     @GetMapping(value = ControllerPath.PRODUCT_IMG, produces = org.springframework.http.MediaType.IMAGE_PNG_VALUE)
-    public ResponseEntity<String> getProductImage(@PathVariable UUID uuid) {
+    public ResponseEntity<String> getProductImg(@PathVariable UUID uuid) {
         try {
             return ResponseEntity.ok(productImgService.getProductImgByUuid(uuid));
-        } catch (ProductServiceException productServiceException) {
+        } catch (ProductImgServiceException productImgServiceException) {
             return ResponseEntity.notFound().build();
         }
     }

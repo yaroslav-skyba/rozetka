@@ -38,7 +38,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and().authorizeRequests()
-            .antMatchers(HttpMethod.POST, ControllerPath.PRODUCTS).hasAuthority(RoleName.ADMIN)
+            .antMatchers(HttpMethod.POST, ControllerPath.PRODUCTS, ControllerPath.PRODUCT_IMG).hasAuthority(RoleName.ADMIN)
             .antMatchers(HttpMethod.PUT, ControllerPath.PRODUCT).hasAuthority(RoleName.ADMIN)
             .antMatchers(HttpMethod.DELETE, ControllerPath.PRODUCT, ControllerPath.USER).hasAuthority(RoleName.ADMIN)
             .antMatchers(ControllerPath.ROLES, ControllerPath.ROLE, ControllerPath.USERS).hasAuthority(RoleName.ADMIN)
