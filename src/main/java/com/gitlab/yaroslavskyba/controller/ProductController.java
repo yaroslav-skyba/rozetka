@@ -4,6 +4,7 @@ import com.gitlab.yaroslavskyba.dto.ProductDto;
 import com.gitlab.yaroslavskyba.dto.ReviewDto;
 import com.gitlab.yaroslavskyba.exception.ProductServiceException;
 import com.gitlab.yaroslavskyba.exception.ReviewServiceException;
+import com.gitlab.yaroslavskyba.service.ProductImgService;
 import com.gitlab.yaroslavskyba.service.ProductService;
 import com.gitlab.yaroslavskyba.service.ReviewService;
 import com.gitlab.yaroslavskyba.util.ControllerPath;
@@ -28,10 +29,12 @@ import java.util.UUID;
 @RequestMapping(produces = org.springframework.http.MediaType.TEXT_PLAIN_VALUE)
 public class ProductController {
     private final ProductService productService;
+    private final ProductImgService productImgService;
     private final ReviewService reviewService;
 
-    public ProductController(ProductService productService, ReviewService reviewService) {
+    public ProductController(ProductService productService, ProductImgService productImgService, ReviewService reviewService) {
         this.productService = productService;
+        this.productImgService = productImgService;
         this.reviewService = reviewService;
     }
 
@@ -42,24 +45,6 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.CREATED).body("A product has been successfully created");
         } catch (ProductServiceException productServiceException) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(productServiceException.getMessage());
-        }
-    }
-
-    @GetMapping(value = ControllerPath.PRODUCT, produces = MediaType.PRODUCT)
-    public ResponseEntity<ProductDto> getProduct(@PathVariable UUID uuid) {
-        try {
-            return ResponseEntity.ok(productService.getProductByUuid(uuid));
-        } catch (ProductServiceException productServiceException) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @GetMapping(value = ControllerPath.PRODUCT_IMAGE, produces = org.springframework.http.MediaType.IMAGE_PNG_VALUE)
-    public ResponseEntity<String> getProductImage(@PathVariable UUID uuid) {
-        try {
-            return ResponseEntity.ok(productService.getProductImageByUuid(uuid));
-        } catch (ProductServiceException productServiceException) {
-            return ResponseEntity.notFound().build();
         }
     }
 
@@ -100,6 +85,15 @@ public class ProductController {
         }
     }
 
+    @GetMapping(value = ControllerPath.PRODUCT_IMG, produces = org.springframework.http.MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<String> getProductImage(@PathVariable UUID uuid) {
+        try {
+            return ResponseEntity.ok(productImgService.getProductImgByUuid(uuid));
+        } catch (ProductServiceException productServiceException) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @SuppressWarnings("SpringElInspection")
     @PostMapping(value = ControllerPath.REVIEWS, consumes = MediaType.REVIEW)
     @PreAuthorize("principal.uuid.equals(#reviewDto.uuidUser)")
@@ -109,15 +103,6 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.CREATED).body("A review has been successfully created");
         } catch (ReviewServiceException reviewServiceException) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(reviewServiceException.getMessage());
-        }
-    }
-
-    @GetMapping(value = ControllerPath.REVIEW, produces = MediaType.REVIEW)
-    public ResponseEntity<ReviewDto> getReview(@PathVariable UUID uuidProduct, @PathVariable UUID uuid) {
-        try {
-            return ResponseEntity.ok(reviewService.getReviewByUuid(uuid, uuidProduct));
-        } catch (ReviewServiceException reviewServiceException) {
-            return ResponseEntity.notFound().build();
         }
     }
 

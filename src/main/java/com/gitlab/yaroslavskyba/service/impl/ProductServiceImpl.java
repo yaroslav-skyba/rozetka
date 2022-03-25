@@ -5,12 +5,9 @@ import com.gitlab.yaroslavskyba.exception.ProductServiceException;
 import com.gitlab.yaroslavskyba.model.Product;
 import com.gitlab.yaroslavskyba.repository.ProductRepository;
 import com.gitlab.yaroslavskyba.service.ProductService;
-import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.File;
-import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -39,32 +36,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional(readOnly = true)
-    public ProductDto getProductByUuid(UUID uuid) {
-        try {
-            final Product product = productRepository.findProductByUuid(uuid).orElseThrow();
-            return new ProductDto(product.getUuid(), product.getName(), product.getQuantity(), product.getPrice(),
-                                  product.getDiscount(), product.getDescription());
-        } catch (Exception exception) {
-            throw new ProductServiceException("An error occurred while getting a product", exception);
-        }
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public String getProductImageByUuid(UUID uuid) {
-        try {
-            return Base64.getEncoder().encodeToString(FileUtils.readFileToByteArray(new File("src/main/resources/img/" + uuid + ".png")));
-        } catch (Exception exception) {
-            throw new ProductServiceException("An error occurred while getting a product image", exception);
-        }
-    }
-
-    @Override
-    @Transactional(readOnly = true)
     public List<ProductDto> getProductListByName(String name) {
         try {
             final List<ProductDto> productDtoList =
-                productRepository.findProductsByName(name).stream().map(product -> getProductByUuid(product.getUuid()))
+                productRepository.findProductsByName(name).stream().map(product -> getProduct(product.getUuid()))
                     .collect(Collectors.toList());
 
             if (productDtoList.isEmpty()) {
@@ -82,7 +57,7 @@ public class ProductServiceImpl implements ProductService {
     public List<ProductDto> getProductList() {
         try {
             final List<ProductDto> productDtoList =
-                productRepository.findAll().stream().map(product -> getProductByUuid(product.getUuid())).collect(Collectors.toList());
+                productRepository.findAll().stream().map(product -> getProduct(product.getUuid())).collect(Collectors.toList());
 
             if (productDtoList.isEmpty()) {
                 throw new ProductServiceException("A product list is empty");
@@ -122,5 +97,11 @@ public class ProductServiceImpl implements ProductService {
         product.setPrice(productDto.getPrice());
         product.setDiscount(productDto.getDiscount());
         product.setDescription(productDto.getDescription());
+    }
+
+    private ProductDto getProduct(UUID uuid) {
+        final Product product = productRepository.findProductByUuid(uuid).orElseThrow();
+        return new ProductDto(product.getUuid(), product.getName(), product.getQuantity(), product.getPrice(), product.getDiscount(),
+                              product.getDescription());
     }
 }

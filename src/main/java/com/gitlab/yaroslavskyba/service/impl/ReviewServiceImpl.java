@@ -43,23 +43,11 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional(readOnly = true)
-    public ReviewDto getReviewByUuid(UUID uuid, UUID uuidProduct) {
-        try {
-            final Review review = reviewRepository.findReviewByUuid(uuid).orElseThrow();
-            productRepository.findProductByUuid(uuidProduct).orElseThrow().setUuid(uuidProduct);
-
-            return new ReviewDto(review.getUuid(), review.getUser().getUuid(), review.getContent(), review.getRating());
-        } catch (Exception exception) {
-            throw new ReviewServiceException("An error occurred while getting a review", exception);
-        }
-    }
-
-    @Override
-    @Transactional(readOnly = true)
     public List<ReviewDto> getReviewListByProductUuid(UUID uuidProduct) {
         try {
             final List<ReviewDto> reviewDtoList = reviewRepository.findReviewsByProductUuid(uuidProduct).stream()
-                .map(review -> getReviewByUuid(review.getUuid(), uuidProduct)).collect(Collectors.toList());
+                .map(review -> new ReviewDto(review.getUuid(), review.getUser().getUuid(), review.getContent(), review.getRating()))
+                .collect(Collectors.toList());
 
             if (reviewDtoList.isEmpty()) {
                 throw new ReviewServiceException("A review list is empty");
