@@ -2,6 +2,8 @@
 
 const productContentType = contentTypeRoot + "product" + contentTypeSuffix;
 
+const productImgStorageKey = "productImg";
+
 let name;
 let quantity;
 let price;
@@ -9,38 +11,9 @@ let discount;
 let description;
 let img;
 
+let productUuid;
+
 let successResponseText;
-
-function getProduct(productStorageKey) {
-    for (const formOutlineElement of document.getElementsByClassName("form-outline")) {
-        const formControlElement = formOutlineElement.getElementsByClassName("form-control")[0];
-
-        if (!areFormInputsValid(formControlElement, formOutlineElement)) {
-            return null;
-        }
-
-        const minFieldValue = 0;
-
-        if (Number(formControlElement.value) < 0) {
-            alert("danger", "A field value should be " + minFieldValue + " or positive");
-            return null;
-        }
-    }
-
-    if (!Number.isInteger(Number(quantity.value))) {
-        alert("danger", "A quantity value should be an integer");
-        return null;
-    }
-
-    const maxDiscountValue = 100;
-
-    if (Number(discount.value) > maxDiscountValue) {
-        alert("danger", "A discount value should be " + maxDiscountValue + " or less");
-        return null;
-    }
-
-    return JSON.parse(localStorage.getItem(productStorageKey));
-}
 
 function configProductModificationPage(headlineInnerHtml, submitInnerHtml, productStorageKey, uuid) {
     setNavigation("../../../", "../../", "../");
@@ -77,6 +50,8 @@ function configProductModificationPage(headlineInnerHtml, submitInnerHtml, produ
                 <label for="description">A description</label>
             </div>
             
+            <img id="productImg" src="" alt="product" style="height:100px; width:100px;">
+            
             <div class="form-outline mb-4">
                 <input type="file" accept=".png" id="img" class="form-control form-control-lg" required/>
                 <label for="img">An image</label>
@@ -108,27 +83,30 @@ function configProductModificationPage(headlineInnerHtml, submitInnerHtml, produ
         price.value = product[productPriceDtoKey];
         discount.value = product[productDiscountDtoKey];
         description.value = product[productDescriptionDtoKey];
-        img.value = product[productImgDtoKey];
     }
 
-    const product2 = {};
-    product2[productUuidDtoKey] = uuid;
-    product2[productNameDtoKey] = name.value;
-    product2[productQuantityDtoKey] = quantity.value;
-    product2[productPriceDtoKey] = price.value;
-    product2[productDiscountDtoKey] = discount.value;
-    product2[productDescriptionDtoKey] = description.value;
-
     setFormControlElementOnchange(productStorageKey, function () {
-        return product2;
+        productUuid = uuid;
+
+        const product = {};
+        product[productUuidDtoKey] = uuid;
+        product[productNameDtoKey] = name.value;
+        product[productQuantityDtoKey] = quantity.value;
+        product[productPriceDtoKey] = price.value;
+        product[productDiscountDtoKey] = discount.value;
+        product[productDescriptionDtoKey] = description.value;
+
+        return product;
     });
 
     img.onchange = function () {
         const fileReader = new FileReader();
         fileReader.readAsDataURL(img.files[0]);
         fileReader.onload = function() {
-            product2[productImgDtoKey] = fileReader.result;
-            localStorage.setItem(productStorageKey, JSON.stringify(product2));
+            const img = fileReader.result;
+
+            localStorage.setItem(productImgStorageKey, img.toString());
+            document.getElementById("productImg").src = img;
         };
     }
 }
@@ -138,10 +116,34 @@ function sendProductModificationHttpRequest(headlineInnerHtml, submitInnerHtml, 
     configProductModificationPage(headlineInnerHtml, submitInnerHtml, productStorageKey, uuid);
 
     submit.onclick = function () {
-        const product = getProduct(productStorageKey);
+        for (const formOutlineElement of document.getElementsByClassName("form-outline")) {
+            const formControlElement = formOutlineElement.getElementsByClassName("form-control")[0];
 
-        delete product[productImgDtoKey];
-        sendModificationHttpRequest(product, httpMethod, url, productContentType);
+            if (!areFormInputsValid(formControlElement, formOutlineElement)) {
+                return null;
+            }
+
+            const minFieldValue = 0;
+
+            if (Number(formControlElement.value) < 0) {
+                alert("danger", "A field value should be " + minFieldValue + " or positive");
+                return null;
+            }
+        }
+
+        if (!Number.isInteger(Number(quantity.value))) {
+            alert("danger", "A quantity value should be an integer");
+            return null;
+        }
+
+        const maxDiscountValue = 100;
+
+        if (Number(discount.value) > maxDiscountValue) {
+            alert("danger", "A discount value should be " + maxDiscountValue + " or less");
+            return null;
+        }
+
+        sendModificationHttpRequest(JSON.parse(localStorage.getItem(productStorageKey)), httpMethod, url, productContentType);
     }
 }
 
@@ -151,9 +153,8 @@ function receiveProductModificationHttpRequest(productStorageKey) {
             if (xmlHttpRequest.responseURL === productApiUrl) {
                 successResponseText = xmlHttpRequest.responseText;
 
-                const product = JSON.parse(localStorage.getItem(productStorageKey));
-                sendModificationHttpRequest(product[productImgDtoKey],"POST", productsApiUrl + "/" + product[productUuidDtoKey] + "/img",
-                                           "image/png");
+                sendModificationHttpRequest(localStorage.getItem(productImgStorageKey),"POST", productsApiUrl + "/" + productUuid + "/img",
+                                            "image/png");
             } else {
                 localStorage.removeItem(productStorageKey);
                 alert("success", successResponseText);

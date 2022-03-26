@@ -41,7 +41,6 @@ const productQuantityDtoKey = "quantity";
 const productPriceDtoKey = "price";
 const productDiscountDtoKey = "discount";
 const productDescriptionDtoKey = "description";
-const productImgDtoKey = "img";
 
 const adminRoleName = "admin";
 const userRoleName = "user";
