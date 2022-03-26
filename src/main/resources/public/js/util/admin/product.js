@@ -11,19 +11,6 @@ let img;
 
 let successResponseText;
 
-function createProduct(uuid) {
-    const product = {};
-    product[productUuidDtoKey] = uuid;
-    product[productNameDtoKey] = name.value;
-    product[productQuantityDtoKey] = quantity.value;
-    product[productPriceDtoKey] = price.value;
-    product[productDiscountDtoKey] = discount.value;
-    product[productDescriptionDtoKey] = description.value;
-    product[productImgDtoKey] = img.value;
-
-    return product;
-}
-
 function getProduct(productStorageKey) {
     for (const formOutlineElement of document.getElementsByClassName("form-outline")) {
         const formControlElement = formOutlineElement.getElementsByClassName("form-control")[0];
@@ -124,9 +111,26 @@ function configProductModificationPage(headlineInnerHtml, submitInnerHtml, produ
         img.value = product[productImgDtoKey];
     }
 
+    const product2 = {};
+    product2[productUuidDtoKey] = uuid;
+    product2[productNameDtoKey] = name.value;
+    product2[productQuantityDtoKey] = quantity.value;
+    product2[productPriceDtoKey] = price.value;
+    product2[productDiscountDtoKey] = discount.value;
+    product2[productDescriptionDtoKey] = description.value;
+
     setFormControlElementOnchange(productStorageKey, function () {
-        return createProduct(uuid);
+        return product2;
     });
+
+    img.onchange = function () {
+        const fileReader = new FileReader();
+        fileReader.readAsDataURL(img.files[0]);
+        fileReader.onload = function() {
+            product2[productImgDtoKey] = fileReader.result;
+            localStorage.setItem(productStorageKey, JSON.stringify(product2));
+        };
+    }
 }
 
 function sendProductModificationHttpRequest(headlineInnerHtml, submitInnerHtml, productStorageKey, uuid, httpMethod, url) {
