@@ -166,7 +166,17 @@ function receiveProductModificationHttpRequest(productStorageKey) {
         if (xmlHttpRequest.status === 201) {
             if (xmlHttpRequest.responseURL === productsApiUrl) {
                 successResponseText = xmlHttpRequest.responseText;
-                productImgApiUrl = productsApiUrl + "/" + Cookies.get("uuid") + "/img";
+
+                const cookies = xmlHttpRequest.getResponseHeader("Cookie").split(";");
+
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookiePair = cookies[i].split("=");
+
+                    if("uuid" === cookiePair[0].trim()) {
+                        productImgApiUrl = productsApiUrl + "/" + cookiePair[1] + "/img";
+                        break;
+                    }
+                }
 
                 sendModificationHttpRequest(localStorage.getItem(productImgStorageKey),"POST", productImgApiUrl, "image/png");
             } else if (xmlHttpRequest.responseURL === productImgApiUrl) {
