@@ -42,8 +42,8 @@ public class ProductController {
     @PostMapping(value = ControllerPath.PRODUCTS, consumes = MediaType.PRODUCT)
     public ResponseEntity<String> createProduct(@RequestBody ProductDto productDto) {
         try {
-            productService.createProduct(productDto);
-            return ResponseEntity.status(HttpStatus.CREATED).body("A product has been successfully created");
+            return ResponseEntity.status(HttpStatus.CREATED).header("Cookie", "uuid=" + productService.createProduct(productDto))
+                .body("A product has been successfully created");
         } catch (ProductServiceException productServiceException) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(productServiceException.getMessage());
         }

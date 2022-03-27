@@ -22,13 +22,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void createProduct(ProductDto productDto) {
+    public UUID createProduct(ProductDto productDto) {
         try {
             final Product product = new Product();
             product.setUuid(UUID.randomUUID());
             setProductFields(productDto, product);
 
-            productRepository.saveAndFlush(product);
+            return productRepository.saveAndFlush(product).getUuid();
         } catch (Exception exception) {
             throw new ProductServiceException("An error occurred while creating a product", exception);
         }

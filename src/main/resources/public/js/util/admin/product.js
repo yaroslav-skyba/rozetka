@@ -1,8 +1,8 @@
 //noinspection DuplicatedCode
 
-const productContentType = contentTypeRoot + "product" + contentTypeSuffix;
-
 const productImgStorageKey = "productImg";
+
+const productContentType = contentTypeRoot + "product" + contentTypeSuffix;
 
 let name;
 let quantity;
@@ -11,9 +11,13 @@ let discount;
 let description;
 let img;
 
-let productUuid;
-
 let successResponseText;
+let productImgApiUrl;
+
+function setProductImg(img) {
+    document.getElementById("productImg").src = img;
+    document.getElementById("productImgCard").hidden = false;
+}
 
 function configProductModificationPage(headlineInnerHtml, submitInnerHtml, productStorageKey, uuid) {
     setNavigation("../../../", "../../", "../");
@@ -45,17 +49,18 @@ function configProductModificationPage(headlineInnerHtml, submitInnerHtml, produ
                 <div class="invalid-feedback">Please type a discount</div>
             </div>
             
-            <div class="form-outline mb-4">
+            <div class="mb-4">
                 <input id="description" class="form-control form-control-lg"/>
                 <label for="description">A description</label>
             </div>
             
-            <img id="productImg" src="" alt="product" style="height:100px; width:100px;">
+            <div id="productImgCard" class="card mb-4" style="border-radius: 15px" hidden>
+                <img src="" alt="product" id="productImg" class="card-img" style="border-radius: 15px">
+            </div>
             
-            <div class="form-outline mb-4">
-                <input type="file" accept=".png" id="img" class="form-control form-control-lg" required/>
+            <div class="mb-4">
+                <input type="file" accept=".png" id="img" class="form-control form-control-lg"/>
                 <label for="img">An image</label>
-                <div class="invalid-feedback">Please upload un image</div>
             </div>
             
             <div class="d-flex justify-content-center">
@@ -86,8 +91,6 @@ function configProductModificationPage(headlineInnerHtml, submitInnerHtml, produ
     }
 
     setFormControlElementOnchange(productStorageKey, function () {
-        productUuid = uuid;
-
         const product = {};
         product[productUuidDtoKey] = uuid;
         product[productNameDtoKey] = name.value;
@@ -99,6 +102,12 @@ function configProductModificationPage(headlineInnerHtml, submitInnerHtml, produ
         return product;
     });
 
+    const productImg = localStorage.getItem(productImgStorageKey);
+
+    if (productImg) {
+        setProductImg(productImg);
+    }
+
     img.onchange = function () {
         const fileReader = new FileReader();
         fileReader.readAsDataURL(img.files[0]);
@@ -106,7 +115,7 @@ function configProductModificationPage(headlineInnerHtml, submitInnerHtml, produ
             const img = fileReader.result;
 
             localStorage.setItem(productImgStorageKey, img.toString());
-            document.getElementById("productImg").src = img;
+            setProductImg(img);
         };
     }
 }
@@ -131,6 +140,11 @@ function sendProductModificationHttpRequest(headlineInnerHtml, submitInnerHtml, 
             }
         }
 
+        if (!localStorage.getItem(productImgStorageKey)) {
+            alert("danger", "Please upload an image");
+            return null;
+        }
+
         if (!Number.isInteger(Number(quantity.value))) {
             alert("danger", "A quantity value should be an integer");
             return null;
@@ -150,17 +164,21 @@ function sendProductModificationHttpRequest(headlineInnerHtml, submitInnerHtml, 
 function receiveProductModificationHttpRequest(productStorageKey) {
     if (xmlHttpRequest.readyState === 4) {
         if (xmlHttpRequest.status === 201) {
-            if (xmlHttpRequest.responseURL === productApiUrl) {
+            if (xmlHttpRequest.responseURL === productsApiUrl) {
                 successResponseText = xmlHttpRequest.responseText;
+                productImgApiUrl = productsApiUrl + "/" + Cookies.get("uuid") + "/img";
 
-                sendModificationHttpRequest(localStorage.getItem(productImgStorageKey),"POST", productsApiUrl + "/" + productUuid + "/img",
-                                            "image/png");
-            } else {
+                sendModificationHttpRequest(localStorage.getItem(productImgStorageKey),"POST", productImgApiUrl, "image/png");
+            } else if (xmlHttpRequest.responseURL === productImgApiUrl) {
                 localStorage.removeItem(productStorageKey);
+                localStorage.removeItem(productImgStorageKey);
+
                 alert("success", successResponseText);
             }
         } else if (xmlHttpRequest.status === 409) {
             alert("danger", xmlHttpRequest.responseText);
+        } else if (xmlHttpRequest.status === 415 && xmlHttpRequest.responseURL === productImgApiUrl) {
+            alert("danger", "Please upload an .png image");
         }
     }
 }
