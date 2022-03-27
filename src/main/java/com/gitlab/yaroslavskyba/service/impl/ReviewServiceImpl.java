@@ -34,7 +34,6 @@ public class ReviewServiceImpl implements ReviewService {
             review.setUuid(UUID.randomUUID());
             setReviewFields(reviewDto, review, uuidProduct);
 
-            productRepository.findProductByUuid(uuidProduct);
             reviewRepository.saveAndFlush(review);
         } catch (Exception exception) {
             throw new ReviewServiceException("An error occurred while creating a review", exception);
@@ -66,7 +65,6 @@ public class ReviewServiceImpl implements ReviewService {
             review.setUuid(reviewDto.getUuid());
             setReviewFields(reviewDto, review, uuidProduct);
 
-            productRepository.findProductByUuid(uuidProduct);
             reviewRepository.saveAndFlush(review);
         } catch (Exception exception) {
             throw new ReviewServiceException("An error occurred while updating a review", exception);
@@ -76,7 +74,6 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public void deleteReviewByUuid(UUID uuid, UUID uuidProduct) {
         try {
-            productRepository.findProductByUuid(uuidProduct);
             reviewRepository.delete(reviewRepository.findReviewByUuid(uuid).orElseThrow());
         } catch (Exception exception) {
             throw new ReviewServiceException("An error occurred while deleting a review", exception);

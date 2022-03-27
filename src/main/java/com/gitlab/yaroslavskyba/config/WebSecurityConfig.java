@@ -2,7 +2,6 @@ package com.gitlab.yaroslavskyba.config;
 
 import com.gitlab.yaroslavskyba.security.JwtTokenFilter;
 import com.gitlab.yaroslavskyba.util.ControllerPath;
-import com.gitlab.yaroslavskyba.util.RoleName;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,6 +15,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import static com.gitlab.yaroslavskyba.util.RoleName.ADMIN;
+import static com.gitlab.yaroslavskyba.util.RoleName.USER;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -38,13 +40,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and().authorizeRequests()
-            .antMatchers(HttpMethod.POST, ControllerPath.PRODUCTS, ControllerPath.PRODUCT_IMG).hasAuthority(RoleName.ADMIN)
-            .antMatchers(HttpMethod.PUT, ControllerPath.PRODUCT).hasAuthority(RoleName.ADMIN)
-            .antMatchers(HttpMethod.DELETE, ControllerPath.PRODUCT, ControllerPath.USER).hasAuthority(RoleName.ADMIN)
-            .antMatchers(ControllerPath.ROLES, ControllerPath.ROLE, ControllerPath.USERS).hasAuthority(RoleName.ADMIN)
-            .antMatchers(HttpMethod.POST, ControllerPath.ORDERS, ControllerPath.REVIEWS).hasAnyAuthority(RoleName.ADMIN, RoleName.USER)
-            .antMatchers(HttpMethod.PUT, ControllerPath.REVIEW, ControllerPath.USER).hasAnyAuthority(RoleName.ADMIN, RoleName.USER)
-            .antMatchers(HttpMethod.DELETE, ControllerPath.REVIEW).hasAnyAuthority(RoleName.ADMIN, RoleName.USER)
+            .antMatchers(HttpMethod.POST, ControllerPath.PRODUCTS).hasAuthority(ADMIN)
+            .antMatchers(HttpMethod.PUT, ControllerPath.PRODUCT).hasAuthority(ADMIN)
+            .antMatchers(HttpMethod.DELETE, ControllerPath.PRODUCT, ControllerPath.USER, ControllerPath.PRODUCT_IMG).hasAuthority(ADMIN)
+            .antMatchers(ControllerPath.ROLES, ControllerPath.ROLE, ControllerPath.USERS).hasAuthority(ADMIN)
+            .antMatchers(HttpMethod.POST, ControllerPath.ORDERS, ControllerPath.REVIEWS).hasAnyAuthority(ADMIN, USER)
+            .antMatchers(HttpMethod.PUT, ControllerPath.REVIEW, ControllerPath.USER).hasAnyAuthority(ADMIN, USER)
+            .antMatchers(HttpMethod.DELETE, ControllerPath.REVIEW).hasAnyAuthority(ADMIN, USER)
             .antMatchers("/**").permitAll()
             .anyRequest().authenticated()
             .and().exceptionHandling().authenticationEntryPoint((request, response, authException) -> response.sendRedirect("/"))

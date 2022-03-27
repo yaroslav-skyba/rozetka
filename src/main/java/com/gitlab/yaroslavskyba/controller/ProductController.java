@@ -105,6 +105,16 @@ public class ProductController {
         }
     }
 
+    @DeleteMapping(ControllerPath.PRODUCT_IMG)
+    public ResponseEntity<String> deleteReview(@PathVariable UUID uuid) {
+        try {
+            productImgService.deleteProductImg(uuid);
+            return ResponseEntity.ok("A product image has been successfully deleted");
+        } catch (ProductImgServiceException productImgServiceException) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(productImgServiceException.getMessage());
+        }
+    }
+
     @SuppressWarnings("SpringElInspection")
     @PostMapping(value = ControllerPath.REVIEWS, consumes = MediaType.REVIEW)
     @PreAuthorize("principal.uuid.equals(#reviewDto.uuidUser)")
