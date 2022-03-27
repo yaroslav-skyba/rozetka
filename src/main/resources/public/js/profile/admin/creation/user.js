@@ -1,4 +1,4 @@
-const userStorageKey = userStorageKeyPrefix + creationStorageKeySuffix;
+const userStorageKey = userStorageKeyPrefix + creationStorageKeyPart;
 
 onload = function () {
     redirectUnauthorized(adminRoleName);;

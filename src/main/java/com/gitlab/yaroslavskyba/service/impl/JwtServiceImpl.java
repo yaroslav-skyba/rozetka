@@ -60,7 +60,7 @@ public class JwtServiceImpl implements JwtService {
 
             if (jwt.getExpiryDate().compareTo(Instant.now()) < 0) {
                 jwtRepository.delete(jwt);
-                throw new JwtServiceException("A jwt has been expired. Please make a new sign-in request");
+                throw new JwtServiceException("A jwt has been expired. Please, make a new sign-in request");
             }
 
             final String jwtValue = TOKEN_TYPE + generateJwtValue(userService.getUserByLogin(jwt.getUser().getLogin()));

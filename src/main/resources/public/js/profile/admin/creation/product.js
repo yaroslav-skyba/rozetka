@@ -1,8 +1,9 @@
-const productStorageKey = productStorageKeyPrefix + creationStorageKeySuffix;
+const productStorageKey = productStorageKeyPart + creationStorageKeyPart;
 
 onload = function () {
-    sendProductModificationHttpRequest("create a product", "Create", productStorageKey, null, "POST",
-                                       productsApiUrl);
+    sendProductModificationHttpRequest("create a product", innerHtmlCreationSubmit, productStorageKey, null,
+                                       productStorageKeyPart + productImgStorageKeyPart + creationStorageKeyPart,
+                                       "POST", productsApiUrl);
 }
 
 xmlHttpRequest.onreadystatechange = function () {

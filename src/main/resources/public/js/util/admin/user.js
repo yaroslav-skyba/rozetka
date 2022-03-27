@@ -13,7 +13,7 @@ function configUserAdminModificationPage(userStorageKey, headlineInnerHtml, subm
         `<div class="form-outline mb-4">
             <select id="roleValue" class="form-control form-control-lg" required></select> 
             <label for="roleValue">A role</label>
-            <div class="invalid-feedback">Please select a role</div>
+            <div class="invalid-feedback">Please, select a role</div>
         </div>`;
 
     role = document.getElementById("roleValue");

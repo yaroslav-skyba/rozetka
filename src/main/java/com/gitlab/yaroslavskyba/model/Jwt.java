@@ -66,7 +66,7 @@ public class Jwt {
                "idRefreshToken=" + idJwt +
                ", uuid=" + uuid +
                ", user=" + user +
-               ", name='" + value + '\'' +
+               ", productName='" + value + '\'' +
                ", expiryDate=" + expiryDate +
                '}';
     }

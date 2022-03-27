@@ -19,7 +19,7 @@ import java.util.UUID;
 @Service
 @Transactional
 public class ProductImgServiceImpl implements ProductImgService {
-    private static final String IMG_FOLDER = "src/main/resources/img/";
+    private static final String IMG_FOLDER = "src/main/resources/productImg/";
     private static final String PNG = "png";
     private static final String PNG_EXTENSION = "." + PNG;
 

@@ -2,12 +2,12 @@ const xmlHttpRequest = new XMLHttpRequest();
 
 const main = document.getElementById("main");
 
-const userStorageKeyPrefix = "user_";
-const roleStorageKeyPrefix = "role_";
-const productStorageKeyPrefix = "product_";
+const userStorageKeyPrefix = "user";
+const roleStorageKeyPrefix = "role";
+const productStorageKeyPart = "product";
 
-const creationStorageKeySuffix = "creation";
-const editStorageKeySuffix = "edit";
+const creationStorageKeyPart = "Creation";
+const editStorageKeySuffix = "Edit";
 
 const jwtStorageKey = "jwt";
 const currentUserRoleNameStorageKey = "roleName";

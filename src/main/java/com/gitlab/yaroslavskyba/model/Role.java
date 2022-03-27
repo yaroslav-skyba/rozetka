@@ -58,7 +58,7 @@ public class Role extends AbstractModel {
         return "Role{" +
                "idRole=" + idRole +
                ", uuid=" + uuid +
-               ", name='" + name + '\'' +
+               ", productName='" + name + '\'' +
                ", userList=" + userList +
                '}';
     }

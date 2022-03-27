@@ -52,43 +52,43 @@ function configUserModificationPage(rootDestination, userDestination, adminDesti
             <div class="form-outline mb-4">
                 <input id="firstName" class="form-control form-control-lg" required/>
                 <label for="firstName">A first name</label>
-                <div class="invalid-feedback">Please type a first name</div>
+                <div class="invalid-feedback">Please, type a first name</div>
             </div>
         
             <div class="form-outline mb-4">
                 <input id="lastName" class="form-control form-control-lg" required/>
                 <label for="lastName">A last name</label>
-                <div class="invalid-feedback">Please type a last name</div>
+                <div class="invalid-feedback">Please, type a last name</div>
             </div>
         
             <div class="form-outline mb-4">
                 <input id="login" class="form-control form-control-lg" required/>
                 <label for="login">A login</label>
-                <div class="invalid-feedback">Please type a login</div>
+                <div class="invalid-feedback">Please, type a login</div>
             </div>
         
             <div class="form-outline mb-4">
                 <input type="email" id="email" class="form-control form-control-lg" required/>
                 <label for="email">An email</label>
-                <div class="invalid-feedback">Please type an email ([text]@[text])</div>
+                <div class="invalid-feedback">Please, type an email ([text]@[text])</div>
             </div>
         
             <div class="form-outline mb-4">
                 <input type="date" id="birthday" class="form-control form-control-lg" required/>
                 <label for="birthday">A birthday</label>
-                <div class="invalid-feedback">Please select a birthday</div>
+                <div class="invalid-feedback">Please, select a birthday</div>
             </div>
         
             <div class="form-outline mb-4">
                 <input type="password" id="password" class="form-control form-control-lg"/>
                 <label for="password">A password</label>
-                <div class="invalid-feedback">Please type a password</div>
+                <div class="invalid-feedback">Please, type a password</div>
             </div>
             
             <div class="form-outline mb-4">
                 <input type="password" id="passwordConformation" class="form-control form-control-lg"/>
                 <label for="passwordConformation">A password conformation</label>
-                <div class="invalid-feedback">Please type a password conformation</div>
+                <div class="invalid-feedback">Please, type a password conformation</div>
             </div>
 
             <div id="role"></div>

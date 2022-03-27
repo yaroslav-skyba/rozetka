@@ -87,11 +87,11 @@ public class Product extends AbstractModel {
         return "Product{" +
                "idProduct=" + idProduct +
                ", uuid=" + uuid +
-               ", name='" + name + '\'' +
-               ", quantity=" + quantity +
-               ", price=" + price +
-               ", discount=" + discount +
-               ", description='" + description + '\'' +
+               ", productName='" + name + '\'' +
+               ", productQuantity=" + quantity +
+               ", productPrice=" + price +
+               ", productDiscount=" + discount +
+               ", productDescription='" + description + '\'' +
                ", orderItemList=" + orderItemList +
                ", reviewList=" + reviewList +
                '}';

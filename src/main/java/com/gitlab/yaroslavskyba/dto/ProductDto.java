@@ -50,11 +50,11 @@ public class ProductDto {
     public String toString() {
         return "ProductDto{" +
                "uuid=" + uuid +
-               ", name='" + name + '\'' +
-               ", quantity=" + quantity +
-               ", price=" + price +
-               ", discount=" + discount +
-               ", description='" + description + '\'' +
+               ", productName='" + name + '\'' +
+               ", productQuantity=" + quantity +
+               ", productPrice=" + price +
+               ", productDiscount=" + discount +
+               ", productDescription='" + description + '\'' +
                '}';
     }
 

@@ -81,7 +81,7 @@ xmlHttpRequest.onreadystatechange = function () {
         if (xmlHttpRequest.status === 200) {
             const userStorageKey = userStorageKeyPrefix + editStorageKeySuffix;
             const roleStorageKey = roleStorageKeyPrefix + editStorageKeySuffix;
-            const productStorageKey = productStorageKeyPrefix + editStorageKeySuffix;
+            const productStorageKey = productStorageKeyPart + editStorageKeySuffix;
 
             if (xmlHttpRequest.responseURL === usersApiUrl) {
                 users = JSON.parse(xmlHttpRequest.responseText);

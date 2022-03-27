@@ -1,17 +1,20 @@
 //noinspection DuplicatedCode
 
-const productImgStorageKey = "productImg";
+const productImgUploadFailMessage = "Please, upload a .png image";
 
 const productContentType = contentTypeRoot + "product" + contentTypeSuffix;
 
-let name;
-let quantity;
-let price;
-let discount;
-let description;
-let img;
+const productImgStorageKeyPart = "Img";
 
-let successResponseText;
+let productName;
+let productQuantity;
+let productPrice;
+let productDiscount;
+let productDescription;
+let productImg;
+
+let productModificationSuccessMessage;
+
 let productImgApiUrl;
 
 function setProductImg(img) {
@@ -19,7 +22,10 @@ function setProductImg(img) {
     document.getElementById("productImgCard").hidden = false;
 }
 
-function configProductModificationPage(headlineInnerHtml, submitInnerHtml, productStorageKey, uuid) {
+function sendProductModificationHttpRequest(headlineInnerHtml, submitInnerHtml, productStorageKey, uuid, productImgStorageKey,
+                                            modificationHttpMethod, modificationUrl) {
+    redirectUnauthorized(adminRoleName);
+
     setNavigation("../../../", "../../", "../");
     setContainer(`
         <h2 class="text-uppercase text-center mb-5" id="headline"></h2>
@@ -28,25 +34,25 @@ function configProductModificationPage(headlineInnerHtml, submitInnerHtml, produ
             <div class="form-outline mb-4">
                 <input id="name" class="form-control form-control-lg" required/>
                 <label for="name">A name</label>
-                <div class="invalid-feedback">Please type a name</div>
+                <div class="invalid-feedback">Please, type a name</div>
             </div>
             
             <div class="form-outline mb-4">
                 <input id="quantity" class="form-control form-control-lg" required/>
                 <label for="quantity">A quantity</label>
-                <div class="invalid-feedback">Please type a quantity</div>
+                <div class="invalid-feedback">Please, type a quantity</div>
             </div>
             
             <div class="form-outline mb-4">
                 <input id="price" class="form-control form-control-lg" required/>
                 <label for="price">A price</label>
-                <div class="invalid-feedback">Please type a price</div>
+                <div class="invalid-feedback">Please, type a price</div>
             </div>
             
             <div class="form-outline mb-4">
                 <input id="discount" class="form-control form-control-lg" required/>
                 <label for="discount">A discount</label>
-                <div class="invalid-feedback">Please type a discount</div>
+                <div class="invalid-feedback">Please, type a discount</div>
             </div>
             
             <div class="mb-4">
@@ -60,7 +66,7 @@ function configProductModificationPage(headlineInnerHtml, submitInnerHtml, produ
             
             <div class="mb-4">
                 <input type="file" accept=".png" id="img" class="form-control form-control-lg"/>
-                <label for="img">An image</label>
+                <label for="img">A .png image</label>
             </div>
             
             <div class="d-flex justify-content-center">
@@ -71,46 +77,51 @@ function configProductModificationPage(headlineInnerHtml, submitInnerHtml, produ
         <div id="alert" class="mt-3"></div>
     `);
 
-    name = document.getElementById("name");
-    quantity = document.getElementById("quantity");
-    price = document.getElementById("price");
-    discount = document.getElementById("discount");
-    description = document.getElementById("description");
-    img = document.getElementById("img");
+    productName = document.getElementById("productName");
+    productQuantity = document.getElementById("productQuantity");
+    productPrice = document.getElementById("productPrice");
+    productDiscount = document.getElementById("productDiscount");
+    productDescription = document.getElementById("productDescription");
+    productImg = document.getElementById("productImg");
 
     configModificationPage(headlineInnerHtml, submitInnerHtml);
 
     const product = JSON.parse(localStorage.getItem(productStorageKey));
 
     if (product) {
-        name.value = product[productNameDtoKey];
-        quantity.value = product[productQuantityDtoKey];
-        price.value = product[productPriceDtoKey];
-        discount.value = product[productDiscountDtoKey];
-        description.value = product[productDescriptionDtoKey];
+        productName.value = product[productNameDtoKey];
+        productQuantity.value = product[productQuantityDtoKey];
+        productPrice.value = product[productPriceDtoKey];
+        productDiscount.value = product[productDiscountDtoKey];
+        productDescription.value = product[productDescriptionDtoKey];
     }
 
     setFormControlElementOnchange(productStorageKey, function () {
         const product = {};
         product[productUuidDtoKey] = uuid;
-        product[productNameDtoKey] = name.value;
-        product[productQuantityDtoKey] = quantity.value;
-        product[productPriceDtoKey] = price.value;
-        product[productDiscountDtoKey] = discount.value;
-        product[productDescriptionDtoKey] = description.value;
+        product[productNameDtoKey] = productName.value;
+        product[productQuantityDtoKey] = productQuantity.value;
+        product[productPriceDtoKey] = productPrice.value;
+        product[productDiscountDtoKey] = productDiscount.value;
+        product[productDescriptionDtoKey] = productDescription.value;
 
         return product;
     });
 
-    const productImg = localStorage.getItem(productImgStorageKey);
+    const productImgValue = localStorage.getItem(productImgStorageKey);
 
-    if (productImg) {
-        setProductImg(productImg);
+    if (productImgValue) {
+        setProductImg(productImgValue);
     }
 
-    img.onchange = function () {
+    productImg.onchange = function () {
+        if (productImg.value.split(".").pop() !== "png") {
+            alert("danger", productImgUploadFailMessage);
+            return;
+        }
+
         const fileReader = new FileReader();
-        fileReader.readAsDataURL(img.files[0]);
+        fileReader.readAsDataURL(productImg.files[0]);
         fileReader.onload = function() {
             const img = fileReader.result;
 
@@ -118,11 +129,6 @@ function configProductModificationPage(headlineInnerHtml, submitInnerHtml, produ
             setProductImg(img);
         };
     }
-}
-
-function sendProductModificationHttpRequest(headlineInnerHtml, submitInnerHtml, productStorageKey, uuid, httpMethod, url) {
-    redirectUnauthorized(adminRoleName);
-    configProductModificationPage(headlineInnerHtml, submitInnerHtml, productStorageKey, uuid);
 
     submit.onclick = function () {
         for (const formOutlineElement of document.getElementsByClassName("form-outline")) {
@@ -141,31 +147,32 @@ function sendProductModificationHttpRequest(headlineInnerHtml, submitInnerHtml, 
         }
 
         if (!localStorage.getItem(productImgStorageKey)) {
-            alert("danger", "Please upload an image");
+            alert("danger", productImgUploadFailMessage);
             return null;
         }
 
-        if (!Number.isInteger(Number(quantity.value))) {
-            alert("danger", "A quantity value should be an integer");
+        if (!Number.isInteger(Number(productQuantity.value))) {
+            alert("danger", "A productQuantity value should be an integer");
             return null;
         }
 
         const maxDiscountValue = 100;
 
-        if (Number(discount.value) > maxDiscountValue) {
-            alert("danger", "A discount value should be " + maxDiscountValue + " or less");
+        if (Number(productDiscount.value) > maxDiscountValue) {
+            alert("danger", "A productDiscount value should be " + maxDiscountValue + " or less");
             return null;
         }
 
-        sendModificationHttpRequest(JSON.parse(localStorage.getItem(productStorageKey)), httpMethod, url, productContentType);
+        sendModificationHttpRequest(JSON.parse(localStorage.getItem(productStorageKey)), modificationHttpMethod, modificationUrl,
+                                    productContentType);
     }
 }
 
-function receiveProductModificationHttpRequest(productStorageKey) {
+function receiveProductModificationHttpRequest(productImgStorageKey, productStorageKey) {
     if (xmlHttpRequest.readyState === 4) {
         if (xmlHttpRequest.status === 201) {
             if (xmlHttpRequest.responseURL === productsApiUrl) {
-                successResponseText = xmlHttpRequest.responseText;
+                productModificationSuccessMessage = xmlHttpRequest.responseText;
 
                 const cookies = xmlHttpRequest.getResponseHeader("Cookie").split(";");
 
@@ -173,7 +180,7 @@ function receiveProductModificationHttpRequest(productStorageKey) {
                     const cookiePair = cookies[i].split("=");
 
                     if("uuid" === cookiePair[0].trim()) {
-                        productImgApiUrl = productsApiUrl + "/" + cookiePair[1] + "/img";
+                        productImgApiUrl = productsApiUrl + "/" + cookiePair[1] + "/productImg";
                         break;
                     }
                 }
@@ -183,7 +190,7 @@ function receiveProductModificationHttpRequest(productStorageKey) {
                 localStorage.removeItem(productStorageKey);
                 localStorage.removeItem(productImgStorageKey);
 
-                alert("success", successResponseText);
+                alert("success", productModificationSuccessMessage);
             }
         } else if (xmlHttpRequest.status === 409) {
             alert("danger", xmlHttpRequest.responseText);

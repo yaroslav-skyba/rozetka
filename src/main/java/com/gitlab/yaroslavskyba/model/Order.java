@@ -52,7 +52,7 @@ public class Order extends AbstractModel {
         return "Order{" +
                "idOrder=" + idOrder +
                ", uuid=" + uuid +
-               ", description='" + description + '\'' +
+               ", productDescription='" + description + '\'' +
                '}';
     }
 
