@@ -22,7 +22,7 @@ public class ProductImgServiceImpl implements ProductImgService {
 
     @Override
     public void createProductImg(UUID productUuid, String img) {
-        try (InputStream inputStream = new ByteArrayInputStream(Base64.getDecoder().decode(img.split(",")[1]))) {
+        try (InputStream inputStream = new ByteArrayInputStream(Base64.getDecoder().decode(img.split(",")[1].replace("\"", "")))) {
             ImageIO.write(ImageIO.read(inputStream), PNG, new File(IMG_FOLDER + productUuid + PNG_EXTENSION));
         } catch (Exception exception) {
             throw new ProductImgServiceException("An error occurred while creating a product image", exception);
@@ -37,5 +37,10 @@ public class ProductImgServiceImpl implements ProductImgService {
         } catch (Exception exception) {
             throw new ProductImgServiceException("An error occurred while getting a product image", exception);
         }
+    }
+
+    @Override
+    public void deleteProductImg(UUID productUuid) throws ProductImgServiceException {
+
     }
 }

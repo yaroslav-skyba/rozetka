@@ -187,8 +187,6 @@ function receiveProductModificationHttpRequest(productStorageKey) {
             }
         } else if (xmlHttpRequest.status === 409) {
             alert("danger", xmlHttpRequest.responseText);
-        } else if (xmlHttpRequest.status === 415 && xmlHttpRequest.responseURL === productImgApiUrl) {
-            alert("danger", "Please upload an .png image");
         }
     }
 }
