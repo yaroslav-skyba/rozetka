@@ -3,16 +3,16 @@ const innerHtmlEditSubmit = "Edit";
 
 let submit;
 
-function redirectUnready(modificationStorageKey) {
-    if (!localStorage.getItem(modificationStorageKey)) {
+function redirectUnready(storageKey) {
+    if (!localStorage.getItem(storageKey)) {
         location.href = "/profile/admin/admin.html";
     }
 }
 
-function receiveModificationHttpResponse(successStatus, modificationStorageKey) {
+function receiveModificationHttpResponse(successStatus, storageKey) {
     if (xmlHttpRequest.readyState === 4) {
         if (xmlHttpRequest.status === successStatus) {
-            localStorage.removeItem(modificationStorageKey);
+            localStorage.removeItem(storageKey);
             localStorage.removeItem(rolesStorageKey);
 
             alert("success", xmlHttpRequest.responseText);

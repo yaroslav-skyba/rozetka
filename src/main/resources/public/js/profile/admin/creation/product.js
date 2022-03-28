@@ -1,11 +1,11 @@
-const productStorageKey = productStorageKeyPart + creationStorageKeyPart;
+const productCreationStorageKey = productStorageKeyPart + creationStorageKeyPart;
+const productImgCreationStorageKey = productStorageKeyPart + productImgStorageKeyPart + creationStorageKeyPart;
 
 onload = function () {
-    sendProductModificationHttpRequest("create a product", innerHtmlCreationSubmit, productStorageKey, null,
-                                       productStorageKeyPart + productImgStorageKeyPart + creationStorageKeyPart,
-                                       "POST", productsApiUrl);
+    sendProductModificationHttpRequest("create a product", innerHtmlCreationSubmit, productCreationStorageKey, null,
+                                       productImgCreationStorageKey, "POST", productsApiUrl);
 }
 
 xmlHttpRequest.onreadystatechange = function () {
-    receiveProductModificationHttpRequest(productStorageKey);
+    receiveProductModificationHttpRequest(201, productImgCreationStorageKey, productCreationStorageKey);
 }

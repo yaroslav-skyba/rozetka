@@ -19,7 +19,7 @@ import java.util.UUID;
 @Service
 @Transactional
 public class ProductImgServiceImpl implements ProductImgService {
-    private static final String IMG_FOLDER = "src/main/resources/productImg/";
+    private static final String IMG_FOLDER = "src/main/resources/img/";
     private static final String PNG = "png";
     private static final String PNG_EXTENSION = "." + PNG;
 
@@ -43,7 +43,8 @@ public class ProductImgServiceImpl implements ProductImgService {
     @Transactional(readOnly = true)
     public String getProductImgByUuid(UUID uuid) {
         try {
-            return Base64.getEncoder().encodeToString(FileUtils.readFileToByteArray(new File(IMG_FOLDER + uuid + PNG_EXTENSION)));
+            return "data:image/png;base64," + Base64.getEncoder()
+                .encodeToString(FileUtils.readFileToByteArray(new File(IMG_FOLDER + uuid + PNG_EXTENSION)));
         } catch (Exception exception) {
             throw new ProductImgServiceException("An error occurred while getting a product image", exception);
         }

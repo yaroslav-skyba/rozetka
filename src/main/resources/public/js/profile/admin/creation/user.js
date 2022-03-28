@@ -1,7 +1,7 @@
 const userStorageKey = userStorageKeyPrefix + creationStorageKeyPart;
 
 onload = function () {
-    redirectUnauthorized(adminRoleName);;
+    redirectUnauthorized(adminRoleName);
     redirectWithoutRoles();
 
     configUserAdminModificationPage(userStorageKey, "create a user", innerHtmlCreationSubmit, null);

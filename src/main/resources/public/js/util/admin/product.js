@@ -1,30 +1,32 @@
 //noinspection DuplicatedCode
 
-const productImgUploadFailMessage = "Please, upload a .png image";
+const productImgUploaderFailMessage = "Please, upload a .png image";
 
 const productContentType = contentTypeRoot + "product" + contentTypeSuffix;
-
-const productImgStorageKeyPart = "Img";
 
 let productName;
 let productQuantity;
 let productPrice;
 let productDiscount;
 let productDescription;
-let productImg;
+let productImgUploader;
 
 let productModificationSuccessMessage;
 
 let productImgApiUrl;
 
 function setProductImg(img) {
-    document.getElementById("productImg").src = img;
+    document.getElementById("productImgValue").src = img;
     document.getElementById("productImgCard").hidden = false;
 }
 
 function sendProductModificationHttpRequest(headlineInnerHtml, submitInnerHtml, productStorageKey, uuid, productImgStorageKey,
                                             modificationHttpMethod, modificationUrl) {
     redirectUnauthorized(adminRoleName);
+
+    if (!localStorage.getItem(productImgEditStorageKey)) {
+        location.href = "/profile/admin/admin.html";
+    }
 
     setNavigation("../../../", "../../", "../");
     setContainer(`
@@ -61,12 +63,12 @@ function sendProductModificationHttpRequest(headlineInnerHtml, submitInnerHtml, 
             </div>
             
             <div id="productImgCard" class="card mb-4" style="border-radius: 15px" hidden>
-                <img src="" alt="product" id="productImg" class="card-img" style="border-radius: 15px">
+                <img src="" alt="product" id="productImgValue" class="card-img" style="border-radius: 15px">
             </div>
             
             <div class="mb-4">
-                <input type="file" accept=".png" id="img" class="form-control form-control-lg"/>
-                <label for="img">A .png image</label>
+                <input type="file" accept=".png" id="productImgUploader" class="form-control form-control-lg"/>
+                <label for="productImgUploader">A .png image</label>
             </div>
             
             <div class="d-flex justify-content-center">
@@ -77,12 +79,12 @@ function sendProductModificationHttpRequest(headlineInnerHtml, submitInnerHtml, 
         <div id="alert" class="mt-3"></div>
     `);
 
-    productName = document.getElementById("productName");
-    productQuantity = document.getElementById("productQuantity");
-    productPrice = document.getElementById("productPrice");
-    productDiscount = document.getElementById("productDiscount");
-    productDescription = document.getElementById("productDescription");
-    productImg = document.getElementById("productImg");
+    productName = document.getElementById("name");
+    productQuantity = document.getElementById("quantity");
+    productPrice = document.getElementById("price");
+    productDiscount = document.getElementById("discount");
+    productDescription = document.getElementById("description");
+    productImgUploader = document.getElementById("productImgUploader");
 
     configModificationPage(headlineInnerHtml, submitInnerHtml);
 
@@ -114,14 +116,14 @@ function sendProductModificationHttpRequest(headlineInnerHtml, submitInnerHtml, 
         setProductImg(productImgValue);
     }
 
-    productImg.onchange = function () {
-        if (productImg.value.split(".").pop() !== "png") {
-            alert("danger", productImgUploadFailMessage);
+    productImgUploader.onchange = function () {
+        if (productImgUploader.value.split(".").pop() !== "png") {
+            alert("danger", productImgUploaderFailMessage);
             return;
         }
 
         const fileReader = new FileReader();
-        fileReader.readAsDataURL(productImg.files[0]);
+        fileReader.readAsDataURL(productImgUploader.files[0]);
         fileReader.onload = function() {
             const img = fileReader.result;
 
@@ -147,7 +149,7 @@ function sendProductModificationHttpRequest(headlineInnerHtml, submitInnerHtml, 
         }
 
         if (!localStorage.getItem(productImgStorageKey)) {
-            alert("danger", productImgUploadFailMessage);
+            alert("danger", productImgUploaderFailMessage);
             return null;
         }
 
@@ -168,27 +170,35 @@ function sendProductModificationHttpRequest(headlineInnerHtml, submitInnerHtml, 
     }
 }
 
-function receiveProductModificationHttpRequest(productImgStorageKey, productStorageKey) {
+function receiveProductModificationHttpRequest(httpSuccessStatus, imgStorageKey, storageKey) {
     if (xmlHttpRequest.readyState === 4) {
-        if (xmlHttpRequest.status === 201) {
-            if (xmlHttpRequest.responseURL === productsApiUrl) {
+        if (xmlHttpRequest.status === httpSuccessStatus) {
+            const productsApiUrl = productsApiUrl + "/";
+            const productApiUrl = productsApiUrl + JSON.parse(localStorage.getItem(storageKey))[productUuidDtoKey];
+
+            if (xmlHttpRequest.responseURL === productApiUrl) {
                 productModificationSuccessMessage = xmlHttpRequest.responseText;
 
                 const cookies = xmlHttpRequest.getResponseHeader("Cookie").split(";");
+                const imgApiUrlPart = "/img";
 
                 for (let i = 0; i < cookies.length; i++) {
                     const cookiePair = cookies[i].split("=");
 
                     if("uuid" === cookiePair[0].trim()) {
-                        productImgApiUrl = productsApiUrl + "/" + cookiePair[1] + "/productImg";
+                        productImgApiUrl = productsApiUrl + cookiePair[1] + imgApiUrlPart;
                         break;
                     }
                 }
 
-                sendModificationHttpRequest(localStorage.getItem(productImgStorageKey),"POST", productImgApiUrl, "image/png");
+                if (!productImgApiUrl) {
+                    productImgApiUrl = productApiUrl + imgApiUrlPart;
+                }
+
+                sendModificationHttpRequest(localStorage.getItem(imgStorageKey),"POST", productImgApiUrl, "image/png");
             } else if (xmlHttpRequest.responseURL === productImgApiUrl) {
-                localStorage.removeItem(productStorageKey);
-                localStorage.removeItem(productImgStorageKey);
+                localStorage.removeItem(storageKey);
+                localStorage.removeItem(imgStorageKey);
 
                 alert("success", productModificationSuccessMessage);
             }

@@ -1,18 +1,16 @@
-const userStorageKey = userStorageKeyPrefix + editStorageKeySuffix;
-
 onload = function () {
     redirectUnauthorized(adminRoleName);
-    redirectUnready(userStorageKey);
+    redirectUnready(userEditStorageKey);
     redirectWithoutRoles();
 
-    const uuid = JSON.parse(localStorage.getItem(userStorageKey))[userUuidDtoKey];
-    configUserAdminModificationPage(userStorageKey, "edit a user", innerHtmlEditSubmit, uuid);
+    const uuid = JSON.parse(localStorage.getItem(userEditStorageKey))[userUuidDtoKey];
+    configUserAdminModificationPage(userEditStorageKey, "edit a user", innerHtmlEditSubmit, uuid);
 
     submit.onclick = function () {
-        sendModificationHttpRequest(getUser(userStorageKey),"PUT", usersApiUrl + "/" + uuid, userContentType);
+        sendModificationHttpRequest(getUser(userEditStorageKey),"PUT", usersApiUrl + "/" + uuid, userContentType);
     }
 }
 
 xmlHttpRequest.onreadystatechange = function () {
-    receiveModificationHttpResponse(200, userStorageKey);
+    receiveModificationHttpResponse(200, userEditStorageKey);
 }

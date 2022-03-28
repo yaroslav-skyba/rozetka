@@ -38,7 +38,7 @@ function configRoleModificationPage(headlineInnerHtml, submitInnerHtml, roleStor
         <div id="alert" class="mt-3"></div>
     `);
 
-    name = document.getElementById("productName");
+    name = document.getElementById("name");
     configModificationPage(headlineInnerHtml, submitInnerHtml);
 
     const role = JSON.parse(localStorage.getItem(roleStorageKey));

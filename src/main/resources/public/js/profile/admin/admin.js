@@ -7,6 +7,7 @@ let productToDeleteUuid;
 let userApiUrl;
 let roleApiUrl;
 let productApiUrl;
+let productImgApiUrl;
 
 onload = function () {
     redirectUnauthorized(adminRoleName);
@@ -79,10 +80,6 @@ onload = function () {
 xmlHttpRequest.onreadystatechange = function () {
     if (xmlHttpRequest.readyState === 4) {
         if (xmlHttpRequest.status === 200) {
-            const userStorageKey = userStorageKeyPrefix + editStorageKeySuffix;
-            const roleStorageKey = roleStorageKeyPrefix + editStorageKeySuffix;
-            const productStorageKey = productStorageKeyPart + editStorageKeySuffix;
-
             if (xmlHttpRequest.responseURL === usersApiUrl) {
                 users = JSON.parse(xmlHttpRequest.responseText);
 
@@ -108,7 +105,7 @@ xmlHttpRequest.onreadystatechange = function () {
                     const actionsTd = document.createElement("td");
 
                     appendButton("Edit", function () {
-                        localStorage.setItem(userStorageKey, JSON.stringify(users[i]));
+                        localStorage.setItem(userEditStorageKey, JSON.stringify(users[i]));
                         location.href = "/profile/admin/edit/user.html";
                     }, actionsTd);
                     actionsTd.append(" ");
@@ -133,7 +130,7 @@ xmlHttpRequest.onreadystatechange = function () {
                     const actionsTd = document.createElement("td");
 
                     appendButton("Edit", function () {
-                        localStorage.setItem(roleStorageKey, JSON.stringify(roles[i]));
+                        localStorage.setItem(roleEditStorageKey, JSON.stringify(roles[i]));
                         location.href = "/profile/admin/edit/role.html";
                     }, actionsTd);
                     actionsTd.append(" ");
@@ -164,8 +161,10 @@ xmlHttpRequest.onreadystatechange = function () {
                     const actionsTd = document.createElement("td");
 
                     appendButton("Edit", function () {
-                        localStorage.setItem(productStorageKey, JSON.stringify(products[i]));
-                        location.href = "/profile/admin/edit/product.html";
+                        localStorage.setItem(productEditStorageKey, JSON.stringify(products[i]));
+                        productImgApiUrl = productsApiUrl + "/" + products[i][productUuidDtoKey] + "/img";
+
+                        sendHttpRequest("GET", productImgApiUrl);
                     }, actionsTd);
                     actionsTd.append(" ");
                     appendButton("Delete", function () {
@@ -180,27 +179,31 @@ xmlHttpRequest.onreadystatechange = function () {
                     tr.append(actionsTd);
                     document.getElementById("productTableContent").append(tr);
                 }
+            } else if (xmlHttpRequest.responseURL === productImgApiUrl) {
+                localStorage.setItem(productImgEditStorageKey, xmlHttpRequest.responseText);
+                location.href = "/profile/admin/edit/product.html";
             } else if (xmlHttpRequest.responseURL === userApiUrl) {
-                const userToEdit = localStorage.getItem(userStorageKey);
+                const userToEdit = localStorage.getItem(userEditStorageKey);
 
                 if (userToEdit && JSON.parse(userToEdit)[userUuidDtoKey] === userToDeleteUuid) {
-                    localStorage.removeItem(userStorageKey);
+                    localStorage.removeItem(userEditStorageKey);
                 }
 
                 alert("success", xmlHttpRequest.responseText);
             } else if (xmlHttpRequest.responseURL === roleApiUrl) {
-                const roleToEdit = localStorage.getItem(roleStorageKey);
+                const roleToEdit = localStorage.getItem(roleEditStorageKey);
 
                 if (roleToEdit && JSON.parse(roleToEdit)[roleUuidDtoKey] === roleToDeleteUuid) {
-                    localStorage.removeItem(roleStorageKey);
+                    localStorage.removeItem(roleEditStorageKey);
                 }
 
                 alert("success", xmlHttpRequest.responseText);
             } else if (xmlHttpRequest.responseURL === productApiUrl) {
-                const productToEdit = localStorage.getItem(productStorageKey);
+                const productToEdit = localStorage.getItem(productEditStorageKey);
 
                 if (productToEdit && JSON.parse(productToEdit)[productUuidDtoKey] === productToDeleteUuid) {
-                    localStorage.removeItem(productStorageKey);
+                    localStorage.removeItem(productEditStorageKey);
+                    localStorage.removeItem(productImgEditStorageKey);
                 }
 
                 alert("success", xmlHttpRequest.responseText);

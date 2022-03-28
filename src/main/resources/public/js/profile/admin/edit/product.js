@@ -1,14 +1,11 @@
-const productStorageKey = productStorageKeyPart + editStorageKeySuffix;
-
 onload = function () {
-    redirectUnready(productStorageKey);
+    redirectUnready(productEditStorageKey);
 
-    const uuid = JSON.parse(localStorage.getItem(productStorageKey))[productUuidDtoKey];
-    sendProductModificationHttpRequest("edit a product", innerHtmlEditSubmit, productStorageKey, uuid,
-                                       productStorageKeyPart + productImgStorageKeyPart + editStorageKeySuffix,
+    const uuid = JSON.parse(localStorage.getItem(productEditStorageKey))[productUuidDtoKey];
+    sendProductModificationHttpRequest("edit a product", innerHtmlEditSubmit, productEditStorageKey, uuid, productImgEditStorageKey,
                                        "PUT", productsApiUrl + "/" + uuid);
 }
 
 xmlHttpRequest.onreadystatechange = function () {
-    receiveProductModificationHttpRequest(productStorageKey);
+    receiveProductModificationHttpRequest(200, productImgEditStorageKey, productEditStorageKey);
 }

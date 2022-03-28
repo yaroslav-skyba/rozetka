@@ -5,12 +5,18 @@ const main = document.getElementById("main");
 const userStorageKeyPrefix = "user";
 const roleStorageKeyPrefix = "role";
 const productStorageKeyPart = "product";
+const productImgStorageKeyPart = "Img";
 
 const creationStorageKeyPart = "Creation";
 const editStorageKeySuffix = "Edit";
 
+const userEditStorageKey = userStorageKeyPrefix + editStorageKeySuffix;
+const roleEditStorageKey = roleStorageKeyPrefix + editStorageKeySuffix;
+const productEditStorageKey = productStorageKeyPart + editStorageKeySuffix;
+const productImgEditStorageKey = productStorageKeyPart + productImgStorageKeyPart + editStorageKeySuffix;
+
 const jwtStorageKey = "jwt";
-const currentUserRoleNameStorageKey = "roleName";
+const currentUserRoleNameStorageKey = "currentUserRoleName";
 const currentUserStorageKey = "currentUser";
 const rolesStorageKey = "roles";
 
@@ -51,13 +57,13 @@ function redirectUnauthorized(roleName) {
     }
 }
 
-function setNavigation(rootDestination, userDestination, adminDestination) {
+function setNavigation(rootFolderDestination, userFolderDestination, adminFolderDestination) {
     new Promise(resolve => setTimeout(resolve, 100)).then(() => {
         document.getElementById("header").innerHTML =
             `<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
                 <div class="container-fluid">
-                    <a class="navbar-brand" href="` + rootDestination + `index.html">
-                        <img src="` + rootDestination + `img/logo.png" alt="logo" width="50" height="50">
+                    <a class="navbar-brand" href="` + rootFolderDestination + `index.html">
+                        <img src="` + rootFolderDestination + `img/logo.png" alt="logo" width="50" height="50">
                     </a>
         
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
@@ -76,11 +82,11 @@ function setNavigation(rootDestination, userDestination, adminDestination) {
                             </li>
                             
                             <li class="nav-item">
-                                <a class="nav-link active" href="` + rootDestination +`cart.html">Cart</a>
+                                <a class="nav-link active" href="` + rootFolderDestination +`cart.html">Cart</a>
                             </li>
                             
                             <li class="nav-item">
-                                <a class="nav-link active" href="` + rootDestination + `about.html">About</a>
+                                <a class="nav-link active" href="` + rootFolderDestination + `about.html">About</a>
                             </li>
                         </ul>
         
@@ -118,23 +124,23 @@ function setNavigation(rootDestination, userDestination, adminDestination) {
 
         const navItem1 = document.getElementById("navItem1");
         const navItem2 = document.getElementById("navItem2");
-        const loginPath = rootDestination + "login.html";
+        const loginPath = rootFolderDestination + "login.html";
 
         if (localStorage.getItem(jwtStorageKey) == null) {
             navItem1.innerHTML = "Login";
             navItem1.href = loginPath;
 
             navItem2.innerHTML = "Registration";
-            navItem2.href = rootDestination + "registration.html";
+            navItem2.href = rootFolderDestination + "registration.html";
         } else {
             navItem1.innerHTML = "Profile";
 
             const roleName = localStorage.getItem(currentUserRoleNameStorageKey);
 
             if (roleName === adminRoleName) {
-                navItem1.href = adminDestination + "admin.html";
+                navItem1.href = adminFolderDestination + "admin.html";
             } else if (roleName === userRoleName) {
-                navItem1.href = userDestination + "user.html";
+                navItem1.href = userFolderDestination + "user.html";
             } else {
                 alert("Some errors occurred");
             }
