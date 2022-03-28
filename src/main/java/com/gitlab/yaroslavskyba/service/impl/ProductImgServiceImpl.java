@@ -31,7 +31,7 @@ public class ProductImgServiceImpl implements ProductImgService {
 
     @Override
     public void createProductImg(UUID productUuid, String img) {
-        try (InputStream inputStream = new ByteArrayInputStream(Base64.getDecoder().decode(img.split(",")[1].replace('"', '\u0000')))) {
+        try (InputStream inputStream = new ByteArrayInputStream(Base64.getDecoder().decode(img.split(",")[1].replace("\"", "")))) {
             productRepository.findProductByUuid(productUuid).orElseThrow().setUuid(productUuid);
             ImageIO.write(ImageIO.read(inputStream), PNG, new File(IMG_FOLDER + productUuid + PNG_EXTENSION));
         } catch (Exception exception) {

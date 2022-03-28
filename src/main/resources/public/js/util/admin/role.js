@@ -1,4 +1,4 @@
-const roleContentType = contentTypeRoot + "role" + contentTypeSuffix;
+const roleContentType = contentTypePrefix + "role" + contentTypeSuffix;
 
 let name;
 

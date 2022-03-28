@@ -7,5 +7,20 @@ onload = function () {
 }
 
 xmlHttpRequest.onreadystatechange = function () {
-    receiveProductModificationHttpRequest(200, productImgEditStorageKey, productEditStorageKey);
+    if (xmlHttpRequest.readyState === 4) {
+        if (xmlHttpRequest.status === 200) {
+            productModificationSuccessMessage = xmlHttpRequest.responseText;
+            sendModificationHttpRequest(
+                localStorage.getItem(productImgEditStorageKey), "POST",
+                productsApiUrl + "/" + JSON.parse(localStorage.getItem(productEditStorageKey))[productUuidDtoKey] + "/img", "image/png"
+            );
+        } else if (xmlHttpRequest.status === 201) {
+            localStorage.removeItem(productEditStorageKey);
+            localStorage.removeItem(productImgEditStorageKey);
+
+            alert("success", productModificationSuccessMessage);
+        } else if (xmlHttpRequest.status === 409) {
+            alert("danger", xmlHttpRequest.responseText);
+        }
+    }
 }

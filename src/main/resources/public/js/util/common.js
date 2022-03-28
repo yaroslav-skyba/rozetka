@@ -25,9 +25,9 @@ const usersApiUrl = authorityApi + "users";
 const rolesApiUrl = authorityApi + "roles";
 const productsApiUrl = authorityApi + "products";
 
-const contentTypeRoot = "application/vnd.rozetka.";
+const contentTypePrefix = "application/vnd.rozetka.";
 const contentTypeSuffix = "+json";
-const userContentType = contentTypeRoot + "user" + contentTypeSuffix;
+const userContentType = contentTypePrefix + "user" + contentTypeSuffix;
 
 const userUuidDtoKey = "uuid";
 const userRoleUuidDtoKey = "uuidRole";
@@ -189,9 +189,9 @@ function setContainer(content) {
         </div>`;
 }
 
-function sendModificationHttpRequest(body, httpMethod, url, contentType) {
+function sendModificationHttpRequest(body, method, url, contentType) {
     if (body) {
-        xmlHttpRequest.open(httpMethod, url);
+        xmlHttpRequest.open(method, url);
         xmlHttpRequest.setRequestHeader("Content-Type", contentType);
         xmlHttpRequest.setRequestHeader("Authorization", localStorage.getItem(jwtStorageKey));
         xmlHttpRequest.send(JSON.stringify(body));
