@@ -162,7 +162,7 @@ xmlHttpRequest.onreadystatechange = function () {
 
                     appendButton("Edit", function () {
                         localStorage.setItem(productEditStorageKey, JSON.stringify(products[i]));
-                        productImgApiUrl = productsApiUrl + "/" + products[i][productUuidDtoKey] + "/img";
+                        productImgApiUrl = productsApiUrl + "/" + products[i][productUuidDtoKey] + productImgApiUrlPart;
 
                         sendHttpRequest("GET", productImgApiUrl);
                     }, actionsTd);

@@ -1,5 +1,11 @@
+let productEditSuccessMessage;
+
 onload = function () {
     redirectUnready(productEditStorageKey);
+
+    if (!localStorage.getItem(productImgEditStorageKey)) {
+        location.href = "/profile/admin/admin.html";
+    }
 
     const uuid = JSON.parse(localStorage.getItem(productEditStorageKey))[productUuidDtoKey];
     sendProductModificationHttpRequest("edit a product", innerHtmlEditSubmit, productEditStorageKey, uuid, productImgEditStorageKey,
@@ -9,16 +15,14 @@ onload = function () {
 xmlHttpRequest.onreadystatechange = function () {
     if (xmlHttpRequest.readyState === 4) {
         if (xmlHttpRequest.status === 200) {
-            productModificationSuccessMessage = xmlHttpRequest.responseText;
+            productEditSuccessMessage = xmlHttpRequest.responseText;
             sendModificationHttpRequest(
                 localStorage.getItem(productImgEditStorageKey), "POST",
-                productsApiUrl + "/" + JSON.parse(localStorage.getItem(productEditStorageKey))[productUuidDtoKey] + "/img", "image/png"
+                productsApiUrl + "/" + JSON.parse(localStorage.getItem(productEditStorageKey))[productUuidDtoKey] + productImgApiUrlPart,
+                "image/png"
             );
         } else if (xmlHttpRequest.status === 201) {
-            localStorage.removeItem(productEditStorageKey);
-            localStorage.removeItem(productImgEditStorageKey);
-
-            alert("success", productModificationSuccessMessage);
+            succeedModificationProductImg(productEditStorageKey, productImgEditStorageKey, productEditSuccessMessage);
         } else if (xmlHttpRequest.status === 409) {
             alert("danger", xmlHttpRequest.responseText);
         }

@@ -2,19 +2,18 @@ const xmlHttpRequest = new XMLHttpRequest();
 
 const main = document.getElementById("main");
 
-const userStorageKeyPrefix = "user";
-const roleStorageKeyPrefix = "role";
+const userStorageKeyPart = "user";
+const roleStorageKeyPart = "role";
 const productStorageKeyPart = "product";
 const productImgStorageKeyPart = "Img";
-
 const creationStorageKeyPart = "Creation";
-const editStorageKeySuffix = "Edit";
+const editStorageKeyPart = "Edit";
+const productImgApiUrlPart = "/img";
 
-const userEditStorageKey = userStorageKeyPrefix + editStorageKeySuffix;
-const roleEditStorageKey = roleStorageKeyPrefix + editStorageKeySuffix;
-const productEditStorageKey = productStorageKeyPart + editStorageKeySuffix;
-const productImgEditStorageKey = productStorageKeyPart + productImgStorageKeyPart + editStorageKeySuffix;
-
+const userEditStorageKey = userStorageKeyPart + editStorageKeyPart;
+const roleEditStorageKey = roleStorageKeyPart + editStorageKeyPart;
+const productEditStorageKey = productStorageKeyPart + editStorageKeyPart;
+const productImgEditStorageKey = productStorageKeyPart + productImgStorageKeyPart + editStorageKeyPart;
 const jwtStorageKey = "jwt";
 const currentUserRoleNameStorageKey = "currentUserRoleName";
 const currentUserStorageKey = "currentUser";
@@ -37,10 +36,8 @@ const userEmailDtoKey = "email";
 const userFirstNameDtoKey = "firstName";
 const userLastNameDtoKey = "lastName";
 const userBirthdayDtoKey = "birthday";
-
 const roleUuidDtoKey = "uuid";
 const roleNameDtoKey = "name";
-
 const productUuidDtoKey = "uuid";
 const productNameDtoKey = "name";
 const productQuantityDtoKey = "quantity";
@@ -212,7 +209,7 @@ function areFormInputsValid(formControlElement, formOutlineElement) {
         return false;
     }
 
-    const maxElementLength = 255;
+    const maxElementLength = 1024;
 
     if (formControlElement.value.length > maxElementLength) {
         alert("danger", "A field length should be equal or less than " + maxElementLength + " symbols");

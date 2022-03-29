@@ -11,8 +11,6 @@ let productDiscount;
 let productDescription;
 let productImgUploader;
 
-let productModificationSuccessMessage;
-
 function setProductImg(img) {
     document.getElementById("productImgValue").src = img;
     document.getElementById("productImgCard").hidden = false;
@@ -20,10 +18,6 @@ function setProductImg(img) {
 
 function sendProductModificationHttpRequest(headlineInnerHtml, submitInnerHtml, storageKey, uuid, imgStorageKey, method, url) {
     redirectUnauthorized(adminRoleName);
-
-    if (!localStorage.getItem(productImgEditStorageKey)) {
-        location.href = "/profile/admin/admin.html";
-    }
 
     setNavigation("../../../", "../../", "../");
     setContainer(`
@@ -54,7 +48,7 @@ function sendProductModificationHttpRequest(headlineInnerHtml, submitInnerHtml, 
                 <div class="invalid-feedback">Please, type a discount</div>
             </div>
             
-            <div class="mb-4">
+            <div class="form-outline mb-4">
                 <input id="description" class="form-control form-control-lg"/>
                 <label for="description">A description</label>
             </div>
@@ -145,20 +139,20 @@ function sendProductModificationHttpRequest(headlineInnerHtml, submitInnerHtml, 
             }
         }
 
-        if (!localStorage.getItem(imgStorageKey)) {
-            alert("danger", productImgUploaderFailMessage);
-            return null;
-        }
-
         if (!Number.isInteger(Number(productQuantity.value))) {
-            alert("danger", "A productQuantity value should be an integer");
+            alert("danger", "A quantity value should be an integer");
             return null;
         }
 
         const maxDiscountValue = 100;
 
         if (Number(productDiscount.value) > maxDiscountValue) {
-            alert("danger", "A productDiscount value should be " + maxDiscountValue + " or less");
+            alert("danger", "A discount value should be " + maxDiscountValue + " or less");
+            return null;
+        }
+
+        if (!localStorage.getItem(imgStorageKey)) {
+            alert("danger", productImgUploaderFailMessage);
             return null;
         }
 
@@ -166,40 +160,9 @@ function sendProductModificationHttpRequest(headlineInnerHtml, submitInnerHtml, 
     }
 }
 
-function receiveProductModificationHttpRequest(httpSuccessStatus, imgStorageKey, storageKey) {
-    if (xmlHttpRequest.readyState === 4) {
-        if (xmlHttpRequest.status === httpSuccessStatus) {
-            const productsApiUrl = productsApiUrl + "/";
-            const productApiUrl = productsApiUrl + JSON.parse(localStorage.getItem(storageKey))[productUuidDtoKey];
+function succeedModificationProductImg(storageKey, imgStorageKey, successMessage) {
+    localStorage.removeItem(storageKey);
+    localStorage.removeItem(imgStorageKey);
 
-            if (xmlHttpRequest.responseURL === productApiUrl) {
-                productModificationSuccessMessage = xmlHttpRequest.responseText;
-
-                const cookies = xmlHttpRequest.getResponseHeader("Cookie").split(";");
-                const imgApiUrlPart = "/img";
-
-                for (let i = 0; i < cookies.length; i++) {
-                    const cookiePair = cookies[i].split("=");
-
-                    if("uuid" === cookiePair[0].trim()) {
-                        productImgApiUrl = productsApiUrl + cookiePair[1] + imgApiUrlPart;
-                        break;
-                    }
-                }
-
-                if (!productImgApiUrl) {
-                    productImgApiUrl = productApiUrl + imgApiUrlPart;
-                }
-
-                sendModificationHttpRequest(localStorage.getItem(imgStorageKey),"POST", productImgApiUrl, "image/png");
-            } else if (xmlHttpRequest.responseURL === productImgApiUrl) {
-                localStorage.removeItem(storageKey);
-                localStorage.removeItem(imgStorageKey);
-
-                alert("success", productModificationSuccessMessage);
-            }
-        } else if (xmlHttpRequest.status === 409) {
-            alert("danger", xmlHttpRequest.responseText);
-        }
-    }
+    alert("success", successMessage);
 }

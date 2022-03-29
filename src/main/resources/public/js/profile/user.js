@@ -29,7 +29,7 @@ xmlHttpRequest.onreadystatechange = function () {
             }
         } else if (xmlHttpRequest.status === 201) {
             localStorage.setItem(jwtStorageKey, xmlHttpRequest.responseText);
-        } else if (xmlHttpRequest.status > 400) {
+        } else if (xmlHttpRequest.status === 409) {
             alert("danger", xmlHttpRequest.responseText);
         }
     }
