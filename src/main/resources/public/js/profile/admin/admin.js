@@ -55,11 +55,11 @@ onload = function () {
         </button>
     `)
     setContainer(`
-        <table class="w-100 table-dark">    
+        <table class="table table-dark table-hover">    
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Name</th>
+                    <th class="col-6">Name</th>
                     <th>Price</th>
                     <th>Quantity</th>
                     <th>Actions</th>
