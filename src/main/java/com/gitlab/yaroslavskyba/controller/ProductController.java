@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
@@ -68,7 +67,7 @@ public class ProductController {
     }
 
     @PutMapping(value = ControllerPath.PRODUCT, consumes = MediaType.PRODUCT)
-    public ResponseEntity<String> updateProduct(@PathVariable UUID uuid, @RequestBody @Valid ProductDto productDto) {
+    public ResponseEntity<String> updateProduct(@PathVariable UUID uuid, @RequestBody ProductDto productDto) {
         try {
             productService.updateProductByUuid(uuid, productDto);
             return ResponseEntity.ok("A product has been successfully updated");

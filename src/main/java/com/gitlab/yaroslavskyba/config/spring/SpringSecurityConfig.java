@@ -1,4 +1,4 @@
-package com.gitlab.yaroslavskyba.config;
+package com.gitlab.yaroslavskyba.config.spring;
 
 import com.gitlab.yaroslavskyba.security.JwtTokenFilter;
 import com.gitlab.yaroslavskyba.util.ControllerPath;
@@ -21,11 +21,11 @@ import static com.gitlab.yaroslavskyba.util.RoleName.USER;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtTokenFilter jwtTokenFilter;
     private final UserDetailsService userDetailsService;
 
-    public WebSecurityConfig(JwtTokenFilter jwtTokenFilter, UserDetailsService userDetailsService) {
+    public SpringSecurityConfig(JwtTokenFilter jwtTokenFilter, UserDetailsService userDetailsService) {
         this.jwtTokenFilter = jwtTokenFilter;
         this.userDetailsService = userDetailsService;
     }
