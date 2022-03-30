@@ -139,11 +139,6 @@ function sendProductModificationHttpRequest(headlineInnerHtml, submitInnerHtml, 
             }
         }
 
-        if (!Number.isInteger(Number(productQuantity.value))) {
-            alert("danger", "A quantity value should be an integer");
-            return null;
-        }
-
         const maxDiscountValue = 100;
 
         if (Number(productDiscount.value) > maxDiscountValue) {
