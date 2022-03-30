@@ -63,10 +63,9 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public void updateRoleByUuid(UUID uuid, RoleDto roleDto) {
+    public void updateRoleByUuid(RoleDto roleDto) {
         try {
-            final Role role = roleRepository.findRoleByUuid(uuid).orElseThrow();
-            role.setUuid(roleDto.getUuid());
+            final Role role = roleRepository.findRoleByUuid(roleDto.getUuid()).orElseThrow();
             role.setName(roleDto.getName());
 
             roleRepository.saveAndFlush(role);

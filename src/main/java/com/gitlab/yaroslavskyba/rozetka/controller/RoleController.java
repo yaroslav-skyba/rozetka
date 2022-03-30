@@ -45,10 +45,10 @@ public class RoleController {
         }
     }
 
-    @PutMapping(value = ControllerPath.ROLE, consumes = MediaType.ROLE)
-    public ResponseEntity<String> updateRole(@PathVariable UUID uuid, @RequestBody RoleDto roleDto) {
+    @PutMapping(value = ControllerPath.ROLES, consumes = MediaType.ROLE)
+    public ResponseEntity<String> updateRole(@RequestBody RoleDto roleDto) {
         try {
-            roleService.updateRoleByUuid(uuid, roleDto);
+            roleService.updateRoleByUuid(roleDto);
             return ResponseEntity.ok("A role has been successfully updated");
         } catch (RoleServiceException roleServiceException) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(roleServiceException.getMessage());

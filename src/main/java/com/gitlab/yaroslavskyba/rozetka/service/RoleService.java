@@ -10,6 +10,6 @@ public interface RoleService {
     void createRole(RoleDto roleDto) throws RoleServiceException;
     RoleDto getRoleByName(String nameRole) throws RoleServiceException;
     List<RoleDto> getRoleList() throws RoleServiceException;
-    void updateRoleByUuid(UUID uuid, RoleDto roleDto) throws RoleServiceException;
+    void updateRoleByUuid(RoleDto roleDto) throws RoleServiceException;
     void deleteRoleByUuid(UUID uuid) throws RoleServiceException;
 }

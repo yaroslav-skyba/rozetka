@@ -9,6 +9,6 @@ import java.util.UUID;
 public interface ReviewService {
     void createReview(ReviewDto reviewDto, UUID uuidProduct) throws ReviewServiceException;
     List<ReviewDto> getReviewListByProductUuid(UUID uuidProduct) throws ReviewServiceException;
-    void updateReviewByUuid(UUID uuid, ReviewDto reviewDto, UUID uuidProduct) throws ReviewServiceException;
+    void updateReviewByUuid(ReviewDto reviewDto, UUID uuid) throws ReviewServiceException;
     void deleteReviewByUuid(UUID uuid, UUID uuidProduct) throws ReviewServiceException;
 }

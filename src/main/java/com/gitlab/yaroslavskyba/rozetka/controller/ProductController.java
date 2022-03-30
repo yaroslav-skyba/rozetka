@@ -67,7 +67,7 @@ public class ProductController {
         }
     }
 
-    @PutMapping(value = ControllerPath.PRODUCT, consumes = MediaType.PRODUCT)
+    @PutMapping(value = ControllerPath.PRODUCTS, consumes = MediaType.PRODUCT)
     public ResponseEntity<String> updateProduct(@RequestBody ProductDto productDto) {
         try {
             productService.updateProductByUuid(productDto);
@@ -139,11 +139,11 @@ public class ProductController {
 
 
     @SuppressWarnings("SpringElInspection")
-    @PutMapping(value = ControllerPath.REVIEW, consumes = MediaType.REVIEW)
-    @PreAuthorize("principal.reviewUuidList.contains(#uuid)")
-    public ResponseEntity<String> updateReview(@PathVariable UUID uuidProduct, @PathVariable UUID uuid, @RequestBody ReviewDto reviewDto) {
+    @PutMapping(value = ControllerPath.REVIEWS, consumes = MediaType.REVIEW)
+    @PreAuthorize("principal.reviewUuidList.contains(#reviewDto.uuid)")
+    public ResponseEntity<String> updateReview(@PathVariable UUID uuidProduct, @RequestBody ReviewDto reviewDto) {
         try {
-            reviewService.updateReviewByUuid(uuid, reviewDto, uuidProduct);
+            reviewService.updateReviewByUuid(reviewDto, uuidProduct);
             return ResponseEntity.ok("A review has been successfully updated");
         } catch (ReviewServiceException reviewServiceException) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(reviewServiceException.getMessage());

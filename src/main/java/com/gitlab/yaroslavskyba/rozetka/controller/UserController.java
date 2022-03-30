@@ -49,12 +49,12 @@ public class UserController {
         }
     }
 
-    @SuppressWarnings({"SpringElInspection", "ELValidationInJSP"})
-    @PutMapping(value = ControllerPath.USER, consumes = MediaType.USER)
-    @PreAuthorize("#uuid.equals(principal.uuid) or hasAuthority('" + RoleName.ADMIN + "')")
-    public ResponseEntity<String> updateUser(@PathVariable UUID uuid, @RequestBody UserDto userDto) {
+    @SuppressWarnings({"ELValidationInspection", "SpringElInspection"})
+    @PutMapping(value = ControllerPath.USERS, consumes = MediaType.USER)
+    @PreAuthorize("#userDto.uuid.equals(principal.uuid) or hasAuthority('" + RoleName.ADMIN + "')")
+    public ResponseEntity<String> updateUser(@RequestBody UserDto userDto) {
         try {
-            userService.updateUserByUuid(uuid, userDto);
+            userService.updateUserByUuid(userDto);
             return ResponseEntity.ok("A user has been successfully updated");
         } catch (UserServiceException userServiceException) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(userServiceException.getMessage());

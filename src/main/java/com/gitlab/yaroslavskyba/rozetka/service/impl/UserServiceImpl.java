@@ -34,9 +34,8 @@ public class UserServiceImpl implements UserService {
             final User user = new User();
             user.setUuid(UUID.randomUUID());
             user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-            setUserFields(userDto, user);
 
-            userRepository.saveAndFlush(user);
+            userRepository.saveAndFlush(setUserFields(userDto, user));
         } catch (Exception exception) {
             throw new UserServiceException("An error occurred while creating a user", exception);
         }
@@ -72,19 +71,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUserByUuid(UUID uuid, UserDto userDto) {
+    public void updateUserByUuid(UserDto userDto) {
         try {
-            final User user = userRepository.findUserByUuid(uuid).orElseThrow();
-            user.setUuid(userDto.getUuid());
-            setUserFields(userDto, user);
-
+            final User user = userRepository.findUserByUuid(userDto.getUuid()).orElseThrow();
             final String password = userDto.getPassword();
 
             if (password != null) {
                 user.setPassword(passwordEncoder.encode(password));
             }
 
-            userRepository.saveAndFlush(user);
+            userRepository.saveAndFlush(setUserFields(userDto, user));
         } catch (Exception exception) {
             throw new UserServiceException("An error occurred while updating a user", exception);
         }
@@ -99,7 +95,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private void setUserFields(UserDto userDto, User user) {
+    private User setUserFields(UserDto userDto, User user) {
         final UUID uuidRole = userDto.getUuidRole();
 
         if (uuidRole != null) {
@@ -113,5 +109,7 @@ public class UserServiceImpl implements UserService {
         user.setFirstName(userDto.getFirstName());
         user.setLastName(userDto.getLastName());
         user.setBirthday(userDto.getBirthday());
+
+        return user;
     }
 }
