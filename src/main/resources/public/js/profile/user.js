@@ -14,7 +14,7 @@ onload = function () {
     });
 
     submit.onclick = function () {
-        sendModificationHttpRequest(getUser(currentUserStorageKey),"PUT", usersApiUrl + "/" + currentUser[userUuidDtoKey], userContentType);
+        sendModificationHttpRequest(getUser(currentUserStorageKey),"PUT", usersApiUrl, userContentType);
     }
 }
 

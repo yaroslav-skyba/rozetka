@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.UUID;
@@ -43,8 +44,8 @@ public class ProductController {
     @PostMapping(value = ControllerPath.PRODUCTS, consumes = MediaType.PRODUCT)
     public ResponseEntity<String> createProduct(@RequestBody ProductDto productDto, HttpServletResponse httpServletResponse) {
         try {
-            return ResponseEntity.status(HttpStatus.CREATED).header("Cookie", "uuid=" + productService.createProduct(productDto))
-                .body("A product has been successfully created");
+            httpServletResponse.addCookie(new Cookie("uuid", productService.createProduct(productDto).toString()));
+            return ResponseEntity.status(HttpStatus.CREATED).body("A product has been successfully created");
         } catch (ProductServiceException productServiceException) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(productServiceException.getMessage());
         }

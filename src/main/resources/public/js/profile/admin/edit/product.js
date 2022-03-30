@@ -7,9 +7,10 @@ onload = function () {
         location.href = "/profile/admin/admin.html";
     }
 
-    const uuid = JSON.parse(localStorage.getItem(productEditStorageKey))[productUuidDtoKey];
-    sendProductModificationHttpRequest("edit a product", innerHtmlEditSubmit, productEditStorageKey, uuid, productImgEditStorageKey,
-                                       "PUT", productsApiUrl + "/" + uuid);
+    sendProductModificationHttpRequest(
+        "edit a product", innerHtmlEditSubmit, productEditStorageKey,
+        JSON.parse(localStorage.getItem(productEditStorageKey))[productUuidDtoKey], productImgEditStorageKey, "PUT", productsApiUrl
+    );
 }
 
 xmlHttpRequest.onreadystatechange = function () {

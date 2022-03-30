@@ -10,7 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
@@ -37,9 +36,6 @@ public class User extends AbstractModel {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_role", nullable = false)
     private Role role;
-
-    @OneToOne(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.LAZY)
-    private Jwt jwt;
 
     @NotNull
     @Size(min = 1, max = 1024)
@@ -72,9 +68,6 @@ public class User extends AbstractModel {
     private LocalDate birthday;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private final List<OrderItem> orderItemList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private final List<Review> reviewList = new ArrayList<>();
 
     @Override
@@ -89,15 +82,14 @@ public class User extends AbstractModel {
 
         final User user = (User) o;
 
-        return idUser.equals(user.idUser) && uuid.equals(user.uuid) && role.equals(user.role) && Objects.equals(jwt, user.jwt)
-               && login.equals(user.login) && password.equals(user.password) && email.equals(user.email) && firstName.equals(user.firstName)
-               && lastName.equals(user.lastName) && birthday.equals(user.birthday) && orderItemList.equals(user.orderItemList)
-               && reviewList.equals(user.reviewList);
+        return idUser.equals(user.idUser) && uuid.equals(user.uuid) && role.equals(user.role) && login.equals(user.login)
+               && password.equals(user.password) && email.equals(user.email) && firstName.equals(user.firstName)
+               && lastName.equals(user.lastName) && birthday.equals(user.birthday) && reviewList.equals(user.reviewList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idUser, uuid, role, jwt, login, password, email, firstName, lastName, birthday, orderItemList, reviewList);
+        return Objects.hash(idUser, uuid, role, login, password, email, firstName, lastName, birthday, reviewList);
     }
 
     @Override
@@ -106,14 +98,12 @@ public class User extends AbstractModel {
                "idUser=" + idUser +
                ", uuid=" + uuid +
                ", role=" + role +
-               ", jwt=" + jwt +
                ", login='" + login + '\'' +
                ", password='" + password + '\'' +
                ", email='" + email + '\'' +
                ", firstName='" + firstName + '\'' +
                ", lastName='" + lastName + '\'' +
                ", birthday=" + birthday +
-               ", orderItemList=" + orderItemList +
                ", reviewList=" + reviewList +
                '}';
     }
@@ -142,16 +132,6 @@ public class User extends AbstractModel {
 
     public void setRole(Role role) {
         this.role = role;
-    }
-
-    @SuppressWarnings("unused")
-    public Jwt getJwt() {
-        return jwt;
-    }
-
-    @SuppressWarnings("unused")
-    public void setJwt(Jwt jwt) {
-        this.jwt = jwt;
     }
 
     public String getLogin() {
@@ -200,11 +180,6 @@ public class User extends AbstractModel {
 
     public void setBirthday(LocalDate birthday) {
         this.birthday = birthday;
-    }
-
-    @SuppressWarnings("unused")
-    public List<OrderItem> getOrderItemList() {
-        return orderItemList;
     }
 
     public List<Review> getReviewList() {

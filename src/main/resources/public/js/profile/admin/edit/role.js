@@ -2,11 +2,12 @@ onload = function () {
     redirectUnauthorized(adminRoleName);
     redirectUnready(roleEditStorageKey);
 
-    const uuid = JSON.parse(localStorage.getItem(roleEditStorageKey))[roleUuidDtoKey];
-    configRoleModificationPage("edit a role", innerHtmlEditSubmit, roleEditStorageKey, uuid);
+    configRoleModificationPage(
+        "edit a role", innerHtmlEditSubmit, roleEditStorageKey, JSON.parse(localStorage.getItem(roleEditStorageKey))[roleUuidDtoKey]
+    );
 
     submit.onclick = function () {
-        sendModificationHttpRequest(getRole(roleEditStorageKey),"PUT", rolesApiUrl + "/" + uuid, roleContentType);
+        sendModificationHttpRequest(getRole(roleEditStorageKey),"PUT", rolesApiUrl, roleContentType);
     }
 }
 

@@ -3,11 +3,12 @@ onload = function () {
     redirectUnready(userEditStorageKey);
     redirectWithoutRoles();
 
-    const uuid = JSON.parse(localStorage.getItem(userEditStorageKey))[userUuidDtoKey];
-    configUserAdminModificationPage(userEditStorageKey, "edit a user", innerHtmlEditSubmit, uuid);
+    configUserAdminModificationPage(
+        userEditStorageKey, "edit a user", innerHtmlEditSubmit, JSON.parse(localStorage.getItem(userEditStorageKey))[userUuidDtoKey]
+    );
 
     submit.onclick = function () {
-        sendModificationHttpRequest(getUser(userEditStorageKey),"PUT", usersApiUrl + "/" + uuid, userContentType);
+        sendModificationHttpRequest(getUser(userEditStorageKey),"PUT", usersApiUrl, userContentType);
     }
 }
 
