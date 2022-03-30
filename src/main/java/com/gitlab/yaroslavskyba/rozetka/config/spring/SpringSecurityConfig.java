@@ -40,7 +40,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and().authorizeRequests()
-            .antMatchers(HttpMethod.POST, ControllerPath.PRODUCTS).hasAuthority(ADMIN)
+            .antMatchers(HttpMethod.POST, ControllerPath.PRODUCTS, ControllerPath.PRODUCT_IMG).hasAuthority(ADMIN)
             .antMatchers(HttpMethod.PUT, ControllerPath.PRODUCT).hasAuthority(ADMIN)
             .antMatchers(HttpMethod.DELETE, ControllerPath.PRODUCT, ControllerPath.USER, ControllerPath.PRODUCT_IMG).hasAuthority(ADMIN)
             .antMatchers(ControllerPath.ROLES, ControllerPath.ROLE, ControllerPath.USERS).hasAuthority(ADMIN)

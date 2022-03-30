@@ -26,9 +26,8 @@ public class ProductServiceImpl implements ProductService {
         try {
             final Product product = new Product();
             product.setUuid(UUID.randomUUID());
-            setProductFields(productDto, product);
 
-            return productRepository.saveAndFlush(product).getUuid();
+            return productRepository.saveAndFlush(setProductFields(productDto, product)).getUuid();
         } catch (Exception exception) {
             throw new ProductServiceException("An error occurred while creating a product", exception);
         }
@@ -70,13 +69,10 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void updateProductByUuid(UUID uuid, ProductDto productDto) {
+    public void updateProductByUuid(ProductDto productDto) {
         try {
-            final Product product = productRepository.findProductByUuid(uuid).orElseThrow();
-            product.setUuid(productDto.getUuid());
-            setProductFields(productDto, product);
-
-            productRepository.saveAndFlush(product);
+            productRepository.saveAndFlush(
+                setProductFields(productDto, productRepository.findProductByUuid(productDto.getUuid()).orElseThrow()));
         } catch (Exception exception) {
             throw new ProductServiceException("An error occurred while updating a product", exception);
         }
@@ -91,12 +87,14 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
-    private void setProductFields(ProductDto productDto, Product product) {
+    private Product setProductFields(ProductDto productDto, Product product) {
         product.setName(productDto.getName());
         product.setQuantity(productDto.getQuantity());
         product.setPrice(productDto.getPrice());
         product.setDiscount(productDto.getDiscount());
         product.setDescription(productDto.getDescription());
+
+        return product;
     }
 
     private ProductDto getProduct(UUID uuid) {

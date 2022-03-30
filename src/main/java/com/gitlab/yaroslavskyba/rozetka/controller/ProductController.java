@@ -68,9 +68,9 @@ public class ProductController {
     }
 
     @PutMapping(value = ControllerPath.PRODUCT, consumes = MediaType.PRODUCT)
-    public ResponseEntity<String> updateProduct(@PathVariable UUID uuid, @RequestBody ProductDto productDto) {
+    public ResponseEntity<String> updateProduct(@RequestBody ProductDto productDto) {
         try {
-            productService.updateProductByUuid(uuid, productDto);
+            productService.updateProductByUuid(productDto);
             return ResponseEntity.ok("A product has been successfully updated");
         } catch (ProductServiceException productServiceException) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(productServiceException.getMessage());

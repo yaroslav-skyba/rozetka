@@ -10,6 +10,6 @@ public interface ProductService {
     UUID createProduct(ProductDto productDto) throws ProductServiceException;
     List<ProductDto> getProductListByName(String name) throws ProductServiceException;
     List<ProductDto> getProductList() throws ProductServiceException;
-    void updateProductByUuid(UUID uuid, ProductDto productDto) throws ProductServiceException;
+    void updateProductByUuid(ProductDto productDto) throws ProductServiceException;
     void deleteProductByUuid(UUID uuid) throws ProductServiceException;
 }
