@@ -10,7 +10,6 @@ public class ControllerPath {
     public static final String ORDERS = ROOT + "orders";
     public static final String PRODUCTS = ROOT + "products";
     public static final String PRODUCT = PRODUCTS + UUID;
-    public static final String PRODUCT_IMG = PRODUCT + "/img";
     public static final String REVIEWS = PRODUCTS + "/{uuidProduct}/reviews";
     public static final String REVIEW = REVIEWS + UUID;
     public static final String ROLES = ROOT + "roles";

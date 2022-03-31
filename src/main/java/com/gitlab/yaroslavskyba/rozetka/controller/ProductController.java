@@ -2,10 +2,8 @@ package com.gitlab.yaroslavskyba.rozetka.controller;
 
 import com.gitlab.yaroslavskyba.rozetka.dto.ProductDto;
 import com.gitlab.yaroslavskyba.rozetka.dto.ReviewDto;
-import com.gitlab.yaroslavskyba.rozetka.exception.ProductImgServiceException;
 import com.gitlab.yaroslavskyba.rozetka.exception.ProductServiceException;
 import com.gitlab.yaroslavskyba.rozetka.exception.ReviewServiceException;
-import com.gitlab.yaroslavskyba.rozetka.service.ProductImgService;
 import com.gitlab.yaroslavskyba.rozetka.service.ProductService;
 import com.gitlab.yaroslavskyba.rozetka.service.ReviewService;
 import com.gitlab.yaroslavskyba.rozetka.util.ControllerPath;
@@ -32,19 +30,17 @@ import java.util.UUID;
 @RequestMapping(produces = org.springframework.http.MediaType.TEXT_PLAIN_VALUE)
 public class ProductController {
     private final ProductService productService;
-    private final ProductImgService productImgService;
     private final ReviewService reviewService;
 
-    public ProductController(ProductService productService, ProductImgService productImgService, ReviewService reviewService) {
+    public ProductController(ProductService productService, ReviewService reviewService) {
         this.productService = productService;
-        this.productImgService = productImgService;
         this.reviewService = reviewService;
     }
 
     @PostMapping(value = ControllerPath.PRODUCTS, consumes = MediaType.PRODUCT)
     public ResponseEntity<String> createProduct(@RequestBody ProductDto productDto, HttpServletResponse httpServletResponse) {
+        httpServletResponse.addCookie(new Cookie("uuid", productService.createProduct(productDto).toString()));
         try {
-            httpServletResponse.addCookie(new Cookie("uuid", productService.createProduct(productDto).toString()));
             return ResponseEntity.status(HttpStatus.CREATED).body("A product has been successfully created");
         } catch (ProductServiceException productServiceException) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(productServiceException.getMessage());
@@ -85,35 +81,6 @@ public class ProductController {
             return ResponseEntity.ok("A product has been successfully deleted");
         } catch (ProductServiceException productServiceException) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(productServiceException.getMessage());
-        }
-    }
-
-    @PostMapping(value = ControllerPath.PRODUCT_IMG, consumes = org.springframework.http.MediaType.IMAGE_PNG_VALUE)
-    public ResponseEntity<String> createProductImg(@PathVariable UUID uuid, @RequestBody String img) {
-        try {
-            productImgService.createProductImg(uuid, img);
-            return ResponseEntity.status(HttpStatus.CREATED).body("A product image has been successfully created");
-        } catch (ProductImgServiceException productImgServiceException) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(productImgServiceException.getMessage());
-        }
-    }
-
-    @GetMapping(value = ControllerPath.PRODUCT_IMG, produces = org.springframework.http.MediaType.IMAGE_PNG_VALUE)
-    public ResponseEntity<String> getProductImg(@PathVariable UUID uuid) {
-        try {
-            return ResponseEntity.ok(productImgService.getProductImgByUuid(uuid));
-        } catch (ProductImgServiceException productImgServiceException) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @DeleteMapping(ControllerPath.PRODUCT_IMG)
-    public ResponseEntity<String> deleteReview(@PathVariable UUID uuid) {
-        try {
-            productImgService.deleteProductImg(uuid);
-            return ResponseEntity.ok("A product image has been successfully deleted");
-        } catch (ProductImgServiceException productImgServiceException) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(productImgServiceException.getMessage());
         }
     }
 

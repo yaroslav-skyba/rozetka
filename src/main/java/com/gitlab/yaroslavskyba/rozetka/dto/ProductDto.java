@@ -10,18 +10,20 @@ public class ProductDto {
     private Float price;
     private Float discount;
     private String description;
+    private String img;
 
     @SuppressWarnings("unused")
     public ProductDto() {
     }
 
-    public ProductDto(UUID uuid, String name, Integer quantity, Float price, Float discount, String description) {
+    public ProductDto(UUID uuid, String name, Integer quantity, Float price, Float discount, String description, String img) {
         this.uuid = uuid;
         this.name = name;
         this.quantity = quantity;
         this.price = price;
         this.discount = discount;
         this.description = description;
+        this.img = img;
     }
 
     @Override
@@ -36,49 +38,68 @@ public class ProductDto {
 
         final ProductDto that = (ProductDto) o;
 
-        return Objects.equals(uuid, that.uuid) && Objects.equals(name, that.name) && Objects.equals(quantity, that.quantity)
-               && Objects.equals(price, that.price) && Objects.equals(discount, that.discount)
-               && Objects.equals(description, that.description);
+        return uuid.equals(that.uuid) && name.equals(that.name) && quantity.equals(that.quantity) && price.equals(that.price)
+               && Objects.equals(discount, that.discount) && Objects.equals(description, that.description) && img.equals(that.img);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, name, quantity, price, discount, description);
-    }
-
-    @Override
-    public String toString() {
-        return "ProductDto{" +
-               "uuid=" + uuid +
-               ", productName='" + name + '\'' +
-               ", productQuantity=" + quantity +
-               ", productPrice=" + price +
-               ", productDiscount=" + discount +
-               ", productDescription='" + description + '\'' +
-               '}';
+        return Objects.hash(uuid, name, quantity, price, discount, description, img);
     }
 
     public UUID getUuid() {
         return uuid;
     }
 
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Integer getQuantity() {
         return quantity;
     }
 
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
     public Float getPrice() {
         return price;
+    }
+
+    public void setPrice(Float price) {
+        this.price = price;
     }
 
     public Float getDiscount() {
         return discount;
     }
 
+    public void setDiscount(Float discount) {
+        this.discount = discount;
+    }
+
     public String getDescription() {
         return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
     }
 }
