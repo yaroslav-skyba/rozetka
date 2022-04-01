@@ -1,20 +1,15 @@
 package com.gitlab.yaroslavskyba.rozetka.model;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.AssertTrue;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -27,37 +22,33 @@ public class Product extends AbstractModel {
     private Integer idProduct;
 
     @NotNull
-    @Column(name = "uuid", nullable = false, unique = true)
+    @Column(nullable = false, unique = true)
     private UUID uuid;
 
     @NotNull
     @Size(min = 1, max = 1024)
-    @Column(name = "name", nullable = false, length = 1024)
+    @Column(nullable = false, length = 1024)
     private String name;
 
     @NotNull
-    @Min(0L)
-    @Column(name = "quantity", nullable = false)
+    @PositiveOrZero
+    @Column(nullable = false)
     private Integer quantity;
 
     @NotNull
     @PositiveOrZero
-    @Column(name = "price", nullable = false)
+    @Column(nullable = false)
     private Float price;
 
-    @NotNull
-    @Column(name = "discount", nullable = false)
     private Float discount;
 
     @Size(max = 1024)
-    @Column(name = "description", length = 1024)
+    @Column(length = 1024)
     private String description;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private final List<OrderItem> orderItemList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private final List<Review> reviewList = new ArrayList<>();
+    @NotNull
+    @Column(nullable = false)
+    private String img;
 
     @Override
     public boolean equals(Object o) {
@@ -72,14 +63,13 @@ public class Product extends AbstractModel {
         final Product product = (Product) o;
 
         return idProduct.equals(product.idProduct) && uuid.equals(product.uuid) && name.equals(product.name)
-               && quantity.equals(product.quantity) && price.equals(product.price) && discount.equals(product.discount)
-               && Objects.equals(description, product.description) && orderItemList.equals(product.orderItemList)
-               && reviewList.equals(product.reviewList);
+               && quantity.equals(product.quantity) && price.equals(product.price) && Objects.equals(discount, product.discount)
+               && Objects.equals(description, product.description) && img.equals(product.img);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idProduct, uuid, name, quantity, price, discount, description, orderItemList, reviewList);
+        return Objects.hash(idProduct, uuid, name, quantity, price, discount, description, img);
     }
 
     @Override
@@ -87,13 +77,12 @@ public class Product extends AbstractModel {
         return "Product{" +
                "idProduct=" + idProduct +
                ", uuid=" + uuid +
-               ", productName='" + name + '\'' +
-               ", productQuantity=" + quantity +
-               ", productPrice=" + price +
-               ", productDiscount=" + discount +
-               ", productDescription='" + description + '\'' +
-               ", orderItemList=" + orderItemList +
-               ", reviewList=" + reviewList +
+               ", name='" + name + '\'' +
+               ", quantity=" + quantity +
+               ", price=" + price +
+               ", discount=" + discount +
+               ", description='" + description + '\'' +
+               ", img='" + img + '\'' +
                '}';
     }
 
@@ -101,7 +90,6 @@ public class Product extends AbstractModel {
         return idProduct;
     }
 
-    @SuppressWarnings("unused")
     public void setIdProduct(Integer idProduct) {
         this.idProduct = idProduct;
     }
@@ -110,16 +98,16 @@ public class Product extends AbstractModel {
         return uuid;
     }
 
-    public void setUuid(UUID uuidProduct) {
-        this.uuid = uuidProduct;
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String nameProduct) {
-        this.name = nameProduct;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Integer getQuantity() {
@@ -146,7 +134,6 @@ public class Product extends AbstractModel {
         this.discount = discount;
     }
 
-    @SuppressWarnings("unused")
     @AssertTrue
     public boolean isDiscountValid() {
         return discount >= 0 && discount <= 100;
@@ -160,13 +147,11 @@ public class Product extends AbstractModel {
         this.description = description;
     }
 
-    @SuppressWarnings("unused")
-    public List<OrderItem> getOrderItemList() {
-        return orderItemList;
+    public String getImg() {
+        return img;
     }
 
-    @SuppressWarnings("unused")
-    public List<Review> getReviewList() {
-        return reviewList;
+    public void setImg(String img) {
+        this.img = img;
     }
 }

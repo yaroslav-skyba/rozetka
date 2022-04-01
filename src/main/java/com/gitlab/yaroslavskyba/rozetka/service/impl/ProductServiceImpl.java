@@ -5,22 +5,14 @@ import com.gitlab.yaroslavskyba.rozetka.exception.ProductServiceException;
 import com.gitlab.yaroslavskyba.rozetka.model.Product;
 import com.gitlab.yaroslavskyba.rozetka.repository.ProductRepository;
 import com.gitlab.yaroslavskyba.rozetka.service.ProductService;
-import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.imageio.ImageIO;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
-
-import static java.util.Base64.getDecoder;
 
 @Service
 @Transactional
@@ -87,28 +79,23 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
-    private Product setProductFields(ProductDto productDto, Product product) throws IOException {
+    private Product setProductFields(ProductDto productDto, Product product) {
         product.setName(productDto.getName());
         product.setQuantity(productDto.getQuantity());
         product.setPrice(productDto.getPrice());
         product.setDiscount(productDto.getDiscount());
         product.setDescription(productDto.getDescription());
-
-        try (var inputStream = new ByteArrayInputStream(getDecoder().decode(productDto.getImg().split(",")[1].replace("\"", "")))) {
-            ImageIO.write(ImageIO.read(inputStream), PNG, new File(IMG_FOLDER + productDto.getUuid() + PNG_EXTENSION));
-        }
+        product.setImg(productDto.getImg());
 
         return product;
     }
 
-    private List<ProductDto> getProductDtoList(List<Product> productList) throws IOException {
+    private List<ProductDto> getProductDtoList(List<Product> productList) {
         final List<ProductDto> productDtoList = new ArrayList<>();
 
         for (Product product : productList) {
             productDtoList.add(new ProductDto(product.getUuid(), product.getName(), product.getQuantity(), product.getPrice(),
-                                              product.getDiscount(), product.getDescription(),
-                                              "data:image/png;base64," + Base64.getEncoder().encodeToString(FileUtils.readFileToByteArray(
-                                                  new File(IMG_FOLDER + product.getUuid() + PNG_EXTENSION)))));
+                                              product.getDiscount(), product.getDescription(), product.getImg()));
         }
 
         if (productDtoList.isEmpty()) {

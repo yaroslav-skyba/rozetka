@@ -20,7 +20,6 @@
         <version.postgresql>42.3.3</version.postgresql>
         <version.hibernate.core>6.0.0.Alpha8</version.hibernate.core>
         <version.tomcat.dbcp>10.0.18</version.tomcat.dbcp>
-        <version.commons.io>2.11.0</version.commons.io>
         <version.jjwt>0.9.1</version.jjwt>
         <version.jackson.core>2.13.2</version.jackson.core>
         <version.jackson.databind>2.13.2.1</version.jackson.databind>
@@ -66,21 +65,14 @@
             <version>${version.hibernate.core}</version>
         </dependency>
 
-        <!--Tomcat-->
+        <!--Apache Tomcat-->
         <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-dbcp</artifactId>
             <version>${version.tomcat.dbcp}</version>
         </dependency>
 
-        <!--Commons-->
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>${version.commons.io}</version>
-        </dependency>
-
-        <!--Jsonwebtoken-->
+        <!--JSON Web Token-->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
