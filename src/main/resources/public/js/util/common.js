@@ -5,15 +5,12 @@ const main = document.getElementById("main");
 const userStorageKeyPart = "user";
 const roleStorageKeyPart = "role";
 const productStorageKeyPart = "product";
-const productImgStorageKeyPart = "Img";
 const creationStorageKeyPart = "Creation";
 const editStorageKeyPart = "Edit";
-const productImgApiUrlPart = "/img";
 
 const userEditStorageKey = userStorageKeyPart + editStorageKeyPart;
 const roleEditStorageKey = roleStorageKeyPart + editStorageKeyPart;
 const productEditStorageKey = productStorageKeyPart + editStorageKeyPart;
-const productImgEditStorageKey = productStorageKeyPart + productImgStorageKeyPart + editStorageKeyPart;
 const jwtStorageKey = "jwt";
 const currentUserRoleNameStorageKey = "currentUserRoleName";
 const currentUserStorageKey = "currentUser";
@@ -44,6 +41,7 @@ const productQuantityDtoKey = "quantity";
 const productPriceDtoKey = "price";
 const productDiscountDtoKey = "discount";
 const productDescriptionDtoKey = "description";
+const productImgDtoKey = "img";
 
 const adminRoleName = "admin";
 const userRoleName = "user";

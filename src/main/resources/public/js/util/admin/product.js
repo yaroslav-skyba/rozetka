@@ -1,5 +1,7 @@
 //noinspection DuplicatedCode
 
+const productImgValue = document.getElementById("productImgValue");
+
 const productImgUploaderFailMessage = "Please, upload a .png image";
 
 const productContentType = contentTypePrefix + "product" + contentTypeSuffix;
@@ -12,7 +14,7 @@ let productDescription;
 let productImgUploader;
 
 function setProductImg(img) {
-    document.getElementById("productImgValue").src = img;
+    productImgValue.src = img;
     document.getElementById("productImgCard").hidden = false;
 }
 
@@ -87,6 +89,7 @@ function sendProductModificationHttpRequest(headlineInnerHtml, submitInnerHtml, 
         productPrice.value = product[productPriceDtoKey];
         productDiscount.value = product[productDiscountDtoKey];
         productDescription.value = product[productDescriptionDtoKey];
+        setProductImg(product[productImgDtoKey]);
     }
 
     setFormControlElementOnchange(storageKey, function () {
@@ -97,15 +100,10 @@ function sendProductModificationHttpRequest(headlineInnerHtml, submitInnerHtml, 
         product[productPriceDtoKey] = productPrice.value;
         product[productDiscountDtoKey] = productDiscount.value;
         product[productDescriptionDtoKey] = productDescription.value;
+        product[productImgDtoKey] = productImgValue.src;
 
         return product;
     });
-
-    const productImgValue = localStorage.getItem(imgStorageKey);
-
-    if (productImgValue) {
-        setProductImg(productImgValue);
-    }
 
     productImgUploader.onchange = function () {
         if (productImgUploader.value.split(".").pop() !== "png") {
