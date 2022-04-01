@@ -23,8 +23,8 @@ public class Order extends AbstractModel {
     @Column(name = "uuid", nullable = false, unique = true)
     private UUID uuid;
 
-    @Size(max = 1024)
-    @Column(name = "description", length = 1024)
+    @Size(max = MAX_COLUMN_LENGTH)
+    @Column(name = "description", length = MAX_COLUMN_LENGTH)
     private String description;
 
     @Override

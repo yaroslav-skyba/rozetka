@@ -39,9 +39,9 @@ public class Review extends AbstractModel {
     @JoinColumn(name = "id_user")
     private User user;
 
-    @Size(max = 1024)
+    @Size(max = MAX_COLUMN_LENGTH)
     @NotEmpty
-    @Column(name = "content", nullable = false, length = 1024)
+    @Column(name = "content", nullable = false, length = MAX_COLUMN_LENGTH)
     private String content;
 
     @Min(1)

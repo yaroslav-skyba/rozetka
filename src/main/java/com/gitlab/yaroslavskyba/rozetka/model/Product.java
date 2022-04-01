@@ -26,8 +26,8 @@ public class Product extends AbstractModel {
     private UUID uuid;
 
     @NotNull
-    @Size(min = 1, max = 1024)
-    @Column(nullable = false, length = 1024)
+    @Size(min = 1, max = MAX_COLUMN_LENGTH)
+    @Column(nullable = false, length = MAX_COLUMN_LENGTH)
     private String name;
 
     @NotNull
@@ -42,12 +42,13 @@ public class Product extends AbstractModel {
 
     private Float discount;
 
-    @Size(max = 1024)
-    @Column(length = 1024)
+    @Size(max = MAX_COLUMN_LENGTH)
+    @Column(length = MAX_COLUMN_LENGTH)
     private String description;
 
     @NotNull
-    @Column(nullable = false)
+    @Size(min = 1, max = MAX_VARCHAR_LENGTH)
+    @Column(nullable = false, length = MAX_VARCHAR_LENGTH)
     private String img;
 
     @Override
@@ -90,6 +91,7 @@ public class Product extends AbstractModel {
         return idProduct;
     }
 
+    @SuppressWarnings("unused")
     public void setIdProduct(Integer idProduct) {
         this.idProduct = idProduct;
     }
@@ -134,6 +136,7 @@ public class Product extends AbstractModel {
         this.discount = discount;
     }
 
+    @SuppressWarnings("unused")
     @AssertTrue
     public boolean isDiscountValid() {
         return discount >= 0 && discount <= 100;

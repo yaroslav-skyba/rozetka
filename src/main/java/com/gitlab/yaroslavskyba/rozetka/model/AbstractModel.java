@@ -12,6 +12,9 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public abstract class AbstractModel {
+    static final int MAX_VARCHAR_LENGTH = 10485760;
+    static final int MAX_COLUMN_LENGTH = 1024;
+
     @CreatedDate
     @Column(name = "creation_date")
     protected LocalDateTime creationDate;

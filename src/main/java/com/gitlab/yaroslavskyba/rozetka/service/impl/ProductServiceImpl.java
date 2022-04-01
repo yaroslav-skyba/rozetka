@@ -8,8 +8,6 @@ import com.gitlab.yaroslavskyba.rozetka.service.ProductService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -17,10 +15,6 @@ import java.util.UUID;
 @Service
 @Transactional
 public class ProductServiceImpl implements ProductService {
-    private static final String IMG_FOLDER = "src/main/resources/img/";
-    private static final String PNG = "png";
-    private static final String PNG_EXTENSION = "." + PNG;
-
     private final ProductRepository productRepository;
 
     public ProductServiceImpl(ProductRepository productRepository) {
@@ -28,12 +22,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public UUID createProduct(ProductDto productDto) {
+    public void createProduct(ProductDto productDto) {
         try {
             final Product product = new Product();
             product.setUuid(UUID.randomUUID());
 
-            return productRepository.saveAndFlush(setProductFields(productDto, product)).getUuid();
+            productRepository.saveAndFlush(setProductFields(productDto, product));
         } catch (Exception exception) {
             throw new ProductServiceException("An error occurred while creating a product", exception);
         }
@@ -62,8 +56,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void updateProductByUuid(ProductDto productDto) {
         try {
-            productRepository.saveAndFlush(
-                setProductFields(productDto, productRepository.findProductByUuid(productDto.getUuid()).orElseThrow()));
+            productRepository.saveAndFlush(setProductFields(productDto,
+                                                            productRepository.findProductByUuid(productDto.getUuid()).orElseThrow()));
         } catch (Exception exception) {
             throw new ProductServiceException("An error occurred while updating a product", exception);
         }
@@ -73,7 +67,6 @@ public class ProductServiceImpl implements ProductService {
     public void deleteProductByUuid(UUID uuid) {
         try {
             productRepository.deleteById(productRepository.findProductByUuid(uuid).orElseThrow().getIdProduct());
-            Files.delete(Path.of(IMG_FOLDER + uuid + PNG_EXTENSION));
         } catch (Exception exception) {
             throw new ProductServiceException("An error occurred while deleting a product", exception);
         }

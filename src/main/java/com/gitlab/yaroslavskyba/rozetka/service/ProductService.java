@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface ProductService {
-    UUID createProduct(ProductDto productDto) throws ProductServiceException;
+    void createProduct(ProductDto productDto) throws ProductServiceException;
     List<ProductDto> getProductListByName(String name) throws ProductServiceException;
     List<ProductDto> getProductList() throws ProductServiceException;
     void updateProductByUuid(ProductDto productDto) throws ProductServiceException;
