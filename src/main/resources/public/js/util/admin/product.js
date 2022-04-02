@@ -1,24 +1,17 @@
 //noinspection DuplicatedCode
 
-const productImgValue = document.getElementById("productImgValue");
-
 const productImgUploaderFailMessage = "Please, upload a .png image";
-
-const productContentType = contentTypePrefix + "product" + contentTypeSuffix;
 
 let productName;
 let productQuantity;
 let productPrice;
 let productDiscount;
 let productDescription;
+let productImgCard
+let productImgValue;
 let productImgUploader;
 
-function setProductImg(img) {
-    productImgValue.src = img;
-    document.getElementById("productImgCard").hidden = false;
-}
-
-function sendProductModificationHttpRequest(headlineInnerHtml, submitInnerHtml, storageKey, uuid, imgStorageKey, method, url) {
+function sendProductModificationHttpRequest(headlineInnerHtml, submitInnerHtml, storageKey, uuid, method, url) {
     redirectUnauthorized(adminRoleName);
 
     setNavigation("../../../", "../../", "../");
@@ -77,6 +70,9 @@ function sendProductModificationHttpRequest(headlineInnerHtml, submitInnerHtml, 
     productPrice = document.getElementById("price");
     productDiscount = document.getElementById("discount");
     productDescription = document.getElementById("description");
+
+    productImgCard = document.getElementById("productImgCard");
+    productImgValue = document.getElementById("productImgValue");
     productImgUploader = document.getElementById("productImgUploader");
 
     configModificationPage(headlineInnerHtml, submitInnerHtml);
@@ -89,7 +85,11 @@ function sendProductModificationHttpRequest(headlineInnerHtml, submitInnerHtml, 
         productPrice.value = product[productPriceDtoKey];
         productDiscount.value = product[productDiscountDtoKey];
         productDescription.value = product[productDescriptionDtoKey];
-        setProductImg(product[productImgDtoKey]);
+        productImgValue.src = product[productImgDtoKey];
+
+        if (productImgValue.src) {
+            productImgCard.hidden = false;
+        }
     }
 
     setFormControlElementOnchange(storageKey, function () {
@@ -114,10 +114,8 @@ function sendProductModificationHttpRequest(headlineInnerHtml, submitInnerHtml, 
         const fileReader = new FileReader();
         fileReader.readAsDataURL(productImgUploader.files[0]);
         fileReader.onload = function() {
-            const img = fileReader.result;
-
-            localStorage.setItem(imgStorageKey, img.toString());
-            setProductImg(img);
+            productImgValue.src = fileReader.result;
+            productImgCard.hidden = false;
         };
     }
 
@@ -144,18 +142,13 @@ function sendProductModificationHttpRequest(headlineInnerHtml, submitInnerHtml, 
             return null;
         }
 
-        if (!localStorage.getItem(imgStorageKey)) {
+        if (!productImgValue.src) {
             alert("danger", productImgUploaderFailMessage);
             return null;
         }
 
-        sendModificationHttpRequest(JSON.parse(localStorage.getItem(storageKey)), method, url, productContentType);
+        sendModificationHttpRequest(
+            JSON.parse(localStorage.getItem(storageKey)), method, url, contentTypePrefix + "product" + contentTypeSuffix
+        );
     }
-}
-
-function succeedModificationProductImg(storageKey, imgStorageKey, successMessage) {
-    localStorage.removeItem(storageKey);
-    localStorage.removeItem(imgStorageKey);
-
-    alert("success", successMessage);
 }
