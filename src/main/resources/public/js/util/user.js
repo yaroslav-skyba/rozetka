@@ -1,15 +1,13 @@
-//noinspection DuplicatedCode
-
-let login;
-let password;
-let passwordConformation;
-let email;
-let firstName;
-let lastName;
-let birthday;
+let userLogin;
+let userPassword;
+let userPasswordConformation;
+let userEmail;
+let userFirstName;
+let userLastName;
+let userBirthday;
 
 function createUser(uuid) {
-    let passwordValue = password.value;
+    let passwordValue = userPassword.value;
 
     if (!passwordValue) {
         passwordValue = null;
@@ -18,32 +16,19 @@ function createUser(uuid) {
     const user = {};
     user[userUuidDtoKey] = uuid;
     user[userRoleUuidDtoKey] = null;
-    user[userLoginDtoKey] = login.value;
+    user[userLoginDtoKey] = userLogin.value;
     user[userPasswordDtoKey] = passwordValue;
-    user[userEmailDtoKey] = email.value;
-    user[userFirstNameDtoKey] = firstName.value;
-    user[userLastNameDtoKey] = lastName.value;
-    user[userBirthdayDtoKey] = birthday.value;
+    user[userEmailDtoKey] = userEmail.value;
+    user[userFirstNameDtoKey] = userFirstName.value;
+    user[userLastNameDtoKey] = userLastName.value;
+    user[userBirthdayDtoKey] = userBirthday.value;
 
     return user;
 }
 
-function getUser(userStorageKey) {
-    for (const formOutlineElement of document.getElementsByClassName("form-outline")) {
-        if (!areFormInputsValid(formOutlineElement.getElementsByClassName("form-control")[0], formOutlineElement)) {
-            return null;
-        }
-    }
+function setUserModificationPage(rootDestination, userDestination, adminDestination) {
+    redirectUnauthorized(adminRoleName);
 
-    if (password.value !== passwordConformation.value) {
-        alert("danger", "Passwords should match");
-        return null;
-    }
-
-    return JSON.parse(localStorage.getItem(userStorageKey));
-}
-
-function configUserModificationPage(rootDestination, userDestination, adminDestination) {
     setNavigation(rootDestination, userDestination, adminDestination);
     setContainer(`
         <h2 class="text-uppercase text-center mb-5" id="headline"></h2>
@@ -101,25 +86,31 @@ function configUserModificationPage(rootDestination, userDestination, adminDesti
         <div id="alert" class="mt-3"></div>
     `);
 
-    login = document.getElementById("login");
-    password = document.getElementById("password");
-    passwordConformation = document.getElementById("passwordConformation");
-    email = document.getElementById("email");
-    firstName = document.getElementById("firstName");
-    lastName = document.getElementById("lastName");
-    birthday = document.getElementById("birthday");
+    userLogin = document.getElementById("login");
+    userPassword = document.getElementById("password");
+    userPasswordConformation = document.getElementById("passwordConformation");
+    userEmail = document.getElementById("email");
+    userFirstName = document.getElementById("firstName");
+    userLastName = document.getElementById("lastName");
+    userBirthday = document.getElementById("birthday");
 }
 
-function setUserFormInputs(headlineInnerHtml, submitInnerHtml, userStorageKey) {
+function setUserModificationPageInputs(headlineInnerHtml, submitInnerHtml, storageKey) {
     setModificationPage(headlineInnerHtml, submitInnerHtml);
 
-    const user = JSON.parse(localStorage.getItem(userStorageKey));
+    const user = JSON.parse(localStorage.getItem(storageKey));
 
     if (user) {
-        login.value = user[userLoginDtoKey];
-        email.value = user[userEmailDtoKey];
-        firstName.value = user[userFirstNameDtoKey];
-        lastName.value = user[userLastNameDtoKey];
-        birthday.value = user[userBirthdayDtoKey];
+        userLogin.value = user[userLoginDtoKey];
+        userEmail.value = user[userEmailDtoKey];
+        userFirstName.value = user[userFirstNameDtoKey];
+        userLastName.value = user[userLastNameDtoKey];
+        userBirthday.value = user[userBirthdayDtoKey];
+    } else {
+        localStorage.setItem(storageKey, JSON.stringify(createUser(null)));
     }
+
+    setFormControlElementOnchange(storageKey, function () {
+       return createUser(user[userUuidDtoKey]);
+    });
 }

@@ -7,8 +7,8 @@ onload = function () {
     configUserAdminModificationPage(userStorageKey, "create a user", innerHtmlCreationSubmit, null);
 
     submit.onclick = function () {
-        password.required = true;
-        passwordConformation.required = true;
+        userPassword.required = true;
+        userPasswordConformation.required = true;
 
         sendModificationHttpRequest(getUser(userStorageKey),"POST",  usersApiUrl, userContentType);
     }

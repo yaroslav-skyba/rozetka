@@ -1,14 +1,9 @@
-const roleStorageKey = roleStorageKeyPart + creationStorageKeyPart;
+const roleCreationStorageKey = roleStorageKeyPart + creationStorageKeyPart;
 
 onload = function () {
-    redirectUnauthorized(adminRoleName);;
-    setRoleModificationPage("create a role", innerHtmlCreationSubmit, roleStorageKey, null);
-
-    submit.onclick = function () {
-        sendModificationHttpRequest(getRole(roleStorageKey),"POST", rolesApiUrl, roleContentType);
-    }
+    setRoleModificationPage("create a role", innerHtmlCreationSubmit, roleCreationStorageKey, "POST", rolesApiUrl);
 }
 
 xmlHttpRequest.onreadystatechange = function () {
-    receiveModificationHttpResponse(201, roleStorageKey);
+    receiveModificationHttpResponse(201, roleCreationStorageKey);
 }

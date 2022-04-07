@@ -3,8 +3,8 @@ let userLogin;
 onload = function () {
     redirectUnauthorized(userRoleName);
 
-    configUserModificationPage("../", "", "admin/");
-    setUserFormInputs("Edit your profile", "Save", currentUserStorageKey);
+    setUserModificationPage("../", "", "admin/");
+    setUserModificationPageInputs("Edit your profile", "Save", currentUserStorageKey);
 
     const currentUser = JSON.parse(localStorage.getItem(currentUserStorageKey));
 
@@ -23,7 +23,7 @@ xmlHttpRequest.onreadystatechange = function () {
         if (xmlHttpRequest.status === 200) {
             alert("success", xmlHttpRequest.responseText);
 
-            if (login.value !== userLogin) {
+            if (userLogin.value !== userLogin) {
                 xmlHttpRequest.open("POST", authorityApi + "jwts");
                 xmlHttpRequest.send(localStorage.getItem(jwtStorageKey));
             }
