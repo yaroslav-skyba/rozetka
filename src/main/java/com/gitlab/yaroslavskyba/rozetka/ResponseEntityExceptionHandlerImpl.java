@@ -26,7 +26,7 @@ public class ResponseEntityExceptionHandlerImpl extends ResponseEntityExceptionH
             body = ((JsonParser)jsonMappingException.getProcessor()).getText()
                    + " is the incorrect "
                    + String.join(" ", StringUtils.splitByCharacterTypeCamelCase(jsonMappingException.getPath().get(0).getFieldName()))
-                   + " field value";
+                   + " value";
         } catch (ClassCastException | IOException exception) {
             body = exception.getMessage();
         }

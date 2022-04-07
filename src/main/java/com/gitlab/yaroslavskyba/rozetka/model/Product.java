@@ -6,10 +6,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.AssertTrue;
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
+import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -37,10 +39,13 @@ public class Product extends AbstractModel {
 
     @NotNull
     @PositiveOrZero
-    @Column(nullable = false)
-    private Float price;
+    @Column(nullable = false, precision = 9, scale = 2)
+    private BigDecimal price;
 
-    private Float discount;
+    @DecimalMin("0")
+    @DecimalMax("100")
+    @Column(precision = 9, scale = 2)
+    private BigDecimal discount;
 
     @Size(max = MAX_COLUMN_LENGTH)
     @Column(length = MAX_COLUMN_LENGTH)
@@ -91,7 +96,6 @@ public class Product extends AbstractModel {
         return idProduct;
     }
 
-    @SuppressWarnings("unused")
     public void setIdProduct(Integer idProduct) {
         this.idProduct = idProduct;
     }
@@ -120,26 +124,20 @@ public class Product extends AbstractModel {
         this.quantity = quantity;
     }
 
-    public Float getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(Float price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
-    public Float getDiscount() {
+    public BigDecimal getDiscount() {
         return discount;
     }
 
-    public void setDiscount(Float discount) {
+    public void setDiscount(BigDecimal discount) {
         this.discount = discount;
-    }
-
-    @SuppressWarnings("unused")
-    @AssertTrue
-    public boolean isDiscountValid() {
-        return discount >= 0 && discount <= 100;
     }
 
     public String getDescription() {

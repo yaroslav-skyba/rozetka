@@ -1,5 +1,6 @@
 package com.gitlab.yaroslavskyba.rozetka.dto;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -7,8 +8,8 @@ public class ProductDto {
     private UUID uuid;
     private String name;
     private Integer quantity;
-    private Float price;
-    private Float discount;
+    private BigDecimal price;
+    private BigDecimal discount;
     private String description;
     private String img;
 
@@ -16,7 +17,7 @@ public class ProductDto {
     public ProductDto() {
     }
 
-    public ProductDto(UUID uuid, String name, Integer quantity, Float price, Float discount, String description, String img) {
+    public ProductDto(UUID uuid, String name, Integer quantity, BigDecimal price, BigDecimal discount, String description, String img) {
         this.uuid = uuid;
         this.name = name;
         this.quantity = quantity;
@@ -71,19 +72,19 @@ public class ProductDto {
         this.quantity = quantity;
     }
 
-    public Float getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(Float price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
-    public Float getDiscount() {
+    public BigDecimal getDiscount() {
         return discount;
     }
 
-    public void setDiscount(Float discount) {
+    public void setDiscount(BigDecimal discount) {
         this.discount = discount;
     }
 

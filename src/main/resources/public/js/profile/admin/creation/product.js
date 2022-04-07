@@ -1,9 +1,9 @@
 const productCreationStorageKey = productStorageKeyPart + creationStorageKeyPart;
 
 onload = function () {
-    sendProductModificationHttpRequest(
-        "create a product", innerHtmlCreationSubmit, productCreationStorageKey, null, "POST", productsApiUrl
-    );
+    setProductModificationHttpRequest("create a product", innerHtmlCreationSubmit, productCreationStorageKey, function () {
+        return createProduct(null, null);
+    }, null, "POST", productsApiUrl);
 }
 
 xmlHttpRequest.onreadystatechange = function () {

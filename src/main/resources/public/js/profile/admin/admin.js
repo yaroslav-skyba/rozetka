@@ -7,7 +7,6 @@ let productToDeleteUuid;
 let userApiUrl;
 let roleApiUrl;
 let productApiUrl;
-let productImgApiUrl;
 
 onload = function () {
     redirectUnauthorized(adminRoleName);
@@ -16,7 +15,7 @@ onload = function () {
 
     setContainer(`<div class="text-white">Welcome, <span id="userName"></span></div>`);
     setContainer(`
-        <table class="w-100 table-dark">
+        <table class="table table-dark table-hover">
             <thead>
                 <tr>
                     <th>#</th>
@@ -38,7 +37,7 @@ onload = function () {
         </button>
     `);
     setContainer(`
-        <table class="w-100 table-dark">
+        <table class="table table-dark table-hover">
             <thead>
                 <tr>
                     <th>#</th>
@@ -162,9 +161,7 @@ xmlHttpRequest.onreadystatechange = function () {
 
                     appendButton("Edit", function () {
                         localStorage.setItem(productEditStorageKey, JSON.stringify(products[i]));
-                        productImgApiUrl = productsApiUrl + "/" + products[i][productUuidDtoKey] + productImgApiUrlPart;
-
-                        sendHttpRequest("GET", productImgApiUrl);
+                        location.href = "/profile/admin/edit/product.html";
                     }, actionsTd);
                     actionsTd.append(" ");
                     appendButton("Delete", function () {
@@ -172,16 +169,13 @@ xmlHttpRequest.onreadystatechange = function () {
                             productToDeleteUuid = products[i][productUuidDtoKey];
                             productApiUrl = productsApiUrl + "/" + productToDeleteUuid;
 
-                            sendHttpRequest("DELETE", productsApiUrl);
+                            sendHttpRequest("DELETE", productApiUrl);
                         }
                     }, actionsTd);
 
                     tr.append(actionsTd);
                     document.getElementById("productTableContent").append(tr);
                 }
-            } else if (xmlHttpRequest.responseURL === productImgApiUrl) {
-                localStorage.setItem(productImgEditStorageKey, xmlHttpRequest.responseText);
-                location.href = "/profile/admin/edit/product.html";
             } else if (xmlHttpRequest.responseURL === userApiUrl) {
                 const userToEdit = localStorage.getItem(userEditStorageKey);
 
@@ -203,7 +197,6 @@ xmlHttpRequest.onreadystatechange = function () {
 
                 if (productToEdit && JSON.parse(productToEdit)[productUuidDtoKey] === productToDeleteUuid) {
                     localStorage.removeItem(productEditStorageKey);
-                    localStorage.removeItem(productImgEditStorageKey);
                 }
 
                 alert("success", xmlHttpRequest.responseText);

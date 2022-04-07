@@ -64,7 +64,7 @@ public class User extends AbstractModel {
     private String lastName;
 
     @NotNull
-    @Column(nullable = false, columnDefinition = "DATE")
+    @Column(nullable = false)
     private LocalDate birthday;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)

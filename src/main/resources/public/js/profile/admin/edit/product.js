@@ -1,9 +1,9 @@
 onload = function () {
     redirectUnready(productEditStorageKey);
-    sendProductModificationHttpRequest(
-        "edit a product", innerHtmlEditSubmit, productEditStorageKey,
-        JSON.parse(localStorage.getItem(productEditStorageKey))[productUuidDtoKey], "PUT", productsApiUrl
-    );
+    setProductModificationHttpRequest("edit a product", innerHtmlEditSubmit, productEditStorageKey, function () {
+        const product = JSON.parse(localStorage.getItem(productEditStorageKey));
+        return createProduct(product[productUuidDtoKey], product[productImgDtoKey]);
+    }, JSON.parse(localStorage.getItem(productEditStorageKey))[productUuidDtoKey], "PUT", productsApiUrl);
 }
 
 xmlHttpRequest.onreadystatechange = function () {

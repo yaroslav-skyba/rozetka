@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -50,7 +51,7 @@ public class OrderItemServiceImpl implements OrderItemService {
 
                 entityManager.detach(product);
                 product.setQuantity(orderItemProductQuantity);
-                product.setPrice(product.getPrice() * product.getDiscount() / 100);
+                product.setPrice(BigDecimal.valueOf(product.getPrice().floatValue() * product.getDiscount().floatValue() / 100));
 
                 final OrderItem orderItem = new OrderItem();
                 orderItem.setUuid(UUID.randomUUID());

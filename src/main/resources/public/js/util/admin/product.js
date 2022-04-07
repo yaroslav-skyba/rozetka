@@ -7,11 +7,25 @@ let productQuantity;
 let productPrice;
 let productDiscount;
 let productDescription;
+
 let productImgCard
 let productImgValue;
 let productImgUploader;
 
-function sendProductModificationHttpRequest(headlineInnerHtml, submitInnerHtml, storageKey, uuid, method, url) {
+function createProduct(uuid, img) {
+    const product = {};
+    product[productUuidDtoKey] = uuid;
+    product[productNameDtoKey] = productName.value;
+    product[productQuantityDtoKey] = productQuantity.value;
+    product[productPriceDtoKey] = productPrice.value;
+    product[productDiscountDtoKey] = productDiscount.value;
+    product[productDescriptionDtoKey] = productDescription.value;
+    product[productImgDtoKey] = img;
+
+    return product;
+}
+
+function setProductModificationHttpRequest(headlineInnerHtml, submitInnerHtml, storageKey, setField, uuid, method, url) {
     redirectUnauthorized(adminRoleName);
 
     setNavigation("../../../", "../../", "../");
@@ -38,7 +52,7 @@ function sendProductModificationHttpRequest(headlineInnerHtml, submitInnerHtml, 
             </div>
             
             <div class="form-outline mb-4">
-                <input id="discount" class="form-control form-control-lg" required/>
+                <input id="discount" class="form-control form-control-lg"/>
                 <label for="discount">A discount</label>
                 <div class="invalid-feedback">Please, type a discount</div>
             </div>
@@ -87,23 +101,12 @@ function sendProductModificationHttpRequest(headlineInnerHtml, submitInnerHtml, 
         productDescription.value = product[productDescriptionDtoKey];
         productImgValue.src = product[productImgDtoKey];
 
-        if (productImgValue.src) {
+        if (product[productImgDtoKey]) {
             productImgCard.hidden = false;
         }
     }
 
-    setFormControlElementOnchange(storageKey, function () {
-        const product = {};
-        product[productUuidDtoKey] = uuid;
-        product[productNameDtoKey] = productName.value;
-        product[productQuantityDtoKey] = productQuantity.value;
-        product[productPriceDtoKey] = productPrice.value;
-        product[productDiscountDtoKey] = productDiscount.value;
-        product[productDescriptionDtoKey] = productDescription.value;
-        product[productImgDtoKey] = productImgValue.src;
-
-        return product;
-    });
+    setFormControlElementOnchange(storageKey, setField);
 
     productImgUploader.onchange = function () {
         if (productImgUploader.value.split(".").pop() !== "png") {
@@ -116,37 +119,12 @@ function sendProductModificationHttpRequest(headlineInnerHtml, submitInnerHtml, 
         fileReader.onload = function() {
             productImgValue.src = fileReader.result;
             productImgCard.hidden = false;
+
+            localStorage.setItem(storageKey, JSON.stringify(createProduct(uuid, fileReader.result)));
         };
     }
 
     submit.onclick = function () {
-        for (const formOutlineElement of document.getElementsByClassName("form-outline")) {
-            const formControlElement = formOutlineElement.getElementsByClassName("form-control")[0];
-
-            if (!areFormInputsValid(formControlElement, formOutlineElement)) {
-                return null;
-            }
-
-            const minFieldValue = 0;
-
-            if (Number(formControlElement.value) < 0) {
-                alert("danger", "A field value should be " + minFieldValue + " or positive");
-                return null;
-            }
-        }
-
-        const maxDiscountValue = 100;
-
-        if (Number(productDiscount.value) > maxDiscountValue) {
-            alert("danger", "A discount value should be " + maxDiscountValue + " or less");
-            return null;
-        }
-
-        if (!productImgValue.src) {
-            alert("danger", productImgUploaderFailMessage);
-            return null;
-        }
-
         sendModificationHttpRequest(
             JSON.parse(localStorage.getItem(storageKey)), method, url, contentTypePrefix + "product" + contentTypeSuffix
         );
