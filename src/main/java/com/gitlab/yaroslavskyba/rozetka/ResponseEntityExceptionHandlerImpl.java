@@ -15,7 +15,6 @@ import java.io.IOException;
 
 @ControllerAdvice
 public class ResponseEntityExceptionHandlerImpl extends ResponseEntityExceptionHandler {
-    @SuppressWarnings("NullableProblems")
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers,
                                                                   HttpStatus status, WebRequest request) {

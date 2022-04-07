@@ -9,6 +9,12 @@ function redirectUnready(storageKey) {
     }
 }
 
+function setSubmitOnclick(storageKey, method, url, contentType) {
+    submit.onclick = function () {
+        sendModificationHttpRequest(JSON.parse(localStorage.getItem(storageKey)), method, url, contentType);
+    }
+}
+
 function receiveModificationHttpResponse(successStatus, storageKey) {
     if (xmlHttpRequest.readyState === 4) {
         if (xmlHttpRequest.status === successStatus) {

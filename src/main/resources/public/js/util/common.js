@@ -155,7 +155,7 @@ function setMainAttributes() {
     main.className = "min-vh-100";
 }
 
-function configModificationPage(headlineInnerHtml, submitInnerHtml) {
+function setModificationPage(headlineInnerHtml, submitInnerHtml) {
     setMainAttributes();
     document.getElementById("headline").innerHTML = headlineInnerHtml;
 
@@ -185,12 +185,10 @@ function setContainer(content) {
 }
 
 function sendModificationHttpRequest(body, method, url, contentType) {
-    if (body) {
-        xmlHttpRequest.open(method, url);
-        xmlHttpRequest.setRequestHeader("Content-Type", contentType);
-        xmlHttpRequest.setRequestHeader("Authorization", localStorage.getItem(jwtStorageKey));
-        xmlHttpRequest.send(JSON.stringify(body));
-    }
+    xmlHttpRequest.open(method, url);
+    xmlHttpRequest.setRequestHeader("Content-Type", contentType);
+    xmlHttpRequest.setRequestHeader("Authorization", localStorage.getItem(jwtStorageKey));
+    xmlHttpRequest.send(JSON.stringify(body));
 }
 
 function alert(type, message) {

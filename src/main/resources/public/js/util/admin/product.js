@@ -1,7 +1,3 @@
-//noinspection DuplicatedCode
-
-const productImgUploaderFailMessage = "Please, upload a .png image";
-
 let productName;
 let productQuantity;
 let productPrice;
@@ -25,7 +21,7 @@ function createProduct(uuid, img) {
     return product;
 }
 
-function setProductModificationHttpRequest(headlineInnerHtml, submitInnerHtml, storageKey, setField, uuid, method, url) {
+function setProductModificationPage(headlineInnerHtml, submitInnerHtml, storageKey, httpMethod, httpUrl) {
     redirectUnauthorized(adminRoleName);
 
     setNavigation("../../../", "../../", "../");
@@ -78,6 +74,7 @@ function setProductModificationHttpRequest(headlineInnerHtml, submitInnerHtml, s
         
         <div id="alert" class="mt-3"></div>
     `);
+    setModificationPage(headlineInnerHtml, submitInnerHtml);
 
     productName = document.getElementById("name");
     productQuantity = document.getElementById("quantity");
@@ -88,8 +85,6 @@ function setProductModificationHttpRequest(headlineInnerHtml, submitInnerHtml, s
     productImgCard = document.getElementById("productImgCard");
     productImgValue = document.getElementById("productImgValue");
     productImgUploader = document.getElementById("productImgUploader");
-
-    configModificationPage(headlineInnerHtml, submitInnerHtml);
 
     const product = JSON.parse(localStorage.getItem(storageKey));
 
@@ -104,13 +99,17 @@ function setProductModificationHttpRequest(headlineInnerHtml, submitInnerHtml, s
         if (product[productImgDtoKey]) {
             productImgCard.hidden = false;
         }
+    } else {
+        localStorage.setItem(storageKey, JSON.stringify(createProduct(null, null)));
     }
 
-    setFormControlElementOnchange(storageKey, setField);
-
+    setFormControlElementOnchange(storageKey, function () {
+        const product = JSON.parse(localStorage.getItem(storageKey));
+        return createProduct(product[productUuidDtoKey], product[productImgDtoKey]);
+    });
     productImgUploader.onchange = function () {
         if (productImgUploader.value.split(".").pop() !== "png") {
-            alert("danger", productImgUploaderFailMessage);
+            alert("danger", "Please, upload a .png image");
             return;
         }
 
@@ -120,13 +119,12 @@ function setProductModificationHttpRequest(headlineInnerHtml, submitInnerHtml, s
             productImgValue.src = fileReader.result;
             productImgCard.hidden = false;
 
-            localStorage.setItem(storageKey, JSON.stringify(createProduct(uuid, fileReader.result)));
+            localStorage.setItem(
+                storageKey,
+                JSON.stringify(createProduct(JSON.parse(localStorage.getItem(storageKey))[productUuidDtoKey], fileReader.result))
+            );
         };
     }
 
-    submit.onclick = function () {
-        sendModificationHttpRequest(
-            JSON.parse(localStorage.getItem(storageKey)), method, url, contentTypePrefix + "product" + contentTypeSuffix
-        );
-    }
+    setSubmitOnclick(storageKey, httpMethod, httpUrl, contentTypePrefix + "product" + contentTypeSuffix);
 }

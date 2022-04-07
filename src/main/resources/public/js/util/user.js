@@ -111,7 +111,7 @@ function configUserModificationPage(rootDestination, userDestination, adminDesti
 }
 
 function setUserFormInputs(headlineInnerHtml, submitInnerHtml, userStorageKey) {
-    configModificationPage(headlineInnerHtml, submitInnerHtml);
+    setModificationPage(headlineInnerHtml, submitInnerHtml);
 
     const user = JSON.parse(localStorage.getItem(userStorageKey));
 

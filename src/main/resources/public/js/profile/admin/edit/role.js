@@ -2,7 +2,7 @@ onload = function () {
     redirectUnauthorized(adminRoleName);
     redirectUnready(roleEditStorageKey);
 
-    configRoleModificationPage(
+    setRoleModificationPage(
         "edit a role", innerHtmlEditSubmit, roleEditStorageKey, JSON.parse(localStorage.getItem(roleEditStorageKey))[roleUuidDtoKey]
     );
 

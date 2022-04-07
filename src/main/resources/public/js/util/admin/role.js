@@ -1,24 +1,16 @@
-const roleContentType = contentTypePrefix + "role" + contentTypeSuffix;
-
-let name;
+let roleName;
 
 function createRole(uuid) {
     const role = {};
     role[roleUuidDtoKey] = uuid;
-    role[roleNameDtoKey] = name.value;
+    role[roleNameDtoKey] = roleName.value;
 
     return role;
 }
 
-function getRole(roleStorageKey) {
-    if (!areFormInputsValid(name, document)) {
-        return null;
-    }
+function setRoleModificationPage(headlineInnerHtml, submitInnerHtml, storageKey, httpMethod, httpUrl) {
+    redirectUnauthorized(adminRoleName);
 
-    return JSON.parse(localStorage.getItem(roleStorageKey));
-}
-
-function configRoleModificationPage(headlineInnerHtml, submitInnerHtml, roleStorageKey, uuid) {
     setNavigation("../../../", "../../", "../");
     setContainer(`
         <h2 class="text-uppercase text-center mb-5" id="headline"></h2>
@@ -37,17 +29,21 @@ function configRoleModificationPage(headlineInnerHtml, submitInnerHtml, roleStor
         
         <div id="alert" class="mt-3"></div>
     `);
+    setModificationPage(headlineInnerHtml, submitInnerHtml);
 
-    name = document.getElementById("name");
-    configModificationPage(headlineInnerHtml, submitInnerHtml);
+    roleName = document.getElementById("name");
 
-    const role = JSON.parse(localStorage.getItem(roleStorageKey));
+    const role = JSON.parse(localStorage.getItem(storageKey));
 
     if (role) {
-        name.value = role[roleNameDtoKey];
+        roleName.value = role[roleNameDtoKey];
+    } else {
+        localStorage.setItem(storageKey, JSON.stringify(createRole(null)));
     }
 
-    setFormControlElementOnchange(roleStorageKey, function () {
-        return createRole(uuid);
+    setFormControlElementOnchange(storageKey, function () {
+        return createRole(role[roleUuidDtoKey]);
     });
+
+    setSubmitOnclick(storageKey, httpMethod, httpUrl, contentTypePrefix + "role" + contentTypeSuffix);
 }
