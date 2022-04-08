@@ -21,7 +21,7 @@ function createProduct(uuid, img) {
     return product;
 }
 
-function setProductModificationPage(headlineInnerHtml, submitInnerHtml, storageKey, httpMethod, httpUrl) {
+function setProductModificationPage(headlineInnerHtml, submitInnerHtml, storageKey, httpMethod) {
     redirectUnauthorized(adminRoleName);
 
     setNavigation("../../../", "../../", "../");
@@ -126,5 +126,5 @@ function setProductModificationPage(headlineInnerHtml, submitInnerHtml, storageK
         };
     }
 
-    setSubmitOnclick(storageKey, httpMethod, httpUrl, contentTypePrefix + "product" + contentTypeSuffix);
+    setSubmitOnclick(storageKey, httpMethod, productsApiUrl, contentTypePrefix + "product" + contentTypeSuffix);
 }

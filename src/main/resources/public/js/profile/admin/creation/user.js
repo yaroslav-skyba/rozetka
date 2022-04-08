@@ -1,19 +1,9 @@
-const userStorageKey = userStorageKeyPart + creationStorageKeyPart;
+const userCreationStorageKey = userStorageKeyPart + creationStorageKeyPart;
 
 onload = function () {
-    redirectUnauthorized(adminRoleName);
-    redirectWithoutRoles();
-
-    configUserAdminModificationPage(userStorageKey, "create a user", innerHtmlCreationSubmit, null);
-
-    submit.onclick = function () {
-        userPassword.required = true;
-        userPasswordConformation.required = true;
-
-        sendModificationHttpRequest(getUser(userStorageKey),"POST",  usersApiUrl, userContentType);
-    }
+    setUserAdminPage(userCreationStorageKey, "create a user", innerHtmlCreationSubmit, "POST");
 }
 
 xmlHttpRequest.onreadystatechange = function () {
-    receiveModificationHttpResponse(201, userStorageKey);
+    receiveModificationHttpResponse(201, userCreationStorageKey);
 }

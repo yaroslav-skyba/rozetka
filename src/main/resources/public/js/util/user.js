@@ -9,7 +9,9 @@ let userBirthday;
 function createUser(uuid) {
     let passwordValue = userPassword.value;
 
-    if (!passwordValue) {
+    if (passwordValue) {
+
+    } else {
         passwordValue = null;
     }
 
@@ -26,7 +28,7 @@ function createUser(uuid) {
     return user;
 }
 
-function setUserModificationPage(rootDestination, userDestination, adminDestination) {
+function setUserPage(rootDestination, userDestination, adminDestination, headlineInnerHtml, submitInnerHtml, storageKey, httpMethod) {
     redirectUnauthorized(adminRoleName);
 
     setNavigation(rootDestination, userDestination, adminDestination);
@@ -93,9 +95,7 @@ function setUserModificationPage(rootDestination, userDestination, adminDestinat
     userFirstName = document.getElementById("firstName");
     userLastName = document.getElementById("lastName");
     userBirthday = document.getElementById("birthday");
-}
 
-function setUserModificationPageInputs(headlineInnerHtml, submitInnerHtml, storageKey) {
     setModificationPage(headlineInnerHtml, submitInnerHtml);
 
     const user = JSON.parse(localStorage.getItem(storageKey));
@@ -111,6 +111,17 @@ function setUserModificationPageInputs(headlineInnerHtml, submitInnerHtml, stora
     }
 
     setFormControlElementOnchange(storageKey, function () {
-       return createUser(user[userUuidDtoKey]);
+        return createUser(user[userUuidDtoKey]);
     });
+
+    submit.onclick = function () {
+        if (userPassword.value === userPasswordConformation.value) {
+            document.getElementById("alert").innerHTML = "";
+            sendModificationHttpRequest(
+                JSON.parse(localStorage.getItem(storageKey)), httpMethod, usersApiUrl, contentTypePrefix + "user" + contentTypeSuffix
+            );
+        } else {
+            alert("danger", "Passwords should match");
+        }
+    }
 }

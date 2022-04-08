@@ -8,7 +8,7 @@ function createRole(uuid) {
     return role;
 }
 
-function setRoleModificationPage(headlineInnerHtml, submitInnerHtml, storageKey, httpMethod, httpUrl) {
+function setRolePage(headlineInnerHtml, submitInnerHtml, storageKey, httpMethod) {
     redirectUnauthorized(adminRoleName);
 
     setNavigation("../../../", "../../", "../");
@@ -45,5 +45,5 @@ function setRoleModificationPage(headlineInnerHtml, submitInnerHtml, storageKey,
         return createRole(role[roleUuidDtoKey]);
     });
 
-    setSubmitOnclick(storageKey, httpMethod, httpUrl, contentTypePrefix + "role" + contentTypeSuffix);
+    setSubmitOnclick(storageKey, httpMethod, roleApiUrl, contentTypePrefix + "role" + contentTypeSuffix);
 }

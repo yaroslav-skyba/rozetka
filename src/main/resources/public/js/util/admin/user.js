@@ -1,13 +1,7 @@
 let userRole;
 
-function redirectWithoutRoles() {
-    if (!localStorage.getItem(rolesStorageKey)) {
-        location.href = "/profile/admin/admin.html";
-    }
-}
-
-function configUserAdminModificationPage(userStorageKey, headlineInnerHtml, submitInnerHtml, uuid) {
-    setUserModificationPage("../../../", "../../", "../");
+function setUserAdminPage(storageKey, headlineInnerHtml, submitInnerHtml, httpMethod) {
+    setUserPage("../../../", "../../", "../", headlineInnerHtml, submitInnerHtml, storageKey, httpMethod);
 
     document.getElementById("role").innerHTML =
         `<div class="form-outline mb-4">
@@ -18,26 +12,20 @@ function configUserAdminModificationPage(userStorageKey, headlineInnerHtml, subm
 
     userRole = document.getElementById("roleValue");
 
-    const roleValues = Object.values(JSON.parse(localStorage.getItem(rolesStorageKey)));
+    const roles = Object.values(JSON.parse(localStorage.getItem(rolesStorageKey)));
 
-    for (const roleValue of roleValues) {
-        userRole.innerHTML +=
-            `<option value="` + roleValue[roleNameDtoKey] + `">`
-                + roleValue[roleNameDtoKey].charAt(0).toUpperCase() + roleValue[roleNameDtoKey].slice(1) +
-            `</option`;
+    for (const role of roles) {
+        userRole.innerHTML += `<option value="` + role[roleNameDtoKey] + `">` + role[roleNameDtoKey] + `</option>`;
     }
 
-    const user = JSON.parse(localStorage.getItem(userStorageKey));
+    userRole.value = roles.reduce((role, value) =>
+        value[roleUuidDtoKey] === JSON.parse(localStorage.getItem(storageKey))[userRoleUuidDtoKey] ? value[roleNameDtoKey] : role,
+        userRoleName);
 
-    if (user) {
-        userRole.value = roleValues.find(value => value[roleUuidDtoKey] === user[userRoleUuidDtoKey])[roleNameDtoKey];
+    userRole.onchange = function() {
+        const user = JSON.parse(localStorage.getItem(storageKey))[userUuidDtoKey];
+        user[userRoleUuidDtoKey] = roles.find(value => value[roleNameDtoKey] === userRole.value)[roleUuidDtoKey];
+
+        localStorage.setItem(storageKey, JSON.stringify(user));
     }
-
-    setUserModificationPageInputs(headlineInnerHtml, submitInnerHtml, userStorageKey);
-    setFormControlElementOnchange(userStorageKey, function () {
-        const user = createUser(uuid);
-        user[userRoleUuidDtoKey] = roleValues.find(value => value[roleNameDtoKey] === userRole.value)[roleUuidDtoKey];
-
-        return user;
-    });
 }

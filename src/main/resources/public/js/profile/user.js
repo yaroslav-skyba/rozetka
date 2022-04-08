@@ -3,7 +3,7 @@ let userLogin;
 onload = function () {
     redirectUnauthorized(userRoleName);
 
-    setUserModificationPage("../", "", "admin/");
+    setUserPage("../", "", "admin/");
     setUserModificationPageInputs("Edit your profile", "Save", currentUserStorageKey);
 
     const currentUser = JSON.parse(localStorage.getItem(currentUserStorageKey));

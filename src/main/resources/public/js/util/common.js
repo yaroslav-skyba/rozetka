@@ -198,19 +198,3 @@ function alert(type, message) {
             `<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" onclick="location.reload()"></button>
         </div>`;
 }
-
-function areFormInputsValid(formControlElement, formOutlineElement) {
-    if (!formControlElement.checkValidity()) {
-        alert("danger", formOutlineElement.getElementsByClassName("invalid-feedback")[0].innerHTML);
-        return false;
-    }
-
-    const maxElementLength = 1024;
-
-    if (formControlElement.value.length > maxElementLength) {
-        alert("danger", "A field length should be equal or less than " + maxElementLength + " symbols");
-        return false;
-    }
-
-    return true;
-}

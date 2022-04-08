@@ -1,7 +1,7 @@
 const roleCreationStorageKey = roleStorageKeyPart + creationStorageKeyPart;
 
 onload = function () {
-    setRoleModificationPage("create a role", innerHtmlCreationSubmit, roleCreationStorageKey, "POST", rolesApiUrl);
+    setRolePage("create a role", innerHtmlCreationSubmit, roleCreationStorageKey, "POST");
 }
 
 xmlHttpRequest.onreadystatechange = function () {

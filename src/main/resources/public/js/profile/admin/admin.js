@@ -10,9 +10,13 @@ let productApiUrl;
 
 onload = function () {
     redirectUnauthorized(adminRoleName);
+
+    localStorage.removeItem(userEditStorageKey);
+    localStorage.removeItem(roleEditStorageKey);
+    localStorage.removeItem(productEditStorageKey);
+
     setNavigation("../../", "../", "");
     setMainAttributes();
-
     setContainer(`<div class="text-white">Welcome, <span id="userName"></span></div>`);
     setContainer(`
         <table class="table table-dark table-hover">
@@ -92,6 +96,8 @@ xmlHttpRequest.onreadystatechange = function () {
                 const roles = JSON.parse(xmlHttpRequest.responseText);
 
                 for (let i = 0; i < users.length; i++) {
+                    users[i][userBirthdayDtoKey] = new Date(users[i][userBirthdayDtoKey]).toISOString().slice(0, 10);
+
                     const tr = document.createElement("tr");
                     appendTd(i + 1, tr);
                     appendTd(users[i][userLoginDtoKey], tr);
