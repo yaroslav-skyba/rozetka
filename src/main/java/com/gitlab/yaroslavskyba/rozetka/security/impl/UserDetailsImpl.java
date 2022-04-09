@@ -58,7 +58,7 @@ public class UserDetailsImpl implements UserDetails {
         return user.getUuid();
     }
 
-    @SuppressWarnings("unused")
+    
     public List<UUID> getReviewUuidList() {
         return user.getReviewList().stream().map(Review::getUuid).collect(Collectors.toList());
     }

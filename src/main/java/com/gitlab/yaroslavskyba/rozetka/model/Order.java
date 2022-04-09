@@ -20,11 +20,11 @@ public class Order extends AbstractModel {
     private Integer idOrder;
 
     @NotNull
-    @Column(name = "uuid", nullable = false, unique = true)
+    @Column(nullable = false, unique = true)
     private UUID uuid;
 
-    @Size(max = MAX_COLUMN_LENGTH)
-    @Column(name = "description", length = MAX_COLUMN_LENGTH)
+    @Size(max = MAX_DESCRIPTION_LENGTH)
+    @Column(length = MAX_DESCRIPTION_LENGTH)
     private String description;
 
     @Override
@@ -56,17 +56,15 @@ public class Order extends AbstractModel {
                '}';
     }
 
-    @SuppressWarnings("unused")
     public Integer getIdOrder() {
         return idOrder;
     }
 
-    @SuppressWarnings("unused")
     public void setIdOrder(Integer idOrder) {
         this.idOrder = idOrder;
     }
 
-    @SuppressWarnings("unused")
+    
     public UUID getUuid() {
         return uuid;
     }
@@ -75,7 +73,6 @@ public class Order extends AbstractModel {
         this.uuid = uuid;
     }
 
-    @SuppressWarnings("unused")
     public String getDescription() {
         return description;
     }

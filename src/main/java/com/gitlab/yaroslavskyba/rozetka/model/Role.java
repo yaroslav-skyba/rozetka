@@ -8,7 +8,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -23,11 +25,12 @@ public class Role extends AbstractModel {
     private Long idRole;
 
     @NotNull
-    @Column(name = "uuid", nullable = false, unique = true)
+    @Column(nullable = false, unique = true)
     private UUID uuid;
 
-    @NotNull
-    @Column(name = "name", unique = true, nullable = false)
+    @NotBlank
+    @Size(min = 1, max = MAX_COLUMN_VARCHAR_LENGTH)
+    @Column(unique = true, nullable = false, length = MAX_COLUMN_VARCHAR_LENGTH)
     private String name;
 
     @OneToMany(mappedBy = "role", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
@@ -63,12 +66,10 @@ public class Role extends AbstractModel {
                '}';
     }
 
-    @SuppressWarnings("unused")
     public Long getIdRole() {
         return idRole;
     }
-
-    @SuppressWarnings("unused")
+    
     public void setIdRole(Long id) {
         this.idRole = id;
     }
@@ -89,7 +90,6 @@ public class Role extends AbstractModel {
         this.name = name;
     }
 
-    @SuppressWarnings("unused")
     public List<User> getUserList() {
         return userList;
     }

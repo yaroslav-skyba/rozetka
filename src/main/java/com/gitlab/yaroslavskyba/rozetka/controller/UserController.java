@@ -49,7 +49,7 @@ public class UserController {
         }
     }
 
-    @SuppressWarnings({"ELValidationInspection", "SpringElInspection"})
+    
     @PutMapping(value = ControllerPath.USERS, consumes = MediaType.USER)
     @PreAuthorize("#userDto.uuid.equals(principal.uuid) or hasAuthority('" + RoleName.ADMIN + "')")
     public ResponseEntity<String> updateUser(@RequestBody UserDto userDto) {

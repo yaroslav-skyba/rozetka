@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
@@ -27,9 +28,9 @@ public class Product extends AbstractModel {
     @Column(nullable = false, unique = true)
     private UUID uuid;
 
-    @NotNull
-    @Size(min = 1, max = MAX_COLUMN_LENGTH)
-    @Column(nullable = false, length = MAX_COLUMN_LENGTH)
+    @NotBlank
+    @Size(min = 1, max = MAX_COLUMN_VARCHAR_LENGTH)
+    @Column(nullable = false, length = MAX_COLUMN_VARCHAR_LENGTH)
     private String name;
 
     @NotNull
@@ -47,8 +48,8 @@ public class Product extends AbstractModel {
     @Column(precision = 9, scale = 2)
     private BigDecimal discount;
 
-    @Size(max = MAX_COLUMN_LENGTH)
-    @Column(length = MAX_COLUMN_LENGTH)
+    @Size(max = MAX_DESCRIPTION_LENGTH)
+    @Column(length = MAX_DESCRIPTION_LENGTH)
     private String description;
 
     @NotNull

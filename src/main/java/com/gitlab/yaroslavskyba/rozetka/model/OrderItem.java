@@ -73,12 +73,12 @@ public class OrderItem extends AbstractModel {
                '}';
     }
 
-    @SuppressWarnings("unused")
+    
     public Integer getIdOrderItem() {
         return idOrderItem;
     }
 
-    @SuppressWarnings("unused")
+    
     public void setIdOrderItem(Integer idOrderItem) {
         this.idOrderItem = idOrderItem;
     }
@@ -107,7 +107,7 @@ public class OrderItem extends AbstractModel {
         this.user = user;
     }
 
-    @SuppressWarnings("unused")
+    
     public Order getOrder() {
         return order;
     }

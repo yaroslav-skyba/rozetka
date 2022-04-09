@@ -13,7 +13,8 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 public abstract class AbstractModel {
     static final int MAX_VARCHAR_LENGTH = 10485760;
-    static final int MAX_COLUMN_LENGTH = 1024;
+    static final int MAX_DESCRIPTION_LENGTH = 1000;
+    static final int MAX_COLUMN_VARCHAR_LENGTH = 100;
 
     @CreatedDate
     @Column(name = "creation_date")
@@ -23,22 +24,22 @@ public abstract class AbstractModel {
     @Column(name = "last_modification_date")
     protected LocalDateTime lastModificationDate;
 
-    @SuppressWarnings("unused")
+    
     public LocalDateTime getCreationDate() {
         return creationDate;
     }
 
-    @SuppressWarnings("unused")
+    
     public void setCreationDate(LocalDateTime created) {
         this.creationDate = created;
     }
 
-    @SuppressWarnings("unused")
+    
     public LocalDateTime getLastModificationDate() {
         return lastModificationDate;
     }
 
-    @SuppressWarnings("unused")
+    
     public void setLastModificationDate(LocalDateTime updated) {
         this.lastModificationDate = updated;
     }

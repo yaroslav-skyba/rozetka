@@ -6,11 +6,11 @@ public class LoginDto {
     private String username;
     private String password;
 
-    @SuppressWarnings("unused")
+    
     public LoginDto() {
     }
 
-    @SuppressWarnings("unused")
+    
     public LoginDto(String username, String password) {
         this.username = username;
         this.password = password;

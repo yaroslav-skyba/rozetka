@@ -22,14 +22,14 @@ onload = function () {
         <table class="table table-dark table-hover">
             <thead>
                 <tr>
-                    <th>#</th>
+                    <th class="col-1">#</th>
                     <th>Login</th>
                     <th>Email</th>
                     <th>First Name</th>
                     <th>Last Name</th>
                     <th>Birthday</th>
                     <th>Role</th>
-                    <th>Actions</th>
+                    <th class="col-2">Actions</th>
                 </tr>
             </thead>
     
@@ -44,9 +44,9 @@ onload = function () {
         <table class="table table-dark table-hover">
             <thead>
                 <tr>
-                    <th>#</th>
+                    <th class="col-1">#</th>
                     <th>Name</th>
-                    <th>Actions</th>
+                    <th class="col-2">Actions</th>
                 </tr>
             </thead>
     
@@ -61,11 +61,11 @@ onload = function () {
         <table class="table table-dark table-hover">    
             <thead>
                 <tr>
-                    <th>#</th>
-                    <th class="col-6">Name</th>
+                    <th class="col-1">#</th>
+                    <th>Name</th>
                     <th>Price</th>
                     <th>Quantity</th>
-                    <th>Actions</th>
+                    <th class="col-2">Actions</th>
                 </tr>
             </thead>
     

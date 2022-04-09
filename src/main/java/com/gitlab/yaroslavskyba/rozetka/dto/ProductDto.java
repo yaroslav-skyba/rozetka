@@ -13,7 +13,7 @@ public class ProductDto {
     private String description;
     private String img;
 
-    @SuppressWarnings("unused")
+    
     public ProductDto() {
     }
 

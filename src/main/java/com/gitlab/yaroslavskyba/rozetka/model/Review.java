@@ -11,7 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Objects;
@@ -26,7 +26,7 @@ public class Review extends AbstractModel {
     private Integer idReview;
 
     @NotNull
-    @Column(name = "uuid", nullable = false, unique = true)
+    @Column(nullable = false, unique = true)
     private UUID uuid;
 
     @NotNull
@@ -39,9 +39,9 @@ public class Review extends AbstractModel {
     @JoinColumn(name = "id_user")
     private User user;
 
-    @Size(max = MAX_COLUMN_LENGTH)
-    @NotEmpty
-    @Column(name = "content", nullable = false, length = MAX_COLUMN_LENGTH)
+    @NotBlank
+    @Size(min = 1, max = MAX_COLUMN_VARCHAR_LENGTH)
+    @Column(nullable = false, length = MAX_COLUMN_VARCHAR_LENGTH)
     private String content;
 
     @Min(1)
@@ -81,12 +81,10 @@ public class Review extends AbstractModel {
                '}';
     }
 
-    @SuppressWarnings("unused")
     public Integer getIdReview() {
         return idReview;
     }
 
-    @SuppressWarnings("unused")
     public void setIdReview(Integer idReview) {
         this.idReview = idReview;
     }

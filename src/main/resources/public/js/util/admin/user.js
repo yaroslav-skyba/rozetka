@@ -23,7 +23,7 @@ function setUserAdminPage(storageKey, headlineInnerHtml, submitInnerHtml, httpMe
         userRoleName);
 
     userRole.onchange = function() {
-        const user = JSON.parse(localStorage.getItem(storageKey))[userUuidDtoKey];
+        const user = JSON.parse(localStorage.getItem(storageKey));
         user[userRoleUuidDtoKey] = roles.find(value => value[roleNameDtoKey] === userRole.value)[roleUuidDtoKey];
 
         localStorage.setItem(storageKey, JSON.stringify(user));

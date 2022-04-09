@@ -24,7 +24,7 @@ public class OrderController {
         this.orderItemService = orderItemService;
     }
 
-    @SuppressWarnings("SpringElInspection")
+    
     @PostMapping(value = ControllerPath.ORDERS, consumes = MediaType.ORDER_ITEM_LIST, produces = TEXT_PLAIN_VALUE)
     @PreAuthorize("#orderItemDtoList.?[#this.getUuidUser() == #root.principal.uuid].size() eq #orderItemDtoList.size()")
     public ResponseEntity<String> createOrderItemList(@RequestBody List<OrderItemDto> orderItemDtoList) {

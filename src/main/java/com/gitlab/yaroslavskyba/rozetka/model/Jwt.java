@@ -71,12 +71,12 @@ public class Jwt {
                '}';
     }
 
-    @SuppressWarnings("unused")
+    
     public Long getIdJwt() {
         return idJwt;
     }
 
-    @SuppressWarnings("unused")
+    
     public void setIdJwt(Long idRefreshToken) {
         this.idJwt = idRefreshToken;
     }

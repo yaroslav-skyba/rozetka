@@ -9,7 +9,7 @@ public class ReviewDto {
     private String content;
     private Integer rating;
 
-    @SuppressWarnings("unused")
+    
     public ReviewDto() {
     }
 

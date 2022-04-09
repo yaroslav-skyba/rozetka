@@ -82,7 +82,7 @@ public class ProductController {
         }
     }
 
-    @SuppressWarnings("SpringElInspection")
+    
     @PostMapping(value = ControllerPath.REVIEWS, consumes = MediaType.REVIEW)
     @PreAuthorize("principal.uuid.equals(#reviewDto.uuidUser)")
     public ResponseEntity<String> createReview(@PathVariable UUID uuidProduct, @RequestBody ReviewDto reviewDto) {
@@ -104,7 +104,7 @@ public class ProductController {
     }
 
 
-    @SuppressWarnings("SpringElInspection")
+    
     @PutMapping(value = ControllerPath.REVIEWS, consumes = MediaType.REVIEW)
     @PreAuthorize("principal.reviewUuidList.contains(#reviewDto.uuid)")
     public ResponseEntity<String> updateReview(@PathVariable UUID uuidProduct, @RequestBody ReviewDto reviewDto) {
@@ -116,7 +116,7 @@ public class ProductController {
         }
     }
 
-    @SuppressWarnings("SpringElInspection")
+    
     @DeleteMapping(ControllerPath.REVIEW)
     @PreAuthorize("principal.reviewUuidList.contains(#uuid)")
     public ResponseEntity<String> deleteReview(@PathVariable UUID uuidProduct, @PathVariable UUID uuid) {

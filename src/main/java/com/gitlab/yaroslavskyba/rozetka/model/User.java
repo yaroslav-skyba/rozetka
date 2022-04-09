@@ -12,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
@@ -37,30 +38,30 @@ public class User extends AbstractModel {
     @JoinColumn(name = "id_role", nullable = false)
     private Role role;
 
-    @NotNull
-    @Size(min = 1, max = MAX_COLUMN_LENGTH)
-    @Column(unique = true, nullable = false)
+    @NotBlank
+    @Size(min = 1, max = MAX_COLUMN_VARCHAR_LENGTH)
+    @Column(unique = true, nullable = false, length = MAX_COLUMN_VARCHAR_LENGTH)
     private String login;
 
-    @NotNull
-    @Size(min = 1, max = MAX_COLUMN_LENGTH)
-    @Column(nullable = false)
+    @NotBlank
+    @Size(min = 1, max = MAX_COLUMN_VARCHAR_LENGTH)
+    @Column(nullable = false, length = MAX_COLUMN_VARCHAR_LENGTH)
     private String password;
 
-    @NotNull
-    @Size(min = 1, max = MAX_COLUMN_LENGTH)
-    @Email(message = "text@text")
-    @Column(unique = true, nullable = false)
+    @NotBlank
+    @Size(min = 1, max = MAX_COLUMN_VARCHAR_LENGTH)
+    @Email(message = "An email should be in such a format as text@text")
+    @Column(unique = true, nullable = false, length = MAX_COLUMN_VARCHAR_LENGTH)
     private String email;
 
-    @NotNull
-    @Size(min = 1, max = MAX_COLUMN_LENGTH)
-    @Column(name = "first_name", nullable = false)
+    @NotBlank
+    @Size(min = 1, max = MAX_COLUMN_VARCHAR_LENGTH)
+    @Column(name = "first_name", nullable = false, length = MAX_COLUMN_VARCHAR_LENGTH)
     private String firstName;
 
-    @NotNull
-    @Size(min = 1, max = MAX_COLUMN_LENGTH)
-    @Column(name = "last_name", nullable = false)
+    @NotBlank
+    @Size(min = 1, max = MAX_COLUMN_VARCHAR_LENGTH)
+    @Column(name = "last_name", nullable = false, length = MAX_COLUMN_VARCHAR_LENGTH)
     private String lastName;
 
     @NotNull
@@ -108,12 +109,10 @@ public class User extends AbstractModel {
                '}';
     }
 
-    @SuppressWarnings("unused")
     public Long getIdUser() {
         return idUser;
     }
 
-    @SuppressWarnings("unused")
     public void setIdUser(Long id) {
         this.idUser = id;
     }

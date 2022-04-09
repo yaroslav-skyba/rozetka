@@ -7,7 +7,7 @@ public class RoleDto {
     private UUID uuid;
     private String name;
 
-    @SuppressWarnings("unused")
+    
     public RoleDto() {
     }
 
