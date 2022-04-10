@@ -46,7 +46,12 @@ const productImgDtoKey = "img";
 const adminRoleName = "admin";
 const userRoleName = "user";
 
-function redirectUnauthorized(roleName) {
+const modificationStorageKeyKey = "modificationStorageKey";
+const modificationStorageKeyValue = localStorage.getItem(modificationStorageKeyKey);
+
+let successModificationHttpResponse;
+
+function redirectWithoutAdminRole(roleName) {
     if (localStorage.getItem(currentUserRoleNameStorageKey) !== roleName) {
         location.href = "/";
     }
@@ -161,14 +166,6 @@ function setModificationPage(headlineInnerHtml, submitInnerHtml) {
 
     submit = document.getElementById("submit");
     submit.innerHTML = submitInnerHtml;
-}
-
-function setFormControlElementOnchange(storageKey, create) {
-    for (const formControlElement of document.getElementsByClassName("form-control")) {
-        formControlElement.onchange = function () {
-            localStorage.setItem(storageKey, JSON.stringify(create()));
-        }
-    }
 }
 
 function setContainer(content) {

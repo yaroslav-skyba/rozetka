@@ -8,8 +8,8 @@ function createRole(uuid) {
     return role;
 }
 
-function setRolePage(headlineInnerHtml, submitInnerHtml, storageKey, httpMethod) {
-    redirectUnauthorized(adminRoleName);
+function setRolePage(headlineInnerHtml, submitInnerHtml, httpMethod) {
+    redirectWithoutAdminRole(adminRoleName);
 
     setNavigation("../../../", "../../", "../");
     setContainer(`
@@ -33,17 +33,19 @@ function setRolePage(headlineInnerHtml, submitInnerHtml, storageKey, httpMethod)
 
     roleName = document.getElementById("name");
 
-    const role = JSON.parse(localStorage.getItem(storageKey));
-
+    const role = JSON.parse(localStorage.getItem(modificationStorageKeyValue));
     if (role) {
         roleName.value = role[roleNameDtoKey];
     } else {
-        localStorage.setItem(storageKey, JSON.stringify(createRole(null)));
+        localStorage.setItem(modificationStorageKeyValue, JSON.stringify(createRole(null)));
     }
 
-    setFormControlElementOnchange(storageKey, function () {
-        return createRole(role[roleUuidDtoKey]);
+    setFormControlElementOnchange(function () {
+        return createRole(JSON.parse(localStorage.getItem(modificationStorageKeyValue))[roleUuidDtoKey]);
     });
 
-    setSubmitOnclick(storageKey, httpMethod, roleApiUrl, contentTypePrefix + "role" + contentTypeSuffix);
+    setSubmitOnclick(
+        createRole(JSON.parse(localStorage.getItem(modificationStorageKeyValue))[roleUuidDtoKey]), httpMethod, rolesApiUrl,
+        contentTypePrefix + "role" + contentTypeSuffix
+    );
 }

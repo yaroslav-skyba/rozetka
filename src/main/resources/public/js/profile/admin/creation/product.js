@@ -1,9 +1,8 @@
-const productCreationStorageKey = productStorageKeyPart + creationStorageKeyPart;
-
 onload = function () {
-    setProductModificationPage("create a product", innerHtmlCreationSubmit, productCreationStorageKey, "POST");
+    localStorage.setItem(modificationStorageKeyKey, productStorageKeyPart + creationStorageKeyPart);
+    setProductModificationPage("create a product", innerHtmlCreationSubmit, "POST");
 }
 
 xmlHttpRequest.onreadystatechange = function () {
-    receiveModificationHttpResponse(201, productCreationStorageKey);
+    receiveModificationHttpResponse(201);
 }

@@ -1,7 +1,7 @@
 let userLogin;
 
 onload = function () {
-    redirectUnauthorized(userRoleName);
+    redirectWithoutAdminRole(userRoleName);
 
     setUserPage("../", "", "admin/");
     setUserModificationPageInputs("Edit your profile", "Save", currentUserStorageKey);

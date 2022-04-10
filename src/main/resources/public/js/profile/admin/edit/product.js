@@ -1,8 +1,8 @@
 onload = function () {
-    redirectUnready(productEditStorageKey);
-    setProductModificationPage("edit a product", innerHtmlEditSubmit, productEditStorageKey, "PUT");
+    localStorage.setItem(modificationStorageKeyKey, productEditStorageKey);
+    setProductModificationPage("edit a product", innerHtmlEditSubmit, "PUT");
 }
 
 xmlHttpRequest.onreadystatechange = function () {
-    receiveModificationHttpResponse(200, productEditStorageKey);
+    receiveModificationHttpResponse(200);
 }

@@ -21,8 +21,8 @@ function createProduct(uuid, img) {
     return product;
 }
 
-function setProductModificationPage(headlineInnerHtml, submitInnerHtml, storageKey, httpMethod) {
-    redirectUnauthorized(adminRoleName);
+function setProductModificationPage(headlineInnerHtml, submitInnerHtml, httpMethod) {
+    redirectWithoutAdminRole(adminRoleName);
 
     setNavigation("../../../", "../../", "../");
     setContainer(`
@@ -86,8 +86,7 @@ function setProductModificationPage(headlineInnerHtml, submitInnerHtml, storageK
     productImgValue = document.getElementById("productImgValue");
     productImgUploader = document.getElementById("productImgUploader");
 
-    const product = JSON.parse(localStorage.getItem(storageKey));
-
+    const product = JSON.parse(localStorage.getItem(modificationStorageKeyValue));
     if (product) {
         productName.value = product[productNameDtoKey];
         productQuantity.value = product[productQuantityDtoKey];
@@ -100,11 +99,11 @@ function setProductModificationPage(headlineInnerHtml, submitInnerHtml, storageK
             productImgCard.hidden = false;
         }
     } else {
-        localStorage.setItem(storageKey, JSON.stringify(createProduct(null, null)));
+        localStorage.setItem(modificationStorageKeyValue, JSON.stringify(createProduct(null, null)));
     }
 
-    setFormControlElementOnchange(storageKey, function () {
-        const product = JSON.parse(localStorage.getItem(storageKey));
+    setFormControlElementOnchange(function () {
+        const product = JSON.parse(localStorage.getItem(modificationStorageKeyValue));
         return createProduct(product[productUuidDtoKey], product[productImgDtoKey]);
     });
     productImgUploader.onchange = function () {
@@ -120,11 +119,17 @@ function setProductModificationPage(headlineInnerHtml, submitInnerHtml, storageK
             productImgCard.hidden = false;
 
             localStorage.setItem(
-                storageKey,
-                JSON.stringify(createProduct(JSON.parse(localStorage.getItem(storageKey))[productUuidDtoKey], fileReader.result))
+                modificationStorageKeyValue,
+                JSON.stringify(createProduct(
+                    JSON.parse(localStorage.getItem(modificationStorageKeyValue))[productUuidDtoKey],
+                    fileReader.result
+                ))
             );
         };
     }
 
-    setSubmitOnclick(storageKey, httpMethod, productsApiUrl, contentTypePrefix + "product" + contentTypeSuffix);
+    setSubmitOnclick(
+        createProduct(JSON.parse(localStorage.getItem(modificationStorageKeyValue))[productUuidDtoKey]), httpMethod, productsApiUrl,
+        contentTypePrefix + "product" + contentTypeSuffix
+    );
 }

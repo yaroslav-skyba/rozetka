@@ -7,19 +7,11 @@ let userLastName;
 let userBirthday;
 
 function createUser(uuid) {
-    let passwordValue = userPassword.value;
-
-    if (passwordValue) {
-
-    } else {
-        passwordValue = null;
-    }
-
     const user = {};
     user[userUuidDtoKey] = uuid;
     user[userRoleUuidDtoKey] = null;
     user[userLoginDtoKey] = userLogin.value;
-    user[userPasswordDtoKey] = passwordValue;
+    user[userPasswordDtoKey] = userPassword.value;
     user[userEmailDtoKey] = userEmail.value;
     user[userFirstNameDtoKey] = userFirstName.value;
     user[userLastNameDtoKey] = userLastName.value;
@@ -28,8 +20,8 @@ function createUser(uuid) {
     return user;
 }
 
-function setUserPage(rootDestination, userDestination, adminDestination, headlineInnerHtml, submitInnerHtml, storageKey, httpMethod) {
-    redirectUnauthorized(adminRoleName);
+function setUserPage(rootDestination, userDestination, adminDestination, headlineInnerHtml, submitInnerHtml, httpMethod) {
+    redirectWithoutAdminRole(adminRoleName);
 
     setNavigation(rootDestination, userDestination, adminDestination);
     setContainer(`
@@ -87,6 +79,7 @@ function setUserPage(rootDestination, userDestination, adminDestination, headlin
         
         <div id="alert" class="mt-3"></div>
     `);
+    setModificationPage(headlineInnerHtml, submitInnerHtml);
 
     userLogin = document.getElementById("login");
     userPassword = document.getElementById("password");
@@ -96,10 +89,7 @@ function setUserPage(rootDestination, userDestination, adminDestination, headlin
     userLastName = document.getElementById("lastName");
     userBirthday = document.getElementById("birthday");
 
-    setModificationPage(headlineInnerHtml, submitInnerHtml);
-
-    const user = JSON.parse(localStorage.getItem(storageKey));
-
+    const user = JSON.parse(localStorage.getItem(modificationStorageKeyValue));
     if (user) {
         userLogin.value = user[userLoginDtoKey];
         userEmail.value = user[userEmailDtoKey];
@@ -107,19 +97,23 @@ function setUserPage(rootDestination, userDestination, adminDestination, headlin
         userLastName.value = user[userLastNameDtoKey];
         userBirthday.value = user[userBirthdayDtoKey];
     } else {
-        localStorage.setItem(storageKey, JSON.stringify(createUser(null)));
+        localStorage.setItem(modificationStorageKeyValue, JSON.stringify(createUser(null)));
     }
 
-    setFormControlElementOnchange(storageKey, function () {
-        return createUser(user[userUuidDtoKey]);
+    setFormControlElementOnchange(function () {
+        return createUser(JSON.parse(localStorage.getItem(modificationStorageKeyValue))[userUuidDtoKey]);
     });
 
     submit.onclick = function () {
+        const user = JSON.parse(localStorage.getItem(modificationStorageKeyValue));
+
+        if (!user[userPasswordDtoKey]) {
+            user[userPasswordDtoKey] = null;
+        }
+
         if (userPassword.value === userPasswordConformation.value) {
             document.getElementById("alert").innerHTML = "";
-            sendModificationHttpRequest(
-                JSON.parse(localStorage.getItem(storageKey)), httpMethod, usersApiUrl, contentTypePrefix + "user" + contentTypeSuffix
-            );
+            sendModificationHttpRequest(user, httpMethod, usersApiUrl, contentTypePrefix + "user" + contentTypeSuffix);
         } else {
             alert("danger", "Passwords should match");
         }

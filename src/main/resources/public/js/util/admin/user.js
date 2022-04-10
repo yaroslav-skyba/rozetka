@@ -1,8 +1,7 @@
 let userRole;
 
-function setUserAdminPage(storageKey, headlineInnerHtml, submitInnerHtml, httpMethod) {
-    setUserPage("../../../", "../../", "../", headlineInnerHtml, submitInnerHtml, storageKey, httpMethod);
-
+function setUserAdminPage(headlineInnerHtml, submitInnerHtml, httpMethod) {
+    setUserPage("../../../", "../../", "../", headlineInnerHtml, submitInnerHtml, httpMethod);
     document.getElementById("role").innerHTML =
         `<div class="form-outline mb-4">
             <select id="roleValue" class="form-control form-control-lg" required></select> 
@@ -19,13 +18,13 @@ function setUserAdminPage(storageKey, headlineInnerHtml, submitInnerHtml, httpMe
     }
 
     userRole.value = roles.reduce((role, value) =>
-        value[roleUuidDtoKey] === JSON.parse(localStorage.getItem(storageKey))[userRoleUuidDtoKey] ? value[roleNameDtoKey] : role,
+        value[roleUuidDtoKey] === JSON.parse(localStorage.getItem(modificationStorageKeyValue))[userRoleUuidDtoKey] ? value[roleNameDtoKey] : role,
         userRoleName);
 
     userRole.onchange = function() {
-        const user = JSON.parse(localStorage.getItem(storageKey));
+        const user = JSON.parse(localStorage.getItem(modificationStorageKeyValue));
         user[userRoleUuidDtoKey] = roles.find(value => value[roleNameDtoKey] === userRole.value)[roleUuidDtoKey];
 
-        localStorage.setItem(storageKey, JSON.stringify(user));
+        localStorage.setItem(modificationStorageKeyValue, JSON.stringify(user));
     }
 }

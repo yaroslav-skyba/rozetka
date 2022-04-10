@@ -1,8 +1,8 @@
 onload = function () {
-    redirectUnready(roleEditStorageKey);
-    setRolePage("edit a role", innerHtmlEditSubmit, roleEditStorageKey, "PUT");
+    localStorage.setItem(modificationStorageKeyKey, roleEditStorageKey);
+    setRolePage("edit a role", innerHtmlEditSubmit, "PUT");
 }
 
 xmlHttpRequest.onreadystatechange = function () {
-    receiveModificationHttpResponse(200, roleEditStorageKey);
+    receiveModificationHttpResponse(200);
 }

@@ -9,15 +9,16 @@ let roleApiUrl;
 let productApiUrl;
 
 onload = function () {
-    redirectUnauthorized(adminRoleName);
+    redirectWithoutAdminRole(adminRoleName);
 
-    localStorage.removeItem(userEditStorageKey);
-    localStorage.removeItem(roleEditStorageKey);
-    localStorage.removeItem(productEditStorageKey);
+    localStorage.removeItem(modificationStorageKeyValue);
 
     setNavigation("../../", "../", "");
     setMainAttributes();
-    setContainer(`<div class="text-white">Welcome, <span id="userName"></span></div>`);
+    setContainer(`
+        <div id="alert"></div>
+        <div class="text-white">Welcome, <span id="userName"></span></div>
+    `);
     setContainer(`
         <table class="table table-dark table-hover">
             <thead>
@@ -27,8 +28,8 @@ onload = function () {
                     <th>Email</th>
                     <th>First Name</th>
                     <th>Last Name</th>
-                    <th>Birthday</th>
-                    <th>Role</th>
+                    <th class="col-2">Birthday</th>
+                    <th class="col-1">Role</th>
                     <th class="col-2">Actions</th>
                 </tr>
             </thead>
@@ -76,6 +77,10 @@ onload = function () {
             Create product
         </button>
     `);
+
+    if (successModificationHttpResponse) {
+        alert("success", successModificationHttpResponse);
+    }
 
     sendHttpRequest("GET", usersApiUrl);
 }
