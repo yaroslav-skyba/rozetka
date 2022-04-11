@@ -86,7 +86,7 @@ function setProductModificationPage(headlineInnerHtml, submitInnerHtml, httpMeth
     productImgValue = document.getElementById("productImgValue");
     productImgUploader = document.getElementById("productImgUploader");
 
-    const product = JSON.parse(localStorage.getItem(modificationStorageKeyValue));
+    const product = JSON.parse(localStorage.getItem(modificationStorageKey));
     if (product) {
         productName.value = product[productNameDtoKey];
         productQuantity.value = product[productQuantityDtoKey];
@@ -99,11 +99,11 @@ function setProductModificationPage(headlineInnerHtml, submitInnerHtml, httpMeth
             productImgCard.hidden = false;
         }
     } else {
-        localStorage.setItem(modificationStorageKeyValue, JSON.stringify(createProduct(null, null)));
+        localStorage.setItem(modificationStorageKey, JSON.stringify(createProduct(null, null)));
     }
 
     setFormControlElementOnchange(function () {
-        const product = JSON.parse(localStorage.getItem(modificationStorageKeyValue));
+        const product = JSON.parse(localStorage.getItem(modificationStorageKey));
         return createProduct(product[productUuidDtoKey], product[productImgDtoKey]);
     });
     productImgUploader.onchange = function () {
@@ -119,9 +119,9 @@ function setProductModificationPage(headlineInnerHtml, submitInnerHtml, httpMeth
             productImgCard.hidden = false;
 
             localStorage.setItem(
-                modificationStorageKeyValue,
+                modificationStorageKey,
                 JSON.stringify(createProduct(
-                    JSON.parse(localStorage.getItem(modificationStorageKeyValue))[productUuidDtoKey],
+                    JSON.parse(localStorage.getItem(modificationStorageKey))[productUuidDtoKey],
                     fileReader.result
                 ))
             );
@@ -129,7 +129,7 @@ function setProductModificationPage(headlineInnerHtml, submitInnerHtml, httpMeth
     }
 
     setSubmitOnclick(
-        createProduct(JSON.parse(localStorage.getItem(modificationStorageKeyValue))[productUuidDtoKey]), httpMethod, productsApiUrl,
+        createProduct(JSON.parse(localStorage.getItem(modificationStorageKey))[productUuidDtoKey]), httpMethod, productsApiUrl,
         contentTypePrefix + "product" + contentTypeSuffix
     );
 }

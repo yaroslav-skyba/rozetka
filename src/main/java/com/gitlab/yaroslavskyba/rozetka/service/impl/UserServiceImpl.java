@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.ConstraintViolationException;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -36,6 +37,8 @@ public class UserServiceImpl implements UserService {
             user.setPassword(passwordEncoder.encode(userDto.getPassword()));
 
             userRepository.saveAndFlush(setUserFields(userDto, user));
+        } catch (ConstraintViolationException constraintViolationException) {
+            throw new UserServiceException(constraintViolationException.getConstraintViolations().iterator().next().getMessage());
         } catch (Exception exception) {
             throw new UserServiceException("An error occurred while creating a user", exception);
         }

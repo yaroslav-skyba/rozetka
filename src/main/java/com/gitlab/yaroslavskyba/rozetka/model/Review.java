@@ -40,7 +40,7 @@ public class Review extends AbstractModel {
     private User user;
 
     @NotBlank
-    @Size(min = 1, max = MAX_COLUMN_VARCHAR_LENGTH)
+    @Size(max = MAX_COLUMN_VARCHAR_LENGTH)
     @Column(nullable = false, length = MAX_COLUMN_VARCHAR_LENGTH)
     private String content;
 

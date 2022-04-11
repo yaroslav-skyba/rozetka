@@ -11,8 +11,6 @@ let productApiUrl;
 onload = function () {
     redirectWithoutAdminRole(adminRoleName);
 
-    localStorage.removeItem(modificationStorageKeyValue);
-
     setNavigation("../../", "../", "");
     setMainAttributes();
     setContainer(`
@@ -78,7 +76,12 @@ onload = function () {
         </button>
     `);
 
+    const successModificationHttpResponse = localStorage.getItem(successModificationHttpResponseStorageKey);
+
     if (successModificationHttpResponse) {
+        localStorage.removeItem(modificationStorageKeyStorageKey);
+        localStorage.removeItem(modificationStorageKey);
+
         alert("success", successModificationHttpResponse);
     }
 

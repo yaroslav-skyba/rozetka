@@ -12,9 +12,11 @@ const userEditStorageKey = userStorageKeyPart + editStorageKeyPart;
 const roleEditStorageKey = roleStorageKeyPart + editStorageKeyPart;
 const productEditStorageKey = productStorageKeyPart + editStorageKeyPart;
 const jwtStorageKey = "jwt";
-const currentUserRoleNameStorageKey = "currentUserRoleName";
 const currentUserStorageKey = "currentUser";
+const currentUserRoleNameStorageKey = "currentUserRoleName";
 const rolesStorageKey = "roles";
+const modificationStorageKeyStorageKey = "modificationStorageKey";
+const successModificationHttpResponseStorageKey = "successModificationHttpResponse";
 
 const authorityApi = "http://localhost:8080/api/v1/";
 const usersApiUrl = authorityApi + "users";
@@ -46,10 +48,7 @@ const productImgDtoKey = "img";
 const adminRoleName = "admin";
 const userRoleName = "user";
 
-const modificationStorageKeyKey = "modificationStorageKey";
-const modificationStorageKeyValue = localStorage.getItem(modificationStorageKeyKey);
-
-let successModificationHttpResponse;
+let modificationStorageKey;
 
 function redirectWithoutAdminRole(roleName) {
     if (localStorage.getItem(currentUserRoleNameStorageKey) !== roleName) {
@@ -160,14 +159,6 @@ function setMainAttributes() {
     main.className = "min-vh-100";
 }
 
-function setModificationPage(headlineInnerHtml, submitInnerHtml) {
-    setMainAttributes();
-    document.getElementById("headline").innerHTML = headlineInnerHtml;
-
-    submit = document.getElementById("submit");
-    submit.innerHTML = submitInnerHtml;
-}
-
 function setContainer(content) {
     main.innerHTML +=
         `<div class="container">
@@ -179,13 +170,6 @@ function setContainer(content) {
                 </div>
             </div>
         </div>`;
-}
-
-function sendModificationHttpRequest(body, method, url, contentType) {
-    xmlHttpRequest.open(method, url);
-    xmlHttpRequest.setRequestHeader("Content-Type", contentType);
-    xmlHttpRequest.setRequestHeader("Authorization", localStorage.getItem(jwtStorageKey));
-    xmlHttpRequest.send(JSON.stringify(body));
 }
 
 function alert(type, message) {

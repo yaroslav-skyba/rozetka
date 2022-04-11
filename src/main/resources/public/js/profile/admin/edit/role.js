@@ -1,5 +1,5 @@
 onload = function () {
-    localStorage.setItem(modificationStorageKeyKey, roleEditStorageKey);
+    localStorage.setItem(modificationStorageKeyStorageKey, roleEditStorageKey);
     setRolePage("edit a role", innerHtmlEditSubmit, "PUT");
 }
 

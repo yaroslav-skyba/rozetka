@@ -29,7 +29,7 @@ public class Product extends AbstractModel {
     private UUID uuid;
 
     @NotBlank
-    @Size(min = 1, max = MAX_COLUMN_VARCHAR_LENGTH)
+    @Size(max = MAX_COLUMN_VARCHAR_LENGTH)
     @Column(nullable = false, length = MAX_COLUMN_VARCHAR_LENGTH)
     private String name;
 
@@ -53,7 +53,7 @@ public class Product extends AbstractModel {
     private String description;
 
     @NotNull
-    @Size(min = 1, max = MAX_VARCHAR_LENGTH)
+    @Size(max = MAX_VARCHAR_LENGTH)
     @Column(nullable = false, length = MAX_VARCHAR_LENGTH)
     private String img;
 

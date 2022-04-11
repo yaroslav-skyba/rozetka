@@ -33,19 +33,19 @@ function setRolePage(headlineInnerHtml, submitInnerHtml, httpMethod) {
 
     roleName = document.getElementById("name");
 
-    const role = JSON.parse(localStorage.getItem(modificationStorageKeyValue));
+    const role = JSON.parse(localStorage.getItem(modificationStorageKey));
     if (role) {
         roleName.value = role[roleNameDtoKey];
     } else {
-        localStorage.setItem(modificationStorageKeyValue, JSON.stringify(createRole(null)));
+        localStorage.setItem(modificationStorageKey, JSON.stringify(createRole(null)));
     }
 
     setFormControlElementOnchange(function () {
-        return createRole(JSON.parse(localStorage.getItem(modificationStorageKeyValue))[roleUuidDtoKey]);
+        return createRole(JSON.parse(localStorage.getItem(modificationStorageKey))[roleUuidDtoKey]);
     });
 
     setSubmitOnclick(
-        createRole(JSON.parse(localStorage.getItem(modificationStorageKeyValue))[roleUuidDtoKey]), httpMethod, rolesApiUrl,
+        createRole(JSON.parse(localStorage.getItem(modificationStorageKey))[roleUuidDtoKey]), httpMethod, rolesApiUrl,
         contentTypePrefix + "role" + contentTypeSuffix
     );
 }

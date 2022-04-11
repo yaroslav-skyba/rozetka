@@ -89,7 +89,7 @@ function setUserPage(rootDestination, userDestination, adminDestination, headlin
     userLastName = document.getElementById("lastName");
     userBirthday = document.getElementById("birthday");
 
-    const user = JSON.parse(localStorage.getItem(modificationStorageKeyValue));
+    const user = JSON.parse(localStorage.getItem(modificationStorageKey));
     if (user) {
         userLogin.value = user[userLoginDtoKey];
         userEmail.value = user[userEmailDtoKey];
@@ -97,22 +97,21 @@ function setUserPage(rootDestination, userDestination, adminDestination, headlin
         userLastName.value = user[userLastNameDtoKey];
         userBirthday.value = user[userBirthdayDtoKey];
     } else {
-        localStorage.setItem(modificationStorageKeyValue, JSON.stringify(createUser(null)));
+        localStorage.setItem(modificationStorageKey, JSON.stringify(createUser(null)));
     }
 
     setFormControlElementOnchange(function () {
-        return createUser(JSON.parse(localStorage.getItem(modificationStorageKeyValue))[userUuidDtoKey]);
+        return createUser(JSON.parse(localStorage.getItem(modificationStorageKey))[userUuidDtoKey]);
     });
 
     submit.onclick = function () {
-        const user = JSON.parse(localStorage.getItem(modificationStorageKeyValue));
+        const user = JSON.parse(localStorage.getItem(modificationStorageKey));
 
         if (!user[userPasswordDtoKey]) {
             user[userPasswordDtoKey] = null;
         }
 
         if (userPassword.value === userPasswordConformation.value) {
-            document.getElementById("alert").innerHTML = "";
             sendModificationHttpRequest(user, httpMethod, usersApiUrl, contentTypePrefix + "user" + contentTypeSuffix);
         } else {
             alert("danger", "Passwords should match");

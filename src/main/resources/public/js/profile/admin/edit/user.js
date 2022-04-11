@@ -1,5 +1,5 @@
 onload = function () {
-    localStorage.setItem(modificationStorageKeyKey, userEditStorageKey);
+    localStorage.setItem(modificationStorageKeyStorageKey, userEditStorageKey);
     setUserAdminPage("edit a user", innerHtmlEditSubmit, "PUT");
 }
 

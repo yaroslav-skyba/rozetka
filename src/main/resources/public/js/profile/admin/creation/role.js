@@ -1,5 +1,5 @@
 onload = function () {
-    localStorage.setItem(modificationStorageKeyKey, roleStorageKeyPart + creationStorageKeyPart);
+    localStorage.setItem(modificationStorageKeyStorageKey, roleStorageKeyPart + creationStorageKeyPart);
     setRolePage("create a role", innerHtmlCreationSubmit, "POST");
 }
 

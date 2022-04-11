@@ -18,13 +18,14 @@ function setUserAdminPage(headlineInnerHtml, submitInnerHtml, httpMethod) {
     }
 
     userRole.value = roles.reduce((role, value) =>
-        value[roleUuidDtoKey] === JSON.parse(localStorage.getItem(modificationStorageKeyValue))[userRoleUuidDtoKey] ? value[roleNameDtoKey] : role,
+        value[roleUuidDtoKey] === JSON.parse(localStorage.getItem(modificationStorageKey))[userRoleUuidDtoKey]
+            ? value[roleNameDtoKey] : role,
         userRoleName);
 
     userRole.onchange = function() {
-        const user = JSON.parse(localStorage.getItem(modificationStorageKeyValue));
+        const user = JSON.parse(localStorage.getItem(modificationStorageKey));
         user[userRoleUuidDtoKey] = roles.find(value => value[roleNameDtoKey] === userRole.value)[roleUuidDtoKey];
 
-        localStorage.setItem(modificationStorageKeyValue, JSON.stringify(user));
+        localStorage.setItem(modificationStorageKey, JSON.stringify(user));
     }
 }

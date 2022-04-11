@@ -29,7 +29,7 @@ public class Role extends AbstractModel {
     private UUID uuid;
 
     @NotBlank
-    @Size(min = 1, max = MAX_COLUMN_VARCHAR_LENGTH)
+    @Size(max = MAX_COLUMN_VARCHAR_LENGTH)
     @Column(unique = true, nullable = false, length = MAX_COLUMN_VARCHAR_LENGTH)
     private String name;
 

@@ -1,5 +1,5 @@
 onload = function () {
-    localStorage.setItem(modificationStorageKeyKey, userStorageKeyPart + creationStorageKeyPart);
+    localStorage.setItem(modificationStorageKeyStorageKey, userStorageKeyPart + creationStorageKeyPart);
     setUserAdminPage("create a user", innerHtmlCreationSubmit, "POST");
 }
 

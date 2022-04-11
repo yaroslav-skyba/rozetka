@@ -29,42 +29,42 @@ public class User extends AbstractModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idUser;
 
-    @NotNull
+    @NotNull(message = "A UUID should be present")
     @Column(nullable = false, unique = true)
     private UUID uuid;
 
-    @NotNull
+    @NotNull(message = "A role should be present")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_role", nullable = false)
     private Role role;
 
-    @NotBlank
-    @Size(min = 1, max = MAX_COLUMN_VARCHAR_LENGTH)
+    @NotBlank(message = "Login should be present and contains at least one non-whitespace character")
+    @Size(max = MAX_COLUMN_VARCHAR_LENGTH, message = "Login should be less or equal to " + MAX_COLUMN_VARCHAR_LENGTH + " symbols")
     @Column(unique = true, nullable = false, length = MAX_COLUMN_VARCHAR_LENGTH)
     private String login;
 
-    @NotBlank
-    @Size(min = 1, max = MAX_COLUMN_VARCHAR_LENGTH)
+    @NotBlank(message = "A password should be present and contains at least one non-whitespace character")
+    @Size(max = MAX_COLUMN_VARCHAR_LENGTH, message = "A password should be less or equal to " + MAX_COLUMN_VARCHAR_LENGTH + " symbols")
     @Column(nullable = false, length = MAX_COLUMN_VARCHAR_LENGTH)
     private String password;
 
-    @NotBlank
-    @Size(min = 1, max = MAX_COLUMN_VARCHAR_LENGTH)
-    @Email(message = "An email should be in such a format as text@text")
+    @NotBlank(message = "An email should be present and contains at least one non-whitespace character")
+    @Size(max = MAX_COLUMN_VARCHAR_LENGTH, message = "An email should be less or equal to " + MAX_COLUMN_VARCHAR_LENGTH + " symbols")
+    @Email(message = "An email should be in such the format as text@text")
     @Column(unique = true, nullable = false, length = MAX_COLUMN_VARCHAR_LENGTH)
     private String email;
 
-    @NotBlank
-    @Size(min = 1, max = MAX_COLUMN_VARCHAR_LENGTH)
+    @NotBlank(message = "A first name should be present and contains at least one non-whitespace character")
+    @Size(max = MAX_COLUMN_VARCHAR_LENGTH, message = "A first name should be less or equal to " + MAX_COLUMN_VARCHAR_LENGTH + " symbols")
     @Column(name = "first_name", nullable = false, length = MAX_COLUMN_VARCHAR_LENGTH)
     private String firstName;
 
-    @NotBlank
-    @Size(min = 1, max = MAX_COLUMN_VARCHAR_LENGTH)
+    @NotBlank(message = "A last name should be present and contains at least one non-whitespace character")
+    @Size(max = MAX_COLUMN_VARCHAR_LENGTH, message = "A last name should be less or equal to " + MAX_COLUMN_VARCHAR_LENGTH + " symbols")
     @Column(name = "last_name", nullable = false, length = MAX_COLUMN_VARCHAR_LENGTH)
     private String lastName;
 
-    @NotNull
+    @NotNull(message = "A birthday should be present")
     @Column(nullable = false)
     private LocalDate birthday;
 

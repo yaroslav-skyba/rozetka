@@ -1,5 +1,5 @@
 onload = function () {
-    localStorage.setItem(modificationStorageKeyKey, productEditStorageKey);
+    localStorage.setItem(modificationStorageKeyStorageKey, productEditStorageKey);
     setProductModificationPage("edit a product", innerHtmlEditSubmit, "PUT");
 }
 
