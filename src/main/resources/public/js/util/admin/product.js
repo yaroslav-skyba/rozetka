@@ -30,19 +30,19 @@ function setProductModificationPage(headlineInnerHtml, submitInnerHtml, httpMeth
         
         <div id="form">
             <div class="form-outline mb-4">
-                <input id="name" class="form-control form-control-lg" required/>
+                <input id="name" class="form-control form-control-lg"/>
                 <label for="name">A name</label>
                 <div class="invalid-feedback">Please, type a name</div>
             </div>
             
             <div class="form-outline mb-4">
-                <input id="quantity" class="form-control form-control-lg" required/>
+                <input id="quantity" class="form-control form-control-lg"/>
                 <label for="quantity">A quantity</label>
                 <div class="invalid-feedback">Please, type a quantity</div>
             </div>
             
             <div class="form-outline mb-4">
-                <input id="price" class="form-control form-control-lg" required/>
+                <input id="price" class="form-control form-control-lg"/>
                 <label for="price">A price</label>
                 <div class="invalid-feedback">Please, type a price</div>
             </div>
@@ -86,6 +86,8 @@ function setProductModificationPage(headlineInnerHtml, submitInnerHtml, httpMeth
     productImgValue = document.getElementById("productImgValue");
     productImgUploader = document.getElementById("productImgUploader");
 
+    const modificationStorageKey = localStorage.getItem(modificationStorageKeyStorageKey);
+
     const product = JSON.parse(localStorage.getItem(modificationStorageKey));
     if (product) {
         productName.value = product[productNameDtoKey];
@@ -108,7 +110,7 @@ function setProductModificationPage(headlineInnerHtml, submitInnerHtml, httpMeth
     });
     productImgUploader.onchange = function () {
         if (productImgUploader.value.split(".").pop() !== "png") {
-            alert("danger", "Please, upload a .png image");
+            alertMessage("danger", "Please, upload a .png image");
             return;
         }
 

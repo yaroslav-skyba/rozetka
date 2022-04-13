@@ -1,6 +1,5 @@
 onload = function () {
-    localStorage.setItem(modificationStorageKeyStorageKey, userStorageKeyPart + creationStorageKeyPart);
-    setUserAdminPage("create a user", innerHtmlCreationSubmit, "POST");
+    setUserAdminPage(userStorageKeyPart + creationStorageKeyPart, "create a user", innerHtmlCreationSubmit, "POST");
 }
 
 xmlHttpRequest.onreadystatechange = function () {

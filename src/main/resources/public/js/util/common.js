@@ -48,8 +48,6 @@ const productImgDtoKey = "img";
 const adminRoleName = "admin";
 const userRoleName = "user";
 
-let modificationStorageKey;
-
 function redirectWithoutAdminRole(roleName) {
     if (localStorage.getItem(currentUserRoleNameStorageKey) !== roleName) {
         location.href = "/";
@@ -57,48 +55,47 @@ function redirectWithoutAdminRole(roleName) {
 }
 
 function setNavigation(rootFolderDestination, userFolderDestination, adminFolderDestination) {
-    new Promise(resolve => setTimeout(resolve, 100)).then(() => {
-        document.getElementById("header").innerHTML =
-            `<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-                <div class="container-fluid">
-                    <a class="navbar-brand" href="` + rootFolderDestination + `index.html">
-                        <img src="` + rootFolderDestination + `img/logo.png" alt="logo" width="50" height="50">
-                    </a>
-        
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-        
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                            <li class="nav-item">
-                                <a id="navItem1" class="nav-link active"></a>
-                            </li>
-        
-                            <li class="nav-item">
-                                <a id="navItem2" class="nav-link active"></a>
-                            </li>
-                            
-                            <li class="nav-item">
-                                <a class="nav-link active" href="` + rootFolderDestination +`cart.html">Cart</a>
-                            </li>
-                            
-                            <li class="nav-item">
-                                <a class="nav-link active" href="` + rootFolderDestination + `about.html">About</a>
-                            </li>
-                        </ul>
-        
-                        <form class="d-flex">
-                            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                            <button class="btn btn-outline-success" type="button">Search</button>
-                        </form>
-                    </div>
+    document.getElementById("header").innerHTML =
+        `<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="` + rootFolderDestination + `index.html">
+                    <img src="` + rootFolderDestination + `img/logo.png" alt="logo" width="50" height="50">
+                </a>
+    
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+    
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a id="navItem1" class="nav-link active"></a>
+                        </li>
+    
+                        <li class="nav-item">
+                            <a id="navItem2" class="nav-link active"></a>
+                        </li>
+                        
+                        <li class="nav-item">
+                            <a class="nav-link active" href="` + rootFolderDestination +`cart.html">Cart</a>
+                        </li>
+                        
+                        <li class="nav-item">
+                            <a class="nav-link active" href="` + rootFolderDestination + `about.html">About</a>
+                        </li>
+                    </ul>
+    
+                    <form class="d-flex">
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-success" type="button">Search</button>
+                    </form>
                 </div>
-            </nav>`;
+            </div>
+        </nav>`;
 
-        document.getElementById("footer").innerHTML =
-            `<footer class="bg-dark text-white text-center">
+    document.getElementById("footer").innerHTML =
+        `<footer class="bg-dark text-white text-center">
                 <div class="container p-4 pb-0">
                     <section class="mb-4">
                         <a class="btn btn-outline-light btn-floating m-1" href="https://www.linkedin.com/in/yaroslavskyba" role="button">
@@ -121,37 +118,36 @@ function setNavigation(rootFolderDestination, userFolderDestination, adminFolder
                 </div>
             </footer>`;
 
-        const navItem1 = document.getElementById("navItem1");
-        const navItem2 = document.getElementById("navItem2");
-        const loginPath = rootFolderDestination + "login.html";
+    const navItem1 = document.getElementById("navItem1");
+    const navItem2 = document.getElementById("navItem2");
+    const loginPath = rootFolderDestination + "login.html";
 
-        if (localStorage.getItem(jwtStorageKey) == null) {
-            navItem1.innerHTML = "Login";
-            navItem1.href = loginPath;
+    if (localStorage.getItem(jwtStorageKey) == null) {
+        navItem1.innerHTML = "Login";
+        navItem1.href = loginPath;
 
-            navItem2.innerHTML = "Registration";
-            navItem2.href = rootFolderDestination + "registration.html";
+        navItem2.innerHTML = "Registration";
+        navItem2.href = rootFolderDestination + "registration.html";
+    } else {
+        navItem1.innerHTML = "Profile";
+
+        const roleName = localStorage.getItem(currentUserRoleNameStorageKey);
+
+        if (roleName === adminRoleName) {
+            navItem1.href = adminFolderDestination + "admin.html";
+        } else if (roleName === userRoleName) {
+            navItem1.href = userFolderDestination + "user.html";
         } else {
-            navItem1.innerHTML = "Profile";
-
-            const roleName = localStorage.getItem(currentUserRoleNameStorageKey);
-
-            if (roleName === adminRoleName) {
-                navItem1.href = adminFolderDestination + "admin.html";
-            } else if (roleName === userRoleName) {
-                navItem1.href = userFolderDestination + "user.html";
-            } else {
-                alert("Some errors occurred");
-            }
-
-            navItem2.innerHTML = "Logout";
-            navItem2.href = loginPath;
-            navItem2.onclick = function () {
-                localStorage.removeItem(jwtStorageKey);
-                localStorage.removeItem(currentUserRoleNameStorageKey);
-            }
+            alertMessage("Some errors occurred");
         }
-    });
+
+        navItem2.innerHTML = "Logout";
+        navItem2.href = loginPath;
+        navItem2.onclick = function () {
+            localStorage.removeItem(jwtStorageKey);
+            localStorage.removeItem(currentUserRoleNameStorageKey);
+        }
+    }
 }
 
 function setMainAttributes() {
@@ -172,7 +168,7 @@ function setContainer(content) {
         </div>`;
 }
 
-function alert(type, message) {
+function alertMessage(type, message) {
     document.getElementById("alert").innerHTML =
         `<div class="alert alert-` + type + ` alert-dismissible" role="alert">
             ` + message +

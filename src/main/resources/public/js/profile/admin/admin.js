@@ -79,10 +79,13 @@ onload = function () {
     const successModificationHttpResponse = localStorage.getItem(successModificationHttpResponseStorageKey);
 
     if (successModificationHttpResponse) {
+        localStorage.removeItem(localStorage.getItem(modificationStorageKeyStorageKey));
         localStorage.removeItem(modificationStorageKeyStorageKey);
-        localStorage.removeItem(modificationStorageKey);
+        localStorage.removeItem(successModificationHttpResponseStorageKey);
 
-        alert("success", successModificationHttpResponse);
+        alertMessage("success", successModificationHttpResponse);
+    } else {
+        document.getElementById("alert").innerHTML = "";
     }
 
     sendHttpRequest("GET", usersApiUrl);
@@ -197,7 +200,7 @@ xmlHttpRequest.onreadystatechange = function () {
                     localStorage.removeItem(userEditStorageKey);
                 }
 
-                alert("success", xmlHttpRequest.responseText);
+                alertMessage("success", xmlHttpRequest.responseText);
             } else if (xmlHttpRequest.responseURL === roleApiUrl) {
                 const roleToEdit = localStorage.getItem(roleEditStorageKey);
 
@@ -205,7 +208,7 @@ xmlHttpRequest.onreadystatechange = function () {
                     localStorage.removeItem(roleEditStorageKey);
                 }
 
-                alert("success", xmlHttpRequest.responseText);
+                alertMessage("success", xmlHttpRequest.responseText);
             } else if (xmlHttpRequest.responseURL === productApiUrl) {
                 const productToEdit = localStorage.getItem(productEditStorageKey);
 
@@ -213,10 +216,10 @@ xmlHttpRequest.onreadystatechange = function () {
                     localStorage.removeItem(productEditStorageKey);
                 }
 
-                alert("success", xmlHttpRequest.responseText);
+                alertMessage("success", xmlHttpRequest.responseText);
             }
         } else if (xmlHttpRequest.status === 409) {
-            alert("danger", xmlHttpRequest.responseText);
+            alertMessage("danger", xmlHttpRequest.responseText);
         }
     }
 }

@@ -6,7 +6,6 @@ import com.gitlab.yaroslavskyba.rozetka.model.User;
 import com.gitlab.yaroslavskyba.rozetka.repository.RoleRepository;
 import com.gitlab.yaroslavskyba.rozetka.repository.UserRepository;
 import com.gitlab.yaroslavskyba.rozetka.service.UserService;
-import com.gitlab.yaroslavskyba.rozetka.util.RoleName;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,9 +33,12 @@ public class UserServiceImpl implements UserService {
         try {
             final User user = new User();
             user.setUuid(UUID.randomUUID());
-            user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+            setFields(userDto, user);
 
-            userRepository.saveAndFlush(setUserFields(userDto, user));
+            final String password = userDto.getPassword();
+            setPassword(password == null ? "" : password, user);
+
+            userRepository.saveAndFlush(user);
         } catch (ConstraintViolationException constraintViolationException) {
             throw new UserServiceException(constraintViolationException.getConstraintViolations().iterator().next().getMessage());
         } catch (Exception exception) {
@@ -77,13 +79,14 @@ public class UserServiceImpl implements UserService {
     public void updateUserByUuid(UserDto userDto) {
         try {
             final User user = userRepository.findUserByUuid(userDto.getUuid()).orElseThrow();
-            final String password = userDto.getPassword();
+            setFields(userDto, user);
 
+            final String password = userDto.getPassword();
             if (password != null) {
-                user.setPassword(passwordEncoder.encode(password));
+                setPassword(password, user);
             }
 
-            userRepository.saveAndFlush(setUserFields(userDto, user));
+            userRepository.saveAndFlush(user);
         } catch (Exception exception) {
             throw new UserServiceException("An error occurred while updating a user", exception);
         }
@@ -98,21 +101,20 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private User setUserFields(UserDto userDto, User user) {
-        final UUID uuidRole = userDto.getUuidRole();
-
-        if (uuidRole != null) {
-            user.setRole(roleRepository.findRoleByUuid(uuidRole).orElseThrow());
-        } else {
-            user.setRole(roleRepository.findRoleByName(RoleName.USER).orElseThrow());
-        }
-
+    private void setFields(UserDto userDto, User user) {
+        user.setRole(roleRepository.findRoleByUuid(userDto.getUuidRole()).orElse(null));
         user.setLogin(userDto.getLogin());
         user.setEmail(userDto.getEmail());
         user.setFirstName(userDto.getFirstName());
         user.setLastName(userDto.getLastName());
         user.setBirthday(userDto.getBirthday());
+    }
 
-        return user;
+    private void setPassword(String password, User user) {
+        if (password.isBlank()) {
+            user.setPassword(password);
+        } else {
+            user.setPassword(passwordEncoder.encode(password));
+        }
     }
 }

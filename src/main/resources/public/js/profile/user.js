@@ -21,7 +21,7 @@ onload = function () {
 xmlHttpRequest.onreadystatechange = function () {
     if (xmlHttpRequest.readyState === 4) {
         if (xmlHttpRequest.status === 200) {
-            alert("success", xmlHttpRequest.responseText);
+            alertMessage("success", xmlHttpRequest.responseText);
 
             if (userLogin.value !== userLogin) {
                 xmlHttpRequest.open("POST", authorityApi + "jwts");
@@ -30,7 +30,7 @@ xmlHttpRequest.onreadystatechange = function () {
         } else if (xmlHttpRequest.status === 201) {
             localStorage.setItem(jwtStorageKey, xmlHttpRequest.responseText);
         } else if (xmlHttpRequest.status === 409) {
-            alert("danger", xmlHttpRequest.responseText);
+            alertMessage("danger", xmlHttpRequest.responseText);
         }
     }
 }

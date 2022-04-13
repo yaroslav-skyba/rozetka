@@ -1,3 +1,4 @@
+let userRole;
 let userLogin;
 let userPassword;
 let userPasswordConformation;
@@ -9,7 +10,7 @@ let userBirthday;
 function createUser(uuid) {
     const user = {};
     user[userUuidDtoKey] = uuid;
-    user[userRoleUuidDtoKey] = null;
+    user[userRoleUuidDtoKey] = userRole.value;
     user[userLoginDtoKey] = userLogin.value;
     user[userPasswordDtoKey] = userPassword.value;
     user[userEmailDtoKey] = userEmail.value;
@@ -29,31 +30,31 @@ function setUserPage(rootDestination, userDestination, adminDestination, headlin
         
         <div id="form">
             <div class="form-outline mb-4">
-                <input id="firstName" class="form-control form-control-lg" required/>
+                <input id="firstName" class="form-control form-control-lg"/>
                 <label for="firstName">A first name</label>
                 <div class="invalid-feedback">Please, type a first name</div>
             </div>
         
             <div class="form-outline mb-4">
-                <input id="lastName" class="form-control form-control-lg" required/>
+                <input id="lastName" class="form-control form-control-lg"/>
                 <label for="lastName">A last name</label>
                 <div class="invalid-feedback">Please, type a last name</div>
             </div>
         
             <div class="form-outline mb-4">
-                <input id="login" class="form-control form-control-lg" required/>
+                <input id="login" class="form-control form-control-lg"/>
                 <label for="login">A login</label>
                 <div class="invalid-feedback">Please, type a login</div>
             </div>
         
             <div class="form-outline mb-4">
-                <input type="email" id="email" class="form-control form-control-lg" required/>
+                <input type="email" id="email" class="form-control form-control-lg"/>
                 <label for="email">An email</label>
                 <div class="invalid-feedback">Please, type an email ([text]@[text])</div>
             </div>
         
             <div class="form-outline mb-4">
-                <input type="date" id="birthday" class="form-control form-control-lg" required/>
+                <input type="date" id="birthday" class="form-control form-control-lg"/>
                 <label for="birthday">A birthday</label>
                 <div class="invalid-feedback">Please, select a birthday</div>
             </div>
@@ -70,7 +71,11 @@ function setUserPage(rootDestination, userDestination, adminDestination, headlin
                 <div class="invalid-feedback">Please, type a password conformation</div>
             </div>
 
-            <div id="role"></div>
+            <divclass="form-outline mb-4">
+                <select id="role" class="form-control form-control-lg" hidden></select> 
+                <label for="role">A role</label>
+                <div class="invalid-feedback">Please, select a role</div>
+            </div>
             
             <div class="d-flex justify-content-center">
                 <button class="btn btn-dark btn-outline-success" id="submit"></button>
@@ -81,6 +86,7 @@ function setUserPage(rootDestination, userDestination, adminDestination, headlin
     `);
     setModificationPage(headlineInnerHtml, submitInnerHtml);
 
+    userRole = document.getElementById("role");
     userLogin = document.getElementById("login");
     userPassword = document.getElementById("password");
     userPasswordConformation = document.getElementById("passwordConformation");
@@ -89,8 +95,15 @@ function setUserPage(rootDestination, userDestination, adminDestination, headlin
     userLastName = document.getElementById("lastName");
     userBirthday = document.getElementById("birthday");
 
+    for (const role of Object.values(JSON.parse(localStorage.getItem(rolesStorageKey)))) {
+        userRole.innerHTML += `<option value="` + role[roleUuidDtoKey] + `">` + role[roleNameDtoKey] + `</option>`;
+    }
+
+    const modificationStorageKey = localStorage.getItem(modificationStorageKeyStorageKey);
+
     const user = JSON.parse(localStorage.getItem(modificationStorageKey));
     if (user) {
+        userRole.value = user[userRoleUuidDtoKey];
         userLogin.value = user[userLoginDtoKey];
         userEmail.value = user[userEmailDtoKey];
         userFirstName.value = user[userFirstNameDtoKey];
@@ -114,7 +127,7 @@ function setUserPage(rootDestination, userDestination, adminDestination, headlin
         if (userPassword.value === userPasswordConformation.value) {
             sendModificationHttpRequest(user, httpMethod, usersApiUrl, contentTypePrefix + "user" + contentTypeSuffix);
         } else {
-            alert("danger", "Passwords should match");
+            alertMessage("danger", "Passwords should match");
         }
     }
 }

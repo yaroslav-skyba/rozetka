@@ -9,14 +9,12 @@ function setModificationPage(headlineInnerHtml, submitInnerHtml) {
 
     submit = document.getElementById("submit");
     submit.innerHTML = submitInnerHtml;
-
-    modificationStorageKey = localStorage.getItem(modificationStorageKeyStorageKey);
 }
 
 function setFormControlElementOnchange(create) {
     for (const formControlElement of document.getElementsByClassName("form-control")) {
         formControlElement.onchange = function () {
-            localStorage.setItem(modificationStorageKey, JSON.stringify(create()));
+            localStorage.setItem(localStorage.getItem(modificationStorageKeyStorageKey), JSON.stringify(create()));
         }
     }
 }
@@ -40,7 +38,7 @@ function receiveModificationHttpResponse(successStatus) {
             localStorage.setItem(successModificationHttpResponseStorageKey, xmlHttpRequest.responseText);
             location.href = "/profile/admin/admin.html";
         } else if (xmlHttpRequest.status === 409) {
-            alert("danger", xmlHttpRequest.responseText);
+            alertMessage("danger", xmlHttpRequest.responseText);
         }
     }
 }

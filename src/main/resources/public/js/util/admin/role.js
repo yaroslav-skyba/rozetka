@@ -17,7 +17,7 @@ function setRolePage(headlineInnerHtml, submitInnerHtml, httpMethod) {
         
         <div id="form">
             <div class="form-outline mb-4">
-                <input id="name" class="form-control form-control-lg" required/>
+                <input id="name" class="form-control form-control-lg"/>
                 <label for="name">A name</label>
                 <div class="invalid-feedback">Please, type a name</div>
             </div>
@@ -32,6 +32,8 @@ function setRolePage(headlineInnerHtml, submitInnerHtml, httpMethod) {
     setModificationPage(headlineInnerHtml, submitInnerHtml);
 
     roleName = document.getElementById("name");
+
+    const modificationStorageKey = localStorage.getItem(modificationStorageKeyStorageKey);
 
     const role = JSON.parse(localStorage.getItem(modificationStorageKey));
     if (role) {
