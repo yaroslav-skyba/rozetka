@@ -9,7 +9,7 @@ function createRole(uuid) {
 }
 
 function setRolePage(headlineInnerHtml, submitInnerHtml, httpMethod) {
-    redirectWithoutAdminRole(adminRoleName);
+    redirectWithoutSpecificRole(adminRoleName);
 
     setNavigation("../../../", "../../", "../");
     setContainer(`

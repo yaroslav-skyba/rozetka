@@ -1,5 +1,5 @@
 function setUserAdminPage(storageKey, headlineInnerHtml, submitInnerHtml, httpMethod) {
     localStorage.setItem(modificationStorageKeyStorageKey, storageKey);
-    setUserPage("../../../", "../../", "../", headlineInnerHtml, submitInnerHtml, httpMethod);
-    userRole.hidden = false;
+    setUserPage(adminRoleName, "../../../", "../../", "../", headlineInnerHtml, submitInnerHtml, httpMethod);
+    document.getElementById("roleDiv").hidden = false;
 }

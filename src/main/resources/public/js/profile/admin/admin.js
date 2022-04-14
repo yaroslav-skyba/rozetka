@@ -9,7 +9,7 @@ let roleApiUrl;
 let productApiUrl;
 
 onload = function () {
-    redirectWithoutAdminRole(adminRoleName);
+    redirectWithoutSpecificRole(adminRoleName);
 
     setNavigation("../../", "../", "");
     setMainAttributes();

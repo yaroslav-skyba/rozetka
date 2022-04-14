@@ -21,8 +21,8 @@ function createUser(uuid) {
     return user;
 }
 
-function setUserPage(rootDestination, userDestination, adminDestination, headlineInnerHtml, submitInnerHtml, httpMethod) {
-    redirectWithoutAdminRole(adminRoleName);
+function setUserPage(roleName, rootDestination, userDestination, adminDestination, headlineInnerHtml, submitInnerHtml, httpMethod) {
+    redirectWithoutSpecificRole(roleName);
 
     setNavigation(rootDestination, userDestination, adminDestination);
     setContainer(`
@@ -71,8 +71,8 @@ function setUserPage(rootDestination, userDestination, adminDestination, headlin
                 <div class="invalid-feedback">Please, type a password conformation</div>
             </div>
 
-            <divclass="form-outline mb-4">
-                <select id="role" class="form-control form-control-lg" hidden></select> 
+            <div id="roleDiv" class="form-outline mb-4" hidden>
+                <select id="role" class="form-control form-control-lg"></select> 
                 <label for="role">A role</label>
                 <div class="invalid-feedback">Please, select a role</div>
             </div>
@@ -95,20 +95,26 @@ function setUserPage(rootDestination, userDestination, adminDestination, headlin
     userLastName = document.getElementById("lastName");
     userBirthday = document.getElementById("birthday");
 
-    for (const role of Object.values(JSON.parse(localStorage.getItem(rolesStorageKey)))) {
-        userRole.innerHTML += `<option value="` + role[roleUuidDtoKey] + `">` + role[roleNameDtoKey] + `</option>`;
+    const modificationStorageKey = localStorage.getItem(modificationStorageKeyStorageKey);
+    const user = JSON.parse(localStorage.getItem(modificationStorageKey));
+
+    const roles = localStorage.getItem(rolesStorageKey);
+    if (roles) {
+        for (const role of Object.values(JSON.parse(roles))) {
+            userRole.innerHTML += `<option value="` + role[roleUuidDtoKey] + `">` + role[roleNameDtoKey] + `</option>`;
+        }
+    } else {
+        userRole.innerHTML =
+            `<option value="` + user[userRoleUuidDtoKey] + `">` + localStorage.getItem(currentUserRoleNameStorageKey) + `</option>`;
     }
 
-    const modificationStorageKey = localStorage.getItem(modificationStorageKeyStorageKey);
-
-    const user = JSON.parse(localStorage.getItem(modificationStorageKey));
     if (user) {
         userRole.value = user[userRoleUuidDtoKey];
         userLogin.value = user[userLoginDtoKey];
         userEmail.value = user[userEmailDtoKey];
         userFirstName.value = user[userFirstNameDtoKey];
         userLastName.value = user[userLastNameDtoKey];
-        userBirthday.value = user[userBirthdayDtoKey];
+        userBirthday.value = new Date(user[userBirthdayDtoKey]).toISOString().slice(0, 10);
     } else {
         localStorage.setItem(modificationStorageKey, JSON.stringify(createUser(null)));
     }

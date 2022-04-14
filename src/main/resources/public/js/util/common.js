@@ -25,7 +25,6 @@ const productsApiUrl = authorityApi + "products";
 
 const contentTypePrefix = "application/vnd.rozetka.";
 const contentTypeSuffix = "+json";
-const userContentType = contentTypePrefix + "user" + contentTypeSuffix;
 
 const userUuidDtoKey = "uuid";
 const userRoleUuidDtoKey = "uuidRole";
@@ -48,7 +47,9 @@ const productImgDtoKey = "img";
 const adminRoleName = "admin";
 const userRoleName = "user";
 
-function redirectWithoutAdminRole(roleName) {
+const innerHtmlEditSubmit = "Edit";
+
+function redirectWithoutSpecificRole(roleName) {
     if (localStorage.getItem(currentUserRoleNameStorageKey) !== roleName) {
         location.href = "/";
     }
@@ -174,4 +175,27 @@ function alertMessage(type, message) {
             ` + message +
             `<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" onclick="location.reload()"></button>
         </div>`;
+}
+
+function setModificationPage(headlineInnerHtml, submitInnerHtml) {
+    setMainAttributes();
+    document.getElementById("headline").innerHTML = headlineInnerHtml;
+
+    submit = document.getElementById("submit");
+    submit.innerHTML = submitInnerHtml;
+}
+
+function setFormControlElementOnchange(create) {
+    for (const formControlElement of document.getElementsByClassName("form-control")) {
+        formControlElement.onchange = function () {
+            localStorage.setItem(localStorage.getItem(modificationStorageKeyStorageKey), JSON.stringify(create()));
+        }
+    }
+}
+
+function sendModificationHttpRequest(body, method, url, contentType) {
+    xmlHttpRequest.open(method, url);
+    xmlHttpRequest.setRequestHeader("Content-Type", contentType);
+    xmlHttpRequest.setRequestHeader("Authorization", localStorage.getItem(jwtStorageKey));
+    xmlHttpRequest.send(JSON.stringify(body));
 }

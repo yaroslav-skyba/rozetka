@@ -22,7 +22,7 @@ function createProduct(uuid, img) {
 }
 
 function setProductModificationPage(headlineInnerHtml, submitInnerHtml, httpMethod) {
-    redirectWithoutAdminRole(adminRoleName);
+    redirectWithoutSpecificRole(adminRoleName);
 
     setNavigation("../../../", "../../", "../");
     setContainer(`
@@ -123,8 +123,7 @@ function setProductModificationPage(headlineInnerHtml, submitInnerHtml, httpMeth
             localStorage.setItem(
                 modificationStorageKey,
                 JSON.stringify(createProduct(
-                    JSON.parse(localStorage.getItem(modificationStorageKey))[productUuidDtoKey],
-                    fileReader.result
+                    JSON.parse(localStorage.getItem(modificationStorageKey))[productUuidDtoKey], fileReader.result
                 ))
             );
         };
