@@ -14,66 +14,77 @@ onload = function () {
     setNavigation("../../", "../", "");
     setMainAttributes();
     setContainer(`
-        <div id="alert"></div>
-        <div class="text-white">Welcome, <span id="userName"></span></div>
+        <div class="card-body">
+            <div id="alert"></div>
+            
+            <div class="text-white">
+                Welcome, <span id="userName"></span>
+            </div>
+        </div>
     `);
     setContainer(`
-        <table class="table table-dark table-hover">
-            <thead>
-                <tr>
-                    <th class="col-1">#</th>
-                    <th>Login</th>
-                    <th>Email</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th class="col-2">Birthday</th>
-                    <th class="col-1">Role</th>
-                    <th class="col-2">Actions</th>
-                </tr>
-            </thead>
-    
-            <tbody id="userTableContent"></tbody>
-        </table>
+        <div class="card-body">
+            <table class="table table-dark table-hover">
+                <thead>
+                    <tr>
+                        <th class="col-1">#</th>
+                        <th>Login</th>
+                        <th>Email</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th class="col-2">Birthday</th>
+                        <th class="col-1">Role</th>
+                        <th class="col-2">Actions</th>
+                    </tr>
+                </thead>
         
-        <button class="btn btn-dark btn-outline-success" type="button" onclick="location.href = '/profile/admin/creation/user.html'">
-            Create user
-        </button>
+                <tbody id="userTableContent"></tbody>
+            </table>
+            
+            <button class="btn btn-dark btn-outline-success" type="button" onclick="location.href = '/profile/admin/creation/user.html'">
+                Create user
+            </button>
+        </div>
     `);
     setContainer(`
-        <table class="table table-dark table-hover">
-            <thead>
-                <tr>
-                    <th class="col-1">#</th>
-                    <th>Name</th>
-                    <th class="col-2">Actions</th>
-                </tr>
-            </thead>
-    
-            <tbody id="roleTableContent"></tbody>
-        </table>
+        <div class="card-body">
+            <table class="table table-dark table-hover">
+                <thead>
+                    <tr>
+                        <th class="col-1">#</th>
+                        <th>Name</th>
+                        <th class="col-2">Actions</th>
+                    </tr>
+                </thead>
         
-        <button class="btn btn-dark btn-outline-success" type="button" onclick="location.href = '/profile/admin/creation/role.html'">
-            Create role
-        </button>
+                <tbody id="roleTableContent"></tbody>
+            </table>
+            
+            <button class="btn btn-dark btn-outline-success" type="button" onclick="location.href = '/profile/admin/creation/role.html'">
+                Create role
+            </button>
+        </div>
     `)
     setContainer(`
-        <table class="table table-dark table-hover">    
-            <thead>
-                <tr>
-                    <th class="col-1">#</th>
-                    <th>Name</th>
-                    <th>Price</th>
-                    <th>Quantity</th>
-                    <th class="col-2">Actions</th>
-                </tr>
-            </thead>
-    
-            <tbody id="productTableContent"></tbody>
-        </table>
+        <div class="card-body">
+            <table class="table table-dark table-hover">    
+                <thead>
+                    <tr>
+                        <th class="col-1">#</th>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th class="col-2">Actions</th>
+                    </tr>
+                </thead>
         
-        <button class="btn btn-dark btn-outline-success" type="button" onclick="location.href = '/profile/admin/creation/product.html'">
-            Create product
-        </button>
+                <tbody id="productTableContent"></tbody>
+            </table>
+            
+            <button class="btn btn-dark btn-outline-success" type="button" onclick="location.href = '/profile/admin/creation/product.html'">
+                Create product
+            </button>
+        </div>
     `);
 
     const successModificationHttpResponse = localStorage.getItem(successModificationHttpResponseStorageKey);

@@ -1,42 +1,67 @@
 onload = function () {
     setNavigation("", "profile/", "profile/admin/");
+    setMainAttributes();
 
     const products = localStorage.getItem(cartProductsStorageKey);
 
     if (products) {
-        let overallPrice = 0;
+        let productOverallPrice = 0;
 
-        for (const product in JSON.parse(products)) {
-            main.innerHTML +=
-                `<div class="card bg-dark text-white text-break" style="border-radius: 15px; border-color: #198754">
-                     <img src="` + product[productImgDtoKey] + `" class="img-fluid rounded-start" alt="` + product[productNameDtoKey] + `">
-                     
-                     <div class="card-body">
-                         <h5 class="card-title">` + product[productNameDtoKey] + `</h5>
-                         <p class="card-text">` + product[productDescriptionDtoKey] + `</p>
-                         
-                         <input id="productCounter_` + product[productUuidDtoKey] + `" type="number" min="1" value="1">
-                         <label id="productCounter_` + product[productUuidDtoKey] + `"></label>
-                         
-                         <span id="productPrice_` + product[productUuidDtoKey] + `"></span>
-                         <button id="productDeletion" class="btn btn-dark btn-outline-success" type="button">Delete</button>
-                    </div>
-                </div>`;
+        const parsedProducts = JSON.parse(products);
 
-            const price =
-                product[productPriceDtoKey] * product[productDiscountDtoKey] / 100
-                * document.getElementById("productCounter_" + product[productUuidDtoKey]);
+        for (let i = 0; i < parsedProducts.length; i++) {
+            let productDescription = "";
 
-            overallPrice += price;
-            document.getElementById("productPrice_" + product[productUuidDtoKey]).value = price;
+            if (parsedProducts[i][productDescriptionDtoKey]) {
+                productDescription = parsedProducts[i][productDescriptionDtoKey];
+            }
+
+            let productDiscountRatio = 1;
+
+            if (parsedProducts[i][productDiscountDtoKey]) {
+                productDiscountRatio = parsedProducts[i][productDiscountDtoKey] / 100;
+            }
+
+            const productPrice = parsedProducts[i][productPriceDtoKey] * productDiscountRatio * parsedProducts[i][productQuantityDtoKey];
+            productOverallPrice += productPrice;
+
+            setContainer(`
+                <img src="` + parsedProducts[i][productImgDtoKey] + `" class="card-img-top" style="border-radius: 15px"
+                     alt="` + parsedProducts[i][productNameDtoKey] + `">
+                 
+                <div class="card-body">
+                    <h3 class="card-title">` + parsedProducts[i][productNameDtoKey] + `</h3>
+                    <p class="card-text">` + productDescription + `</p>
+                    
+                    <input id="productCounter_` + parsedProducts[i][productUuidDtoKey] + `" class="productCounter" type="number" min="1"
+                           value="` + parsedProducts[i][productQuantityDtoKey] + `">
+                    <label id="productCounter_` + parsedProducts[i][productUuidDtoKey] + `"></label>
+                    
+                    <span>` + productPrice + `</span><br/>
+                    <button id="productDeletion" class="btn btn-dark btn-outline-success mt-4" type="button">Delete</button>
+                </div>
+            `);
         }
 
-        main.innerHTML +=
-            `Overall: ` + overallPrice +
-            `<button id="submit" class="btn btn-dark btn-outline-success">Place an order</button>`;
+        setContainer(`
+            <div class="card-body">
+                Overall:` + productOverallPrice + `<br/>
+                <button id="submit" class="btn btn-dark btn-outline-success">Place an order</button>
+            </div>
+        `);
+
+        const productCounters = document.getElementsByClassName("productCounter");
+
+        for (let i = 0; i < productCounters.length; i++) {
+            productCounters[i].onchange = function () {
+                parsedProducts[i][productQuantityDtoKey] = productCounters[i].value;
+                localStorage.setItem(cartProductsStorageKey, JSON.stringify(parsedProducts));
+
+                location.reload();
+            }
+        }
     } else {
         main.innerHTML = `EMPTY`;
     }
-
-    setMainAttributes();
 }
+

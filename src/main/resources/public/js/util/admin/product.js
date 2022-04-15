@@ -26,53 +26,55 @@ function setProductModificationPage(headlineInnerHtml, submitInnerHtml, httpMeth
 
     setNavigation("../../../", "../../", "../");
     setContainer(`
-        <h2 class="text-uppercase text-center mb-5" id="headline"></h2>
-        
-        <div id="form">
-            <div class="form-outline mb-4">
-                <input id="name" class="form-control form-control-lg"/>
-                <label for="name">A name</label>
-                <div class="invalid-feedback">Please, type a name</div>
+        <div class="card-body">
+            <h2 class="text-uppercase text-center mb-5" id="headline"></h2>
+            
+            <div id="form">
+                <div class="form-outline mb-4">
+                    <input id="name" class="form-control form-control-lg"/>
+                    <label for="name">A name</label>
+                    <div class="invalid-feedback">Please, type a name</div>
+                </div>
+                
+                <div class="form-outline mb-4">
+                    <input id="quantity" class="form-control form-control-lg"/>
+                    <label for="quantity">A quantity</label>
+                    <div class="invalid-feedback">Please, type a quantity</div>
+                </div>
+                
+                <div class="form-outline mb-4">
+                    <input id="price" class="form-control form-control-lg"/>
+                    <label for="price">A price</label>
+                    <div class="invalid-feedback">Please, type a price</div>
+                </div>
+                
+                <div class="form-outline mb-4">
+                    <input id="discount" class="form-control form-control-lg"/>
+                    <label for="discount">A discount</label>
+                    <div class="invalid-feedback">Please, type a discount</div>
+                </div>
+                
+                <div class="form-outline mb-4">
+                    <input id="description" class="form-control form-control-lg"/>
+                    <label for="description">A description</label>
+                </div>
+                
+                <div id="productImgCard" class="card mb-4" style="border-radius: 15px" hidden>
+                    <img src="" alt="product" id="productImgValue" class="card-img" style="border-radius: 15px">
+                </div>
+                
+                <div class="mb-4">
+                    <input type="file" accept=".png" id="productImgUploader" class="form-control form-control-lg"/>
+                    <label for="productImgUploader">A .png image</label>
+                </div>
+                
+                <div class="d-flex justify-content-center">
+                    <button class="btn btn-dark btn-outline-success" id="submit"></button>
+                </div>
             </div>
             
-            <div class="form-outline mb-4">
-                <input id="quantity" class="form-control form-control-lg"/>
-                <label for="quantity">A quantity</label>
-                <div class="invalid-feedback">Please, type a quantity</div>
-            </div>
-            
-            <div class="form-outline mb-4">
-                <input id="price" class="form-control form-control-lg"/>
-                <label for="price">A price</label>
-                <div class="invalid-feedback">Please, type a price</div>
-            </div>
-            
-            <div class="form-outline mb-4">
-                <input id="discount" class="form-control form-control-lg"/>
-                <label for="discount">A discount</label>
-                <div class="invalid-feedback">Please, type a discount</div>
-            </div>
-            
-            <div class="form-outline mb-4">
-                <input id="description" class="form-control form-control-lg"/>
-                <label for="description">A description</label>
-            </div>
-            
-            <div id="productImgCard" class="card mb-4" style="border-radius: 15px" hidden>
-                <img src="" alt="product" id="productImgValue" class="card-img" style="border-radius: 15px">
-            </div>
-            
-            <div class="mb-4">
-                <input type="file" accept=".png" id="productImgUploader" class="form-control form-control-lg"/>
-                <label for="productImgUploader">A .png image</label>
-            </div>
-            
-            <div class="d-flex justify-content-center">
-                <button class="btn btn-dark btn-outline-success" id="submit"></button>
-            </div>
+            <div id="alert" class="mt-3"></div>
         </div>
-        
-        <div id="alert" class="mt-3"></div>
     `);
     setModificationPage(headlineInnerHtml, submitInnerHtml);
 

@@ -162,9 +162,7 @@ function setContainer(content) {
         `<div class="container">
             <div class="row">
                 <div class="col">
-                    <div class="card bg-dark text-white text-break" style="border-radius: 15px; border-color: #198754">
-                        <div class="card-body">` + content + `</div>
-                    </div>
+                    <div class="card bg-dark text-white text-break" style="border-radius: 15px; border-color: #198754">` + content + `</div>
                 </div>
             </div>
         </div>`;
