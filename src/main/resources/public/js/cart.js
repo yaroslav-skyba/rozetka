@@ -22,7 +22,11 @@ onload = function () {
                 productDiscountRatio = parsedProducts[i][productDiscountDtoKey] / 100;
             }
 
-            const productPrice = parsedProducts[i][productPriceDtoKey] * productDiscountRatio * parsedProducts[i][productQuantityDtoKey];
+            const productPricePower = 100;
+            const productPrice = Math.round(
+                parsedProducts[i][productPriceDtoKey] * productDiscountRatio * parsedProducts[i][productQuantityDtoKey] * productPricePower
+            ) / productPricePower;
+
             productOverallPrice += productPrice;
 
             setContainer(`
@@ -35,17 +39,17 @@ onload = function () {
                     
                     <input id="productCounter_` + parsedProducts[i][productUuidDtoKey] + `" class="productCounter" type="number" min="1"
                            value="` + parsedProducts[i][productQuantityDtoKey] + `">
-                    <label id="productCounter_` + parsedProducts[i][productUuidDtoKey] + `"></label>
+                    <label id="productCounter_` + parsedProducts[i][productUuidDtoKey] + `"></label><br/>
                     
-                    <span>` + productPrice + `</span><br/>
-                    <button id="productDeletion" class="btn btn-dark btn-outline-success mt-4" type="button">Delete</button>
+                    <span>The price: ` + productPrice + `</span><br/>
+                    <button class="btn btn-dark btn-outline-success mt-4 productDeletion" type="button">Delete</button>
                 </div>
             `);
         }
 
         setContainer(`
             <div class="card-body">
-                Overall:` + productOverallPrice + `<br/>
+                Overall: ` + productOverallPrice + `<br/>
                 <button id="submit" class="btn btn-dark btn-outline-success">Place an order</button>
             </div>
         `);
@@ -54,9 +58,31 @@ onload = function () {
 
         for (let i = 0; i < productCounters.length; i++) {
             productCounters[i].onchange = function () {
+                if (!productCounters[i].checkValidity()) {
+                    productCounters[i].value = 1;
+                    return;
+                }
+
                 parsedProducts[i][productQuantityDtoKey] = productCounters[i].value;
                 localStorage.setItem(cartProductsStorageKey, JSON.stringify(parsedProducts));
 
+                location.reload();
+            }
+        }
+
+        const productDeletions = document.getElementsByClassName("productDeletion");
+
+        for (let i = 0; i < productDeletions.length; i++) {
+            productDeletions[i].onclick = function () {
+                const products = [];
+
+                for (let j = 0; j < parsedProducts.length; j++) {
+                    if (i !== j) {
+                        products[j] = parsedProducts[j]
+                    }
+                }
+
+                localStorage.setItem(cartProductsStorageKey, JSON.stringify(products));
                 location.reload();
             }
         }
