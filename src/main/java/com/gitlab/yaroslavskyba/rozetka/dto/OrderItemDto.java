@@ -8,10 +8,8 @@ public class OrderItemDto {
     private UUID uuidProduct;
     private UUID uuidUser;
 
-    
     public OrderItemDto() { }
 
-    
     public OrderItemDto(UUID uuid, UUID uuidProduct, UUID uuidUser) {
         this.uuid = uuid;
         this.uuidProduct = uuidProduct;

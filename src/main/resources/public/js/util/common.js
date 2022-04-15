@@ -17,6 +17,7 @@ const currentUserRoleNameStorageKey = "currentUserRoleName";
 const rolesStorageKey = "roles";
 const modificationStorageKeyStorageKey = "modificationStorageKey";
 const successModificationHttpResponseStorageKey = "successModificationHttpResponse";
+const cartProductsStorageKey = "cartProducts";
 
 const authorityApi = "http://localhost:8080/api/v1/";
 const usersApiUrl = authorityApi + "users";

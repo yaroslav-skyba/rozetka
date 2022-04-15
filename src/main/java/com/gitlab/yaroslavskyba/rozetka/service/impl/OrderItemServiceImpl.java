@@ -23,7 +23,6 @@ import java.util.UUID;
 public class OrderItemServiceImpl implements OrderItemService {
     @PersistenceContext
     private EntityManager entityManager;
-
     private final OrderItemRepository orderItemRepository;
     private final ProductRepository productRepository;
     private final UserRepository userRepository;

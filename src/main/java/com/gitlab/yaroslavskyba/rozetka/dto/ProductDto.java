@@ -13,7 +13,6 @@ public class ProductDto {
     private String description;
     private String img;
 
-    
     public ProductDto() {
     }
 
