@@ -15,35 +15,22 @@ onload = function () {
         }
 
         for (let i = 0; i < parsedProducts.length; i++) {
-            let productDescription = "";
-
-            if (parsedProducts[i][productDescriptionDtoKey]) {
-                productDescription = parsedProducts[i][productDescriptionDtoKey];
-            }
-
-            let productDiscountRatio = 1;
-
-            if (parsedProducts[i][productDiscountDtoKey]) {
-                productDiscountRatio = parsedProducts[i][productDiscountDtoKey] / 100;
-            }
-
-            const productPricePower = 100;
-            const productPrice = Math.round(
-                parsedProducts[i][productPriceDtoKey] * productDiscountRatio * parsedProducts[i][productQuantityDtoKey] * productPricePower
-            ) / productPricePower;
-
+            const productPrice = getProductPrice(parsedProducts, i);
             productOverallPrice += productPrice;
 
             setContainer(`
-                <img src="` + parsedProducts[i][productImgDtoKey] + `" class="card-img-top" style="border-radius: 15px"
+                <img src="` + parsedProducts[i][productImgDtoKey] + `" style="border-radius: 15px"
                      alt="` + parsedProducts[i][productNameDtoKey] + `">
                  
                 <div class="card-body">
-                    <h3 class="card-title">` + parsedProducts[i][productNameDtoKey] + `</h3>
-                    <p class="card-text">` + productDescription + `</p>
+                    <a href="product.html?uuid=` + products[i][productUuidDtoKey] + `">
+                        <h3 class="card-title">` + parsedProducts[i][productNameDtoKey] + `</h3>    
+                    </a>
+                    
+                    <p class="card-text">` + getProductDescription(parsedProducts, i) + `</p>
                     
                     <input id="productCounter_` + parsedProducts[i][productUuidDtoKey] + `" class="productCounter" type="number" min="1" 
-                    max="100" value="` + parsedProducts[i][productQuantityDtoKey] + `">
+                           max="100" value="` + parsedProducts[i][productQuantityDtoKey] + `">
                     <label id="productCounter_` + parsedProducts[i][productUuidDtoKey] + `"></label><br/>
                     
                     <span>The price: ` + productPrice + `</span><br/>
@@ -77,10 +64,10 @@ onload = function () {
             }
         }
 
-        const productDeletions = document.getElementsByClassName("productDeletion");
+        const productDeletionButtons = document.getElementsByClassName("productDeletion");
 
-        for (let i = 0; i < productDeletions.length; i++) {
-            productDeletions[i].onclick = function () {
+        for (let i = 0; i < productDeletionButtons.length; i++) {
+            productDeletionButtons[i].onclick = function () {
                 const products = [];
 
                 for (let j = 0; j < parsedProducts.length; j++) {
@@ -107,7 +94,7 @@ onload = function () {
             sendModificationHttpRequest(orderItems, "POST", ordersApiUrl, contentTypePrefix + "orderItemList" + contentTypeSuffix);
         }
     } else {
-        main.innerHTML = `EMPTY`;
+        main.innerHTML = '<h1 class="text-center text-white">YOUR CART IS EMPTY</h1>';
     }
 }
 

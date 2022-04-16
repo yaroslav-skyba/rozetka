@@ -199,3 +199,25 @@ function sendModificationHttpRequest(body, method, url, contentType) {
     xmlHttpRequest.setRequestHeader("Authorization", localStorage.getItem(jwtStorageKey));
     xmlHttpRequest.send(JSON.stringify(body));
 }
+
+function getProductDescription(products, i) {
+    let description = "";
+
+    if (products[i][productDescriptionDtoKey]) {
+        description = products[i][productDescriptionDtoKey];
+    }
+
+    return description;
+}
+
+function getProductPrice(products, i) {
+    let discountRatio = 1;
+
+    if (products[i][productDiscountDtoKey]) {
+        discountRatio = products[i][productDiscountDtoKey] / 100;
+    }
+
+    const power = 100;
+
+    return Math.round(products[i][productPriceDtoKey] * discountRatio * products[i][productQuantityDtoKey] * power) / power;
+}

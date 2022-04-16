@@ -87,8 +87,10 @@ public class ProductServiceImpl implements ProductService {
         final List<ProductDto> productDtoList = new ArrayList<>();
 
         for (Product product : productList) {
-            productDtoList.add(new ProductDto(product.getUuid(), product.getName(), product.getQuantity(), product.getPrice(),
-                                              product.getDiscount(), product.getDescription(), product.getImg()));
+            if (product.getQuantity() > 0) {
+                productDtoList.add(new ProductDto(product.getUuid(), product.getName(), product.getQuantity(), product.getPrice(),
+                                                  product.getDiscount(), product.getDescription(), product.getImg()));
+            }
         }
 
         if (productDtoList.isEmpty()) {
