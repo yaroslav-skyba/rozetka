@@ -25,7 +25,6 @@ xmlHttpRequest.onreadystatechange = function () {
                         <span>The price: ` + getProductPrice(products, i) + `</span><br/>
                         
                         <button class="btn btn-dark btn-outline-success mt-4 productAdding" type="button">Add to your cart</button>
-                        <div id="alert" class="mt-3"></div>
                     </div>
                 `);
             }
@@ -42,12 +41,20 @@ xmlHttpRequest.onreadystatechange = function () {
                         cartParsedProducts = JSON.parse(cartProducts);
                     }
 
-                    if (cartParsedProducts.includes(products[i])) {
+                    if (cartParsedProducts.find(value => value[productUuidDtoKey] === products[i][productUuidDtoKey])) {
                         location.href = "cart.html";
                     } else {
+                        products[i][productQuantityDtoKey] = 1;
                         cartParsedProducts.push(products[i]);
                         localStorage.setItem(cartProductsStorageKey, JSON.stringify(cartParsedProducts));
 
+                        const alert = document.getElementById("alert");
+
+                        if (alert) {
+                            alert.remove();
+                        }
+
+                        document.getElementsByClassName("card-body")[i].innerHTML += '<div id="alert" class="mt-3"></div>';
                         alertMessage("success", "The product was successfully added to your cart!");
                     }
                 }

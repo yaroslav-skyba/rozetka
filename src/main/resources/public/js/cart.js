@@ -44,7 +44,7 @@ onload = function () {
                 Overall: ` + productOverallPrice + `<br/>
                 <button id="submit" class="btn btn-dark btn-outline-success">Place an order</button>
                 
-                <div id="alert" class="mt-3"></div>
+                <div id="alert" class="mt-3"></div> 
             </div>
         `);
 
@@ -72,7 +72,7 @@ onload = function () {
 
                 for (let j = 0; j < parsedProducts.length; j++) {
                     if (i !== j) {
-                        products[j] = parsedProducts[j]
+                        products.push(parsedProducts[j]);
                     }
                 }
 
