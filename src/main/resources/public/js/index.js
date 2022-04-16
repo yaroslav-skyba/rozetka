@@ -2,7 +2,15 @@ onload = function() {
     setNavigation("", "profile/", "profile/admin/");
     setMainAttributes();
 
-    xmlHttpRequest.open("GET", productsApiUrl);
+    const searchedProductName = localStorage.getItem(searchedProductNameStorageKey);
+
+    if (searchedProductName) {
+        localStorage.removeItem(searchedProductNameStorageKey);
+        xmlHttpRequest.open("GET", productsApiUrl + "?name=" + searchedProductName);
+    } else {
+        xmlHttpRequest.open("GET", productsApiUrl);
+    }
+
     xmlHttpRequest.send();
 }
 

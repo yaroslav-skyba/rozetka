@@ -18,6 +18,7 @@ const rolesStorageKey = "roles";
 const modificationStorageKeyStorageKey = "modificationStorageKey";
 const successModificationHttpResponseStorageKey = "successModificationHttpResponse";
 const cartProductsStorageKey = "cartProducts";
+const searchedProductNameStorageKey = "searchedProductName";
 
 const authorityApi = "http://localhost:8080/api/v1/";
 const usersApiUrl = authorityApi + "users";
@@ -61,7 +62,7 @@ function setNavigation(rootFolderDestination, userFolderDestination, adminFolder
     document.getElementById("header").innerHTML =
         `<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container-fluid">
-                <a class="navbar-brand" href="` + rootFolderDestination + `index.html">
+                <a class="navbar-brand" href="/` + rootFolderDestination + `">
                     <img src="` + rootFolderDestination + `img/logo.png" alt="logo" width="50" height="50">
                 </a>
     
@@ -90,8 +91,8 @@ function setNavigation(rootFolderDestination, userFolderDestination, adminFolder
                     </ul>
     
                     <form class="d-flex">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-success" type="button">Search</button>
+                        <input id="searchInput" class="form-control me-2" type="search" placeholder="Search products" aria-label="Search">
+                        <button id="searchButton" class="btn btn-outline-success" type="button">Search</button>
                     </form>
                 </div>
             </div>
@@ -125,7 +126,7 @@ function setNavigation(rootFolderDestination, userFolderDestination, adminFolder
     const navItem2 = document.getElementById("navItem2");
     const loginPath = rootFolderDestination + "login.html";
 
-    if (localStorage.getItem(jwtStorageKey) == null) {
+    if (!localStorage.getItem(jwtStorageKey)) {
         navItem1.innerHTML = "Login";
         navItem1.href = loginPath;
 
@@ -150,6 +151,11 @@ function setNavigation(rootFolderDestination, userFolderDestination, adminFolder
             localStorage.removeItem(jwtStorageKey);
             localStorage.removeItem(currentUserRoleNameStorageKey);
         }
+    }
+
+    document.getElementById("searchButton").onclick = function() {
+        localStorage.setItem(searchedProductNameStorageKey, document.getElementById("searchInput").value);
+        location.href = "/";
     }
 }
 
