@@ -9,6 +9,11 @@ onload = function () {
 
         const parsedProducts = JSON.parse(products);
 
+        if (!parsedProducts.length) {
+            localStorage.removeItem(cartProductsStorageKey);
+            location.reload();
+        }
+
         for (let i = 0; i < parsedProducts.length; i++) {
             let productDescription = "";
 
@@ -37,8 +42,8 @@ onload = function () {
                     <h3 class="card-title">` + parsedProducts[i][productNameDtoKey] + `</h3>
                     <p class="card-text">` + productDescription + `</p>
                     
-                    <input id="productCounter_` + parsedProducts[i][productUuidDtoKey] + `" class="productCounter" type="number" min="1"
-                           value="` + parsedProducts[i][productQuantityDtoKey] + `">
+                    <input id="productCounter_` + parsedProducts[i][productUuidDtoKey] + `" class="productCounter" type="number" min="1" 
+                    max="100" value="` + parsedProducts[i][productQuantityDtoKey] + `">
                     <label id="productCounter_` + parsedProducts[i][productUuidDtoKey] + `"></label><br/>
                     
                     <span>The price: ` + productPrice + `</span><br/>
@@ -51,6 +56,8 @@ onload = function () {
             <div class="card-body">
                 Overall: ` + productOverallPrice + `<br/>
                 <button id="submit" class="btn btn-dark btn-outline-success">Place an order</button>
+                
+                <div id="alert" class="mt-3"></div>
             </div>
         `);
 
@@ -59,7 +66,7 @@ onload = function () {
         for (let i = 0; i < productCounters.length; i++) {
             productCounters[i].onchange = function () {
                 if (!productCounters[i].checkValidity()) {
-                    productCounters[i].value = 1;
+                    productCounters[i].value = productCounters[i].min;
                     return;
                 }
 
@@ -86,8 +93,31 @@ onload = function () {
                 location.reload();
             }
         }
+
+        document.getElementById("submit").onclick = function() {
+            const userUuid = JSON.parse(localStorage.getItem(currentUserStorageKey))[userUuidDtoKey];
+            const orderItems = [];
+
+            for (let i = 0; i < parsedProducts.length; i++) {
+                for (let j = 0; j < parsedProducts[i][productQuantityDtoKey]; j++) {
+                    orderItems.push({uuidProduct:parsedProducts[i][productUuidDtoKey], uuidUser:userUuid})
+                }
+            }
+
+            sendModificationHttpRequest(orderItems, "POST", ordersApiUrl, contentTypePrefix + "orderItemList" + contentTypeSuffix);
+        }
     } else {
         main.innerHTML = `EMPTY`;
     }
 }
 
+xmlHttpRequest.onreadystatechange = function () {
+    if (xmlHttpRequest.readyState === 4) {
+        if (xmlHttpRequest.status === 201) {
+            localStorage.removeItem(cartProductsStorageKey);
+            alertMessage("success", xmlHttpRequest.responseText);
+        } else if (xmlHttpRequest.status === 409) {
+            alertMessage("danger", xmlHttpRequest.responseText);
+        }
+    }
+}

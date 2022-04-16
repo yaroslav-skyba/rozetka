@@ -23,6 +23,7 @@ const authorityApi = "http://localhost:8080/api/v1/";
 const usersApiUrl = authorityApi + "users";
 const rolesApiUrl = authorityApi + "roles";
 const productsApiUrl = authorityApi + "products";
+const ordersApiUrl = authorityApi + "orders";
 
 const contentTypePrefix = "application/vnd.rozetka.";
 const contentTypeSuffix = "+json";

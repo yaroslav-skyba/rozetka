@@ -37,20 +37,30 @@ public class OrderItemServiceImpl implements OrderItemService {
     @Override
     public void createOrderItemList(List<OrderItemDto> orderItemDtoList) {
         try {
+            if (orderItemDtoList.isEmpty()) {
+                throw new OrderServiceException("An order item list is empty");
+            }
+
             final Order order = new Order();
             order.setUuid(UUID.randomUUID());
-            order.setDescription(orderItemDtoList.toString());
 
             for (OrderItemDto orderItemDto : orderItemDtoList) {
                 final int orderItemProductQuantity = 1;
-
                 final Product product = productRepository.findProductByUuid(orderItemDto.getUuidProduct()).orElseThrow();
+
                 product.setQuantity(product.getQuantity() - orderItemProductQuantity);
                 productRepository.saveAndFlush(product);
 
                 entityManager.detach(product);
                 product.setQuantity(orderItemProductQuantity);
-                product.setPrice(BigDecimal.valueOf(product.getPrice().floatValue() * product.getDiscount().floatValue() / 100));
+
+                final BigDecimal productDiscount = product.getDiscount();
+                final float productPrice = product.getPrice().floatValue();
+                if (productDiscount != null) {
+                    product.setPrice(BigDecimal.valueOf(productPrice * productDiscount.floatValue() / 100));
+                } else {
+                    product.setPrice(BigDecimal.valueOf(productPrice));
+                }
 
                 final OrderItem orderItem = new OrderItem();
                 orderItem.setUuid(UUID.randomUUID());

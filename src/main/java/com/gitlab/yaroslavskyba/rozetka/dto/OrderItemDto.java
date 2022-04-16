@@ -4,14 +4,12 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class OrderItemDto {
-    private UUID uuid;
     private UUID uuidProduct;
     private UUID uuidUser;
 
     public OrderItemDto() { }
 
-    public OrderItemDto(UUID uuid, UUID uuidProduct, UUID uuidUser) {
-        this.uuid = uuid;
+    public OrderItemDto(UUID uuidProduct, UUID uuidUser) {
         this.uuidProduct = uuidProduct;
         this.uuidUser = uuidUser;
     }
@@ -28,25 +26,20 @@ public class OrderItemDto {
 
         final OrderItemDto that = (OrderItemDto) o;
 
-        return uuid.equals(that.uuid) && uuidProduct.equals(that.uuidProduct) && uuidUser.equals(that.uuidUser);
+        return uuidProduct.equals(that.uuidProduct) && uuidUser.equals(that.uuidUser);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, uuidProduct, uuidUser);
+        return Objects.hash(uuidProduct, uuidUser);
     }
 
     @Override
     public String toString() {
         return "OrderItemDto{" +
-               "uuid=" + uuid +
                ", uuidProduct=" + uuidProduct +
                ", uuidUser=" + uuidUser +
                '}';
-    }
-
-    public UUID getUuid() {
-        return uuid;
     }
 
     public UUID getUuidProduct() {

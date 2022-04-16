@@ -7,7 +7,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -23,10 +22,6 @@ public class Order extends AbstractModel {
     @Column(nullable = false, unique = true)
     private UUID uuid;
 
-    @Size(max = MAX_DESCRIPTION_LENGTH)
-    @Column(length = MAX_DESCRIPTION_LENGTH)
-    private String description;
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -39,12 +34,12 @@ public class Order extends AbstractModel {
 
         final Order order = (Order) o;
 
-        return idOrder.equals(order.idOrder) && uuid.equals(order.uuid) && Objects.equals(description, order.description);
+        return idOrder.equals(order.idOrder) && uuid.equals(order.uuid);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idOrder, uuid, description);
+        return Objects.hash(idOrder, uuid);
     }
 
     @Override
@@ -52,7 +47,6 @@ public class Order extends AbstractModel {
         return "Order{" +
                "idOrder=" + idOrder +
                ", uuid=" + uuid +
-               ", productDescription='" + description + '\'' +
                '}';
     }
 
@@ -71,13 +65,5 @@ public class Order extends AbstractModel {
 
     public void setUuid(UUID uuid) {
         this.uuid = uuid;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 }
