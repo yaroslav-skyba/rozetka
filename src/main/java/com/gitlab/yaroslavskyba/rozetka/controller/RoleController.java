@@ -29,17 +29,26 @@ public class RoleController {
     @PostMapping(value = ControllerPath.ROLES, consumes = MediaType.ROLE, produces = org.springframework.http.MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<String> createRole(@RequestBody RoleDto roleDto) {
         try {
-            roleService.createRole(roleDto);
+            roleService.create(roleDto);
             return ResponseEntity.status(HttpStatus.CREATED).body("A role has been successfully created");
         } catch (RoleServiceException roleServiceException) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(roleServiceException.getMessage());
         }
     }
 
+    @GetMapping(value = ControllerPath.ROLE, produces = MediaType.ROLE)
+    public ResponseEntity<RoleDto> getRole(@PathVariable UUID uuid) {
+        try {
+            return ResponseEntity.ok(roleService.get(uuid));
+        } catch (RoleServiceException roleServiceException) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @GetMapping(value = ControllerPath.ROLES, produces = MediaType.ROLE_LIST)
     public ResponseEntity<List<RoleDto>> getRoleList() {
         try {
-            return ResponseEntity.ok(roleService.getRoleList());
+            return ResponseEntity.ok(roleService.getList());
         } catch (RoleServiceException roleServiceException) {
             return ResponseEntity.notFound().build();
         }
@@ -48,7 +57,7 @@ public class RoleController {
     @PutMapping(value = ControllerPath.ROLES, consumes = MediaType.ROLE)
     public ResponseEntity<String> updateRole(@RequestBody RoleDto roleDto) {
         try {
-            roleService.updateRoleByUuid(roleDto);
+            roleService.update(roleDto);
             return ResponseEntity.ok("A role has been successfully updated");
         } catch (RoleServiceException roleServiceException) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(roleServiceException.getMessage());
@@ -58,7 +67,7 @@ public class RoleController {
     @DeleteMapping(ControllerPath.ROLE)
     public ResponseEntity<String> deleteUser(@PathVariable UUID uuid) {
         try {
-            roleService.deleteRoleByUuid(uuid);
+            roleService.delete(uuid);
             return ResponseEntity.ok("A role has been successfully deleted");
         } catch (RoleServiceException roleServiceException) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(roleServiceException.getMessage());

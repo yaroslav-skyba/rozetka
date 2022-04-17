@@ -99,7 +99,7 @@ onload = function () {
         document.getElementById("alert").innerHTML = "";
     }
 
-    sendHttpRequest("GET", usersApiUrl);
+    sendHttpRequest("GET", usersApiUrl, "Authorization", localStorage.getItem(jwtStorageKey), null);
 }
 
 xmlHttpRequest.onreadystatechange = function () {
@@ -111,7 +111,7 @@ xmlHttpRequest.onreadystatechange = function () {
                 const currentUser = JSON.parse(localStorage.getItem(currentUserStorageKey));
                 document.getElementById("userName").innerHTML = currentUser[userFirstNameDtoKey] + " " + currentUser[userLastNameDtoKey];
 
-                sendHttpRequest("GET", rolesApiUrl);
+                sendHttpRequest("GET", rolesApiUrl, "Authorization", localStorage.getItem(jwtStorageKey), null);
             } else if (xmlHttpRequest.responseURL === rolesApiUrl) {
                 localStorage.setItem(rolesStorageKey, xmlHttpRequest.responseText);
 
@@ -141,7 +141,7 @@ xmlHttpRequest.onreadystatechange = function () {
                             userToDeleteUuid = users[i][userUuidDtoKey];
                             userApiUrl = usersApiUrl + "/" + userToDeleteUuid;
 
-                            sendHttpRequest("DELETE", userApiUrl);
+                            sendHttpRequest("DELETE", userApiUrl, "Authorization", localStorage.getItem(jwtStorageKey), null);
                         }
                     }, actionsTd);
 
@@ -166,7 +166,7 @@ xmlHttpRequest.onreadystatechange = function () {
                             roleToDeleteUuid = roles[i][roleUuidDtoKey];
                             roleApiUrl = rolesApiUrl + "/" + roleToDeleteUuid;
 
-                            sendHttpRequest("DELETE", roleApiUrl);
+                            sendHttpRequest("DELETE", roleApiUrl, "Authorization", localStorage.getItem(jwtStorageKey), null);
                         }
                     }, actionsTd);
 
@@ -174,14 +174,20 @@ xmlHttpRequest.onreadystatechange = function () {
                     document.getElementById("roleTableContent").append(tr);
                 }
 
-                sendHttpRequest("GET", productsApiUrl);
+                sendHttpRequest("GET", productsApiUrl, "Authorization", localStorage.getItem(jwtStorageKey), null);
             } else if (xmlHttpRequest.responseURL === productsApiUrl) {
                 const products = JSON.parse(xmlHttpRequest.responseText);
 
                 for (let i = 0; i < products.length; i++) {
+                    const productNameA = document.createElement("a");
+                    productNameA.innerHTML = products[i][productNameDtoKey];
+                    productNameA.href = "/product.html?uuid=" + products[i][productUuidDtoKey];
+                    const td = document.createElement("td");
+                    td.append(productNameA)
+
                     const tr = document.createElement("tr");
                     appendTd(i + 1, tr);
-                    appendTd(products[i][productNameDtoKey], tr);
+                    tr.append(td);
                     appendTd(products[i][productPriceDtoKey], tr);
                     appendTd(products[i][productQuantityDtoKey], tr);
 
@@ -197,7 +203,7 @@ xmlHttpRequest.onreadystatechange = function () {
                             productToDeleteUuid = products[i][productUuidDtoKey];
                             productApiUrl = productsApiUrl + "/" + productToDeleteUuid;
 
-                            sendHttpRequest("DELETE", productApiUrl);
+                            sendHttpRequest("DELETE", productApiUrl, "Authorization", localStorage.getItem(jwtStorageKey), null);
                         }
                     }, actionsTd);
 
@@ -233,12 +239,6 @@ xmlHttpRequest.onreadystatechange = function () {
             alertMessage("danger", xmlHttpRequest.responseText);
         }
     }
-}
-
-function sendHttpRequest(method, url) {
-    xmlHttpRequest.open(method, url);
-    xmlHttpRequest.setRequestHeader("Authorization", localStorage.getItem(jwtStorageKey));
-    xmlHttpRequest.send();
 }
 
 function appendTd(textContent, tr) {

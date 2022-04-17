@@ -13,7 +13,7 @@ public class MediaType {
     public static final String ROLE_LIST = ROOT + "roleList" + SUFFIX;
     public static final String USER = ROOT + "user" + SUFFIX;
     public static final String USER_LIST = ROOT + "userList" + SUFFIX;
-    public static final String LOGIN_REQUEST = ROOT + "loginRequest" + SUFFIX;
+    public static final String LOGIN = ROOT + "login" + SUFFIX;
 
     private MediaType() {}
 }

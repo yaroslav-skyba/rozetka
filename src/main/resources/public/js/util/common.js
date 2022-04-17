@@ -13,6 +13,7 @@ const roleEditStorageKey = roleStorageKeyPart + editStorageKeyPart;
 const productEditStorageKey = productStorageKeyPart + editStorageKeyPart;
 const jwtStorageKey = "jwt";
 const currentUserStorageKey = "currentUser";
+const currentUserLoginStorageKey = "currentUserLogin";
 const currentUserRoleNameStorageKey = "currentUserRoleName";
 const rolesStorageKey = "roles";
 const modificationStorageKeyStorageKey = "modificationStorageKey";
@@ -24,7 +25,6 @@ const authorityApi = "http://localhost:8080/api/v1/";
 const usersApiUrl = authorityApi + "users";
 const rolesApiUrl = authorityApi + "roles";
 const productsApiUrl = authorityApi + "products";
-const ordersApiUrl = authorityApi + "orders";
 
 const contentTypePrefix = "application/vnd.rozetka.";
 const contentTypeSuffix = "+json";
@@ -199,7 +199,13 @@ function setFormControlElementOnchange(create) {
     }
 }
 
-function sendModificationHttpRequest(body, method, url, contentType) {
+function sendHttpRequest(method, url, headerName, headerValue, body) {
+    xmlHttpRequest.open(method, url);
+    xmlHttpRequest.setRequestHeader(headerName, headerValue);
+    xmlHttpRequest.send(body);
+}
+
+function sendModificationHttpRequest(method, url, contentType, body) {
     xmlHttpRequest.open(method, url);
     xmlHttpRequest.setRequestHeader("Content-Type", contentType);
     xmlHttpRequest.setRequestHeader("Authorization", localStorage.getItem(jwtStorageKey));

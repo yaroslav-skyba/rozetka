@@ -38,15 +38,17 @@ public class JwtServiceImpl implements JwtService {
     public String createJwt(UserDto userDto) {
         try {
             final String jwtValue = generateJwtValue(userDto);
+            final String fullJwtValue = TOKEN_TYPE + jwtValue;
+
             final Jwt jwt = new Jwt();
             jwt.setUuid(UUID.randomUUID());
             jwt.setUser(userRepository.findUserByUuid(userDto.getUuid()).orElseThrow());
-            jwt.setValue(TOKEN_TYPE + jwtValue);
+            jwt.setValue(fullJwtValue);
             jwt.setExpiryDate(Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(jwtValue).getBody().getExpiration().toInstant());
 
             jwtRepository.saveAndFlush(jwt);
 
-            return jwtValue;
+            return fullJwtValue;
         } catch (Exception exception) {
             throw new JwtServiceException("An error occurred while creating a jwt", exception);
         }
@@ -63,7 +65,7 @@ public class JwtServiceImpl implements JwtService {
                 throw new JwtServiceException("A jwt has been expired. Please, make a new sign-in request");
             }
 
-            final String jwtValue = TOKEN_TYPE + generateJwtValue(userService.getUserByLogin(jwt.getUser().getLogin()));
+            final String jwtValue = TOKEN_TYPE + generateJwtValue(userService.get(jwt.getUser().getLogin()));
             jwt.setValue(jwtValue);
             jwtRepository.saveAndFlush(jwt);
 

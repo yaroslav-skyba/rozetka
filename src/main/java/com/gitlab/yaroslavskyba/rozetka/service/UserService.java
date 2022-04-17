@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.UUID;
 
 public interface UserService {
-    void createUser(UserDto userDto) throws UserServiceException;
-    UserDto getUserByLogin(String login) throws UserServiceException;
-    List<UserDto> getUserList() throws UserServiceException;
-    void updateUserByUuid(UserDto userDto) throws UserServiceException;
-    void deleteUserByUuid(UUID uuid) throws UserServiceException;
+    void create(UserDto userDto) throws UserServiceException;
+    UserDto get(String login) throws UserServiceException;
+    List<UserDto> getList() throws UserServiceException;
+    void update(UserDto userDto) throws UserServiceException;
+    void delete(UUID uuid) throws UserServiceException;
 }

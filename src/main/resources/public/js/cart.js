@@ -82,7 +82,14 @@ onload = function () {
         }
 
         document.getElementById("submit").onclick = function() {
-            const userUuid = JSON.parse(localStorage.getItem(currentUserStorageKey))[userUuidDtoKey];
+            const user = localStorage.getItem(currentUserStorageKey);
+
+            if (!user) {
+                alertMessage("danger", "Please, login into place an order");
+                return;
+            }
+
+            const userUuid = JSON.parse(user)[userUuidDtoKey];
             const orderItems = [];
 
             for (let i = 0; i < parsedProducts.length; i++) {
@@ -91,7 +98,7 @@ onload = function () {
                 }
             }
 
-            sendModificationHttpRequest(orderItems, "POST", ordersApiUrl, contentTypePrefix + "orderItemList" + contentTypeSuffix);
+            sendModificationHttpRequest("POST", authorityApi + "orders", contentTypePrefix + "orderItemList" + contentTypeSuffix, orderItems);
         }
     } else {
         main.innerHTML = '<h1 class="text-center text-white">YOUR CART IS EMPTY</h1>';

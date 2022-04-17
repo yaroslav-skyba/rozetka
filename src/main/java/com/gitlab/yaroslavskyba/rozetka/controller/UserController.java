@@ -33,38 +33,46 @@ public class UserController {
     @PostMapping(value = ControllerPath.USERS, consumes = MediaType.USER)
     public ResponseEntity<String> createUser(@RequestBody UserDto userDto) {
         try {
-            userService.createUser(userDto);
+            userService.create(userDto);
             return ResponseEntity.status(HttpStatus.CREATED).body("A user has been successfully created");
         } catch (UserServiceException userServiceException) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(userServiceException.getMessage());
         }
     }
 
-    @GetMapping(value = ControllerPath.USERS, produces = MediaType.USER_LIST)
-    public ResponseEntity<List<UserDto>> getUserList() {
+    @GetMapping(value = ControllerPath.USER_BY_LOGIN, produces = MediaType.USER)
+    @PreAuthorize("#login.equals(principal.username) or hasAuthority('" + RoleName.ADMIN + "')")
+    public ResponseEntity<UserDto> getUser(@PathVariable String login) {
         try {
-            return ResponseEntity.ok(userService.getUserList());
+            return ResponseEntity.ok(userService.get(login));
         } catch (UserServiceException userServiceException) {
             return ResponseEntity.notFound().build();
         }
     }
 
-    
+    @GetMapping(value = ControllerPath.USERS, produces = MediaType.USER_LIST)
+    public ResponseEntity<List<UserDto>> getUserList() {
+        try {
+            return ResponseEntity.ok(userService.getList());
+        } catch (UserServiceException userServiceException) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @PutMapping(value = ControllerPath.USERS, consumes = MediaType.USER)
-    @PreAuthorize("#userDto.uuid.equals(principal.uuid) or hasAuthority('" + RoleName.ADMIN + "')")
     public ResponseEntity<String> updateUser(@RequestBody UserDto userDto) {
         try {
-            userService.updateUserByUuid(userDto);
+            userService.update(userDto);
             return ResponseEntity.ok("A user has been successfully updated");
         } catch (UserServiceException userServiceException) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(userServiceException.getMessage());
         }
     }
 
-    @DeleteMapping(ControllerPath.USER)
+    @DeleteMapping(ControllerPath.USER_BY_UUID)
     public ResponseEntity<String> deleteUser(@PathVariable UUID uuid) {
         try {
-            userService.deleteUserByUuid(uuid);
+            userService.delete(uuid);
             return ResponseEntity.ok("A user has been successfully deleted");
         } catch (UserServiceException userServiceException) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(userServiceException.getMessage());

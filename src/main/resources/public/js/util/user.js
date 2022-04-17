@@ -133,7 +133,7 @@ function setUserPage(roleName, rootDestination, userDestination, adminDestinatio
         }
 
         if (userPassword.value === userPasswordConformation.value) {
-            sendModificationHttpRequest(user, httpMethod, usersApiUrl, contentTypePrefix + "user" + contentTypeSuffix);
+            sendModificationHttpRequest(httpMethod, usersApiUrl, contentTypePrefix + "user" + contentTypeSuffix, user);
         } else {
             alertMessage("danger", "Passwords should match");
         }

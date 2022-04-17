@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void createUser(UserDto userDto) {
+    public void create(UserDto userDto) {
         try {
             final User user = new User();
             user.setUuid(UUID.randomUUID());
@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public UserDto getUserByLogin(String login) {
+    public UserDto get(String login) {
         try {
             final User user = userRepository.findUserByLogin(login).orElseThrow();
             return new UserDto(user.getUuid(), user.getRole().getUuid(), user.getLogin(), user.getPassword(), user.getEmail(),
@@ -60,10 +60,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<UserDto> getUserList() {
+    public List<UserDto> getList() {
         try {
             final List<UserDto> userDtoList =
-                userRepository.findAll().stream().map(user -> getUserByLogin(user.getLogin())).collect(Collectors.toList());
+                userRepository.findAll().stream().map(user -> get(user.getLogin())).collect(Collectors.toList());
 
             if (userDtoList.isEmpty()) {
                 throw new UserServiceException("A user list is empty");
@@ -76,7 +76,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUserByUuid(UserDto userDto) {
+    public void update(UserDto userDto) {
         try {
             final User user = userRepository.findUserByUuid(userDto.getUuid()).orElseThrow();
             setFields(userDto, user);
@@ -93,7 +93,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUserByUuid(UUID uuid) {
+    public void delete(UUID uuid) {
         try {
             userRepository.delete(userRepository.findUserByUuid(uuid).orElseThrow());
         } catch (Exception exception) {

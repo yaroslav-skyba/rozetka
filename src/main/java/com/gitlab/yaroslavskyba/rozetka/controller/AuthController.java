@@ -35,13 +35,13 @@ public class AuthController {
         this.userService = userService;
     }
 
-    @PostMapping(value = ControllerPath.LOGINS, consumes = MediaType.LOGIN_REQUEST)
+    @PostMapping(value = ControllerPath.LOGINS, consumes = MediaType.LOGIN)
     public ResponseEntity<String> login(@RequestBody LoginDto loginDto) {
         try {
             final String username = loginDto.getUsername();
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, loginDto.getPassword()));
 
-            return ResponseEntity.ok(jwtService.createJwt(userService.getUserByLogin(username)));
+            return ResponseEntity.status(HttpStatus.CREATED).body(jwtService.createJwt(userService.get(username)));
         } catch (RuntimeException runtimeException) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(runtimeException.getMessage());
         }
@@ -50,8 +50,8 @@ public class AuthController {
     @PostMapping(value = ControllerPath.REGISTRATIONS, consumes = MediaType.USER)
     public ResponseEntity<String> register(@RequestBody UserDto userDto) {
         try {
-            userDto.setUuidRole(roleService.getRoleByName(RoleName.USER).getUuid());
-            userService.createUser(userDto);
+            userDto.setUuidRole(roleService.get(RoleName.USER).getUuid());
+            userService.create(userDto);
 
             return ResponseEntity.status(HttpStatus.CREATED).body("You were successfully registered");
         } catch (UserServiceException userServiceException) {

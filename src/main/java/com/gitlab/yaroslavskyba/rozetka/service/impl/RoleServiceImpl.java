@@ -13,7 +13,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
 public class RoleServiceImpl implements RoleService {
     private final RoleRepository roleRepository;
 
@@ -22,7 +21,8 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public void createRole(RoleDto roleDto) {
+    @Transactional
+    public void create(RoleDto roleDto) {
         try {
             final Role role = new Role();
             role.setUuid(UUID.randomUUID());
@@ -35,10 +35,9 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public RoleDto getRoleByName(String nameRole) {
+    public RoleDto get(UUID uuid) throws RoleServiceException {
         try {
-            final Role role = roleRepository.findRoleByName(nameRole).orElseThrow();
+            final Role role = roleRepository.findRoleByUuid(uuid).orElseThrow();
             return new RoleDto(role.getUuid(), role.getName());
         } catch (Exception exception) {
             throw new RoleServiceException("An error occurred while getting a role", exception);
@@ -46,8 +45,17 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public List<RoleDto> getRoleList() {
+    public RoleDto get(String name) {
+        try {
+            final Role role = roleRepository.findRoleByName(name).orElseThrow();
+            return new RoleDto(role.getUuid(), role.getName());
+        } catch (Exception exception) {
+            throw new RoleServiceException("An error occurred while getting a role", exception);
+        }
+    }
+
+    @Override
+    public List<RoleDto> getList() {
         try {
             final List<RoleDto> roleDtoList =
                 roleRepository.findAll().stream().map(role -> new RoleDto(role.getUuid(), role.getName())).collect(Collectors.toList());
@@ -63,7 +71,8 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public void updateRoleByUuid(RoleDto roleDto) {
+    @Transactional
+    public void update(RoleDto roleDto) {
         try {
             final Role role = roleRepository.findRoleByUuid(roleDto.getUuid()).orElseThrow();
             role.setName(roleDto.getName());
@@ -75,7 +84,8 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public void deleteRoleByUuid(UUID uuid) {
+    @Transactional
+    public void delete(UUID uuid) {
         try {
             roleRepository.delete(roleRepository.findRoleByUuid(uuid).orElseThrow());
         } catch (Exception exception) {

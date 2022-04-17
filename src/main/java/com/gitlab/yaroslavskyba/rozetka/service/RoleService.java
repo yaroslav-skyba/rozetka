@@ -7,9 +7,10 @@ import java.util.List;
 import java.util.UUID;
 
 public interface RoleService {
-    void createRole(RoleDto roleDto) throws RoleServiceException;
-    RoleDto getRoleByName(String nameRole) throws RoleServiceException;
-    List<RoleDto> getRoleList() throws RoleServiceException;
-    void updateRoleByUuid(RoleDto roleDto) throws RoleServiceException;
-    void deleteRoleByUuid(UUID uuid) throws RoleServiceException;
+    void create(RoleDto roleDto) throws RoleServiceException;
+    RoleDto get(UUID uuid) throws RoleServiceException;
+    RoleDto get(String name) throws RoleServiceException;
+    List<RoleDto> getList() throws RoleServiceException;
+    void update(RoleDto roleDto) throws RoleServiceException;
+    void delete(UUID uuid) throws RoleServiceException;
 }

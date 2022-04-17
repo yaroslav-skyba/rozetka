@@ -15,7 +15,8 @@ public class ControllerPath {
     public static final String ROLES = ROOT + "roles";
     public static final String ROLE = ROLES + UUID;
     public static final String USERS = ROOT + "users";
-    public static final String USER = USERS + UUID;
+    public static final String USER_BY_UUID = USERS + UUID;
+    public static final String USER_BY_LOGIN = USERS + "/{login}";
 
     private ControllerPath() {}
 }

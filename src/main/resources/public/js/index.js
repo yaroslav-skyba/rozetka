@@ -5,12 +5,12 @@ onload = function() {
     const searchedProductName = localStorage.getItem(searchedProductNameStorageKey);
 
     if (searchedProductName) {
-        localStorage.removeItem(searchedProductNameStorageKey);
         xmlHttpRequest.open("GET", productsApiUrl + "?name=" + searchedProductName);
     } else {
         xmlHttpRequest.open("GET", productsApiUrl);
     }
 
+    localStorage.removeItem(searchedProductNameStorageKey);
     xmlHttpRequest.send();
 }
 

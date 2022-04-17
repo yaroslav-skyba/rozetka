@@ -4,7 +4,7 @@ let submit;
 
 function setSubmitOnclick(body, method, url, contentType) {
     submit.onclick = function () {
-        sendModificationHttpRequest(body, method, url, contentType);
+        sendModificationHttpRequest(method, url, contentType, body);
     }
 }
 
