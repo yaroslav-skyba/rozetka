@@ -38,10 +38,19 @@ public class ProductController {
     @PostMapping(value = ControllerPath.PRODUCTS, consumes = MediaType.PRODUCT)
     public ResponseEntity<String> createProduct(@RequestBody ProductDto productDto) {
         try {
-            productService.createProduct(productDto);
+            productService.create(productDto);
             return ResponseEntity.status(HttpStatus.CREATED).body("A product has been successfully created");
         } catch (ProductServiceException productServiceException) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(productServiceException.getMessage());
+        }
+    }
+
+    @GetMapping(value = ControllerPath.PRODUCT, produces = MediaType.PRODUCT)
+    public ResponseEntity<ProductDto> getProduct(@PathVariable UUID uuid) {
+        try {
+            return ResponseEntity.ok(productService.get(uuid));
+        } catch (ProductServiceException productServiceException) {
+            return ResponseEntity.notFound().build();
         }
     }
 
@@ -51,9 +60,9 @@ public class ProductController {
             final List<ProductDto> productDtoList;
 
             if (name != null) {
-                productDtoList = productService.getProductListByName(name);
+                productDtoList = productService.getList(name);
             } else {
-                productDtoList = productService.getProductList();
+                productDtoList = productService.getList();
             }
 
             return ResponseEntity.ok(productDtoList);
@@ -65,7 +74,7 @@ public class ProductController {
     @PutMapping(value = ControllerPath.PRODUCTS, consumes = MediaType.PRODUCT)
     public ResponseEntity<String> updateProduct(@RequestBody ProductDto productDto) {
         try {
-            productService.updateProductByUuid(productDto);
+            productService.update(productDto);
             return ResponseEntity.ok("A product has been successfully updated");
         } catch (ProductServiceException productServiceException) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(productServiceException.getMessage());
@@ -75,7 +84,7 @@ public class ProductController {
     @DeleteMapping(ControllerPath.PRODUCT)
     public ResponseEntity<String> deleteProduct(@PathVariable UUID uuid) {
         try {
-            productService.deleteProductByUuid(uuid);
+            productService.delete(uuid);
             return ResponseEntity.ok("A product has been successfully deleted");
         } catch (ProductServiceException productServiceException) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(productServiceException.getMessage());
@@ -103,8 +112,6 @@ public class ProductController {
         }
     }
 
-
-    
     @PutMapping(value = ControllerPath.REVIEWS, consumes = MediaType.REVIEW)
     @PreAuthorize("principal.reviewUuidList.contains(#reviewDto.uuid)")
     public ResponseEntity<String> updateReview(@PathVariable UUID uuidProduct, @RequestBody ReviewDto reviewDto) {

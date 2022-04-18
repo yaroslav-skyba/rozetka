@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-@Transactional
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
 
@@ -22,7 +21,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void createProduct(ProductDto productDto) {
+    @Transactional
+    public void create(ProductDto productDto) {
         try {
             final Product product = new Product();
             product.setUuid(UUID.randomUUID());
@@ -34,8 +34,19 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public List<ProductDto> getProductListByName(String name) {
+    public ProductDto get(UUID uuid) throws ProductServiceException {
+        try {
+            final Product product = productRepository.findProductByUuid(uuid).orElseThrow();
+
+            return new ProductDto(product.getUuid(), product.getName(), product.getQuantity(), product.getPrice(), product.getDiscount(),
+                                  product.getDescription(), product.getImg());
+        } catch (Exception exception) {
+            throw new ProductServiceException("An error occurred while getting a product", exception);
+        }
+    }
+
+    @Override
+    public List<ProductDto> getList(String name) {
         try {
             return getProductDtoList(productRepository.findProductsByName(name));
         } catch (Exception exception) {
@@ -44,8 +55,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public List<ProductDto> getProductList() {
+    public List<ProductDto> getList() {
         try {
             return getProductDtoList(productRepository.findAll());
         } catch (Exception exception) {
@@ -54,7 +64,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void updateProductByUuid(ProductDto productDto) {
+    @Transactional
+    public void update(ProductDto productDto) {
         try {
             productRepository.saveAndFlush(setProductFields(productDto,
                                                             productRepository.findProductByUuid(productDto.getUuid()).orElseThrow()));
@@ -64,7 +75,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void deleteProductByUuid(UUID uuid) {
+    @Transactional
+    public void delete(UUID uuid) {
         try {
             productRepository.deleteById(productRepository.findProductByUuid(uuid).orElseThrow().getIdProduct());
         } catch (Exception exception) {

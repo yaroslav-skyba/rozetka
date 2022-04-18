@@ -181,7 +181,7 @@ xmlHttpRequest.onreadystatechange = function () {
                 for (let i = 0; i < products.length; i++) {
                     const productNameA = document.createElement("a");
                     productNameA.innerHTML = products[i][productNameDtoKey];
-                    productNameA.href = "/product.html?uuid=" + products[i][productUuidDtoKey];
+                    productNameA.href = "/product.html?" + productUuidDtoKey + "=" + products[i][productUuidDtoKey];
                     const td = document.createElement("td");
                     td.append(productNameA)
 

@@ -15,7 +15,7 @@ onload = function () {
         }
 
         for (let i = 0; i < parsedProducts.length; i++) {
-            const productPrice = getProductPrice(parsedProducts, i);
+            const productPrice = getProductPrice(parsedProducts[i]);
             productOverallPrice += productPrice;
 
             setContainer(`
@@ -23,11 +23,11 @@ onload = function () {
                      alt="` + parsedProducts[i][productNameDtoKey] + `">
                  
                 <div class="card-body">
-                    <a href="product.html?uuid=` + products[i][productUuidDtoKey] + `">
+                    <a href="product.html?` + productUuidDtoKey + `=` + products[i][productUuidDtoKey] + `">
                         <h3 class="card-title">` + parsedProducts[i][productNameDtoKey] + `</h3>    
                     </a>
                     
-                    <p class="card-text">` + getProductDescription(parsedProducts, i) + `</p>
+                    <p class="card-text">` + getProductDescription(parsedProducts[i]) + `</p>
                     
                     <input id="productCounter_` + parsedProducts[i][productUuidDtoKey] + `" class="productCounter" type="number" min="1" 
                            max="100" value="` + parsedProducts[i][productQuantityDtoKey] + `">
@@ -98,7 +98,9 @@ onload = function () {
                 }
             }
 
-            sendModificationHttpRequest("POST", authorityApi + "orders", contentTypePrefix + "orderItemList" + contentTypeSuffix, orderItems);
+            sendModificationHttpRequest(
+                "POST", authorityApi + "orders", contentTypePrefix + "orderItemList" + contentTypeSuffix, orderItems
+            );
         }
     } else {
         main.innerHTML = '<h1 class="text-center text-white">YOUR CART IS EMPTY</h1>';

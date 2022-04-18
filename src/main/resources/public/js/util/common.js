@@ -212,24 +212,51 @@ function sendModificationHttpRequest(method, url, contentType, body) {
     xmlHttpRequest.send(JSON.stringify(body));
 }
 
-function getProductDescription(products, i) {
+function getProductDescription(product) {
     let description = "";
 
-    if (products[i][productDescriptionDtoKey]) {
-        description = products[i][productDescriptionDtoKey];
+    if (product[productDescriptionDtoKey]) {
+        description = product[productDescriptionDtoKey];
     }
 
     return description;
 }
 
-function getProductPrice(products, i) {
+function getProductPrice(product) {
     let discountRatio = 1;
 
-    if (products[i][productDiscountDtoKey]) {
-        discountRatio = products[i][productDiscountDtoKey] / 100;
+    if (product[productDiscountDtoKey]) {
+        discountRatio = product[productDiscountDtoKey] / 100;
     }
 
     const power = 100;
 
-    return Math.round(products[i][productPriceDtoKey] * discountRatio * products[i][productQuantityDtoKey] * power) / power;
+    return Math.round(product[productPriceDtoKey] * discountRatio * product[productQuantityDtoKey] * power) / power;
+}
+
+function setProductAddingButtonOnclick(product, i) {
+    const cartProducts = localStorage.getItem(cartProductsStorageKey);
+
+    let cartParsedProducts = [];
+
+    if (cartProducts) {
+        cartParsedProducts = JSON.parse(cartProducts);
+    }
+
+    if (cartParsedProducts.find(value => value[productUuidDtoKey] === product[productUuidDtoKey])) {
+        location.href = "cart.html";
+    } else {
+        product[productQuantityDtoKey] = 1;
+        cartParsedProducts.push(product);
+        localStorage.setItem(cartProductsStorageKey, JSON.stringify(cartParsedProducts));
+
+        const alert = document.getElementById("alert");
+
+        if (alert) {
+            alert.remove();
+        }
+
+        document.getElementsByClassName("card-body")[i].innerHTML += '<div id="alert" class="mt-3"></div>';
+        alertMessage("success", "The product was successfully added to your cart!");
+    }
 }

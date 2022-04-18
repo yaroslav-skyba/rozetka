@@ -7,9 +7,10 @@ import java.util.List;
 import java.util.UUID;
 
 public interface ProductService {
-    void createProduct(ProductDto productDto) throws ProductServiceException;
-    List<ProductDto> getProductListByName(String name) throws ProductServiceException;
-    List<ProductDto> getProductList() throws ProductServiceException;
-    void updateProductByUuid(ProductDto productDto) throws ProductServiceException;
-    void deleteProductByUuid(UUID uuid) throws ProductServiceException;
+    void create(ProductDto productDto) throws ProductServiceException;
+    ProductDto get(UUID uuid) throws ProductServiceException;
+    List<ProductDto> getList(String name) throws ProductServiceException;
+    List<ProductDto> getList() throws ProductServiceException;
+    void update(ProductDto productDto) throws ProductServiceException;
+    void delete(UUID uuid) throws ProductServiceException;
 }

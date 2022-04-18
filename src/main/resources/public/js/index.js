@@ -5,7 +5,7 @@ onload = function() {
     const searchedProductName = localStorage.getItem(searchedProductNameStorageKey);
 
     if (searchedProductName) {
-        xmlHttpRequest.open("GET", productsApiUrl + "?name=" + searchedProductName);
+        xmlHttpRequest.open("GET", productsApiUrl + "?" + productNameDtoKey + "=" + searchedProductName);
     } else {
         xmlHttpRequest.open("GET", productsApiUrl);
     }
@@ -25,12 +25,12 @@ xmlHttpRequest.onreadystatechange = function () {
                          alt="` + products[i][productNameDtoKey] + `">
                      
                     <div class="card-body">
-                        <a href="product.html?uuid=` + products[i][productUuidDtoKey] + `">
+                        <a href="product.html?` + productUuidDtoKey + `=` + products[i][productUuidDtoKey] + `">
                             <h3 class="card-title">` + products[i][productNameDtoKey] + `</h3>
                         </a>
                         
-                        <p class="card-text">` + getProductDescription(products, i) + `</p>
-                        <span>The price: ` + getProductPrice(products, i) + `</span><br/>
+                        <p class="card-text">` + getProductDescription(products[i]) + `</p>
+                        <span>The price: ` + getProductPrice(products[i]) + `</span><br/>
                         
                         <button class="btn btn-dark btn-outline-success mt-4 productAdding" type="button">Add to your cart</button>
                     </div>
@@ -41,30 +41,7 @@ xmlHttpRequest.onreadystatechange = function () {
 
             for (let i = 0; i < productAddingButtons.length; i++) {
                 productAddingButtons[i].onclick = function () {
-                    const cartProducts = localStorage.getItem(cartProductsStorageKey);
-
-                    let cartParsedProducts = [];
-
-                    if (cartProducts) {
-                        cartParsedProducts = JSON.parse(cartProducts);
-                    }
-
-                    if (cartParsedProducts.find(value => value[productUuidDtoKey] === products[i][productUuidDtoKey])) {
-                        location.href = "cart.html";
-                    } else {
-                        products[i][productQuantityDtoKey] = 1;
-                        cartParsedProducts.push(products[i]);
-                        localStorage.setItem(cartProductsStorageKey, JSON.stringify(cartParsedProducts));
-
-                        const alert = document.getElementById("alert");
-
-                        if (alert) {
-                            alert.remove();
-                        }
-
-                        document.getElementsByClassName("card-body")[i].innerHTML += '<div id="alert" class="mt-3"></div>';
-                        alertMessage("success", "The product was successfully added to your cart!");
-                    }
+                    setProductAddingButtonOnclick(products[i], i);
                 }
             }
         } else if (xmlHttpRequest.status === 404) {
