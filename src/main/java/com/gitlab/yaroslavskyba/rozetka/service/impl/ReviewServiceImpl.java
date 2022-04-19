@@ -3,6 +3,7 @@ package com.gitlab.yaroslavskyba.rozetka.service.impl;
 import com.gitlab.yaroslavskyba.rozetka.dto.ReviewDto;
 import com.gitlab.yaroslavskyba.rozetka.exception.ReviewServiceException;
 import com.gitlab.yaroslavskyba.rozetka.model.Review;
+import com.gitlab.yaroslavskyba.rozetka.model.User;
 import com.gitlab.yaroslavskyba.rozetka.repository.ProductRepository;
 import com.gitlab.yaroslavskyba.rozetka.repository.ReviewRepository;
 import com.gitlab.yaroslavskyba.rozetka.repository.UserRepository;
@@ -43,9 +44,12 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional(readOnly = true)
     public List<ReviewDto> getReviewListByProductUuid(UUID uuidProduct) {
         try {
-            final List<ReviewDto> reviewDtoList = reviewRepository.findReviewsByProductUuid(uuidProduct).stream()
-                .map(review -> new ReviewDto(review.getUuid(), review.getUser().getUuid(), review.getContent(), review.getRating()))
-                .collect(Collectors.toList());
+            final List<ReviewDto> reviewDtoList = reviewRepository.findReviewsByProductUuid(uuidProduct).stream().map(review -> {
+                final User user = review.getUser();
+
+                return new ReviewDto(review.getUuid(), user.getUuid(), user.getFirstName() + " " + user.getLastName(),
+                                     review.getContent(), review.getRating());
+            }).collect(Collectors.toList());
 
             if (reviewDtoList.isEmpty()) {
                 throw new ReviewServiceException("A review list is empty");

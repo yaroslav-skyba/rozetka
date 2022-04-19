@@ -60,6 +60,7 @@ public class UserController {
     }
 
     @PutMapping(value = ControllerPath.USERS, consumes = MediaType.USER)
+    @PreAuthorize("#userDto.login.equals(principal.username) or hasAuthority('" + RoleName.ADMIN + "')")
     public ResponseEntity<String> updateUser(@RequestBody UserDto userDto) {
         try {
             userService.update(userDto);

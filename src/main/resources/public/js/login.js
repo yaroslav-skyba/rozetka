@@ -63,6 +63,8 @@ xmlHttpRequest.onreadystatechange = function() {
         } else if (xmlHttpRequest.status === 401) {
             localStorage.removeItem(currentUserLoginStorageKey);
             alertMessage("danger", xmlHttpRequest.responseText);
+        } else if (xmlHttpRequest.status === 403) {
+            alertMessage("danger", "You are not authorized");
         } else if (xmlHttpRequest.status === 404) {
             localStorage.removeItem(currentUserLoginStorageKey);
             localStorage.removeItem(jwtStorageKey);
