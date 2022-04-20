@@ -32,50 +32,42 @@ function setUserPage(roleName, rootDestination, userDestination, adminDestinatio
             <div id="form">
                 <div class="form-outline mb-4">
                     <input id="firstName" class="form-control form-control-lg"/>
-                    <label for="firstName">A first name</label>
-                    <div class="invalid-feedback">Please, type a first name</div>
+                    <label for="firstName">first name</label>                    
                 </div>
             
                 <div class="form-outline mb-4">
                     <input id="lastName" class="form-control form-control-lg"/>
-                    <label for="lastName">A last name</label>
-                    <div class="invalid-feedback">Please, type a last name</div>
+                    <label for="lastName">last name</label>
                 </div>
             
                 <div class="form-outline mb-4">
                     <input id="login" class="form-control form-control-lg"/>
-                    <label for="login">A login</label>
-                    <div class="invalid-feedback">Please, type a login</div>
+                    <label for="login">login</label>
                 </div>
             
                 <div class="form-outline mb-4">
                     <input type="email" id="email" class="form-control form-control-lg"/>
                     <label for="email">An email</label>
-                    <div class="invalid-feedback">Please, type an email ([text]@[text])</div>
                 </div>
             
                 <div class="form-outline mb-4">
                     <input type="date" id="birthday" class="form-control form-control-lg"/>
-                    <label for="birthday">A birthday</label>
-                    <div class="invalid-feedback">Please, select a birthday</div>
+                    <label for="birthday">birthday</label>
                 </div>
             
                 <div class="form-outline mb-4">
                     <input type="password" id="password" class="form-control form-control-lg"/>
-                    <label for="password">A password</label>
-                    <div class="invalid-feedback">Please, type a password</div>
+                    <label for="password">password</label>
                 </div>
                 
                 <div class="form-outline mb-4">
                     <input type="password" id="passwordConformation" class="form-control form-control-lg"/>
-                    <label for="passwordConformation">A password conformation</label>
-                    <div class="invalid-feedback">Please, type a password conformation</div>
+                    <label for="passwordConformation">password conformation</label>
                 </div>
     
                 <div id="roleDiv" class="form-outline mb-4" hidden>
                     <select id="role" class="form-control form-control-lg"></select> 
-                    <label for="role">A role</label>
-                    <div class="invalid-feedback">Please, select a role</div>
+                    <label for="role">role</label>
                 </div>
                 
                 <div class="d-flex justify-content-center">

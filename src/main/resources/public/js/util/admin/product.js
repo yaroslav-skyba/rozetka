@@ -32,31 +32,31 @@ function setProductModificationPage(headlineInnerHtml, submitInnerHtml, httpMeth
             <div id="form">
                 <div class="form-outline mb-4">
                     <input id="name" class="form-control form-control-lg"/>
-                    <label for="name">A name</label>
-                    <div class="invalid-feedback">Please, type a name</div>
+                    <label for="name">name</label>
+                    
                 </div>
                 
                 <div class="form-outline mb-4">
                     <input id="quantity" class="form-control form-control-lg"/>
-                    <label for="quantity">A quantity</label>
-                    <div class="invalid-feedback">Please, type a quantity</div>
+                    <label for="quantity">quantity</label>
+                    
                 </div>
                 
                 <div class="form-outline mb-4">
                     <input id="price" class="form-control form-control-lg"/>
-                    <label for="price">A price</label>
-                    <div class="invalid-feedback">Please, type a price</div>
+                    <label for="price">price</label>
+                    
                 </div>
                 
                 <div class="form-outline mb-4">
                     <input id="discount" class="form-control form-control-lg"/>
-                    <label for="discount">A discount</label>
-                    <div class="invalid-feedback">Please, type a discount</div>
+                    <label for="discount">discount</label>
+                    
                 </div>
                 
                 <div class="form-outline mb-4">
                     <input id="description" class="form-control form-control-lg"/>
-                    <label for="description">A description</label>
+                    <label for="description">description</label>
                 </div>
                 
                 <div id="productImgCard" class="card mb-4" style="border-radius: 15px" hidden>
@@ -65,7 +65,7 @@ function setProductModificationPage(headlineInnerHtml, submitInnerHtml, httpMeth
                 
                 <div class="mb-4">
                     <input type="file" accept=".png" id="productImgUploader" class="form-control form-control-lg"/>
-                    <label for="productImgUploader">A .png image</label>
+                    <label for="productImgUploader">.png image</label>
                 </div>
                 
                 <div class="d-flex justify-content-center">

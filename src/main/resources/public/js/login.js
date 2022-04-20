@@ -10,12 +10,12 @@ onload = function() {
     setMainAttributes();
     setContainer(`
         <div class="card-body p-5">
-            <h2 class="text-center mb-5">LOGIN</h2>
+            <h2 class="text-uppercase text-center mb-5">login</h2>
 
             <div class="form-outline mb-4">
                 <input id="login" class="form-control form-control-lg"/>
                 <label for="login">Your login</label>
-                <div class="invalid-feedback">Please, type your login</div>
+                
             </div>
 
             <div class="form-outline mb-4">
