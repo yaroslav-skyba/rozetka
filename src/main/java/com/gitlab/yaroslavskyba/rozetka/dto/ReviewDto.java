@@ -5,7 +5,7 @@ import java.util.UUID;
 
 public class ReviewDto {
     private UUID uuid;
-    private UUID uuidUser;
+    private UUID userUuid;
     private String userName;
     private String content;
     private Integer rating;
@@ -13,9 +13,9 @@ public class ReviewDto {
     public ReviewDto() {
     }
 
-    public ReviewDto(UUID uuid, UUID uuidUser, String userName, String content, Integer rating) {
+    public ReviewDto(UUID uuid, UUID userUuid, String userName, String content, Integer rating) {
         this.uuid = uuid;
-        this.uuidUser = uuidUser;
+        this.userUuid = userUuid;
         this.userName = userName;
         this.content = content;
         this.rating = rating;
@@ -33,21 +33,21 @@ public class ReviewDto {
 
         final ReviewDto reviewDto = (ReviewDto) o;
 
-        return Objects.equals(uuid, reviewDto.uuid) && Objects.equals(uuidUser, reviewDto.uuidUser)
+        return Objects.equals(uuid, reviewDto.uuid) && Objects.equals(userUuid, reviewDto.userUuid)
                && Objects.equals(userName, reviewDto.userName) && Objects.equals(content, reviewDto.content)
                && Objects.equals(rating, reviewDto.rating);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, uuidUser, userName, content, rating);
+        return Objects.hash(uuid, userUuid, userName, content, rating);
     }
 
     @Override
     public String toString() {
         return "ReviewDto{" +
                "uuid=" + uuid +
-               ", uuidUser=" + uuidUser +
+               ", userUuid=" + userUuid +
                ", userName='" + userName + '\'' +
                ", content='" + content + '\'' +
                ", rating=" + rating +
@@ -62,12 +62,12 @@ public class ReviewDto {
         this.uuid = uuid;
     }
 
-    public UUID getUuidUser() {
-        return uuidUser;
+    public UUID getUserUuid() {
+        return userUuid;
     }
 
-    public void setUuidUser(UUID uuidUser) {
-        this.uuidUser = uuidUser;
+    public void setUserUuid(UUID userUuid) {
+        this.userUuid = userUuid;
     }
 
     public String getUserName() {

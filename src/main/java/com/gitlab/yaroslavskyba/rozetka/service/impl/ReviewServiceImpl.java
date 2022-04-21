@@ -82,7 +82,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     private Review setReviewFields(ReviewDto reviewDto, Review review, UUID uuidProduct) {
         review.setProduct(productRepository.findProductByUuid(uuidProduct).orElseThrow());
-        review.setUser(userRepository.findUserByUuid(reviewDto.getUuidUser()).orElseThrow());
+        review.setUser(userRepository.findUserByUuid(reviewDto.getUserUuid()).orElseThrow());
         review.setContent(reviewDto.getContent());
         review.setRating(reviewDto.getRating());
 

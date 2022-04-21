@@ -29,7 +29,7 @@ function setUserPage(roleName, rootDestination, userDestination, adminDestinatio
         <div class="card-body">
             <h2 class="text-uppercase text-center mb-5" id="headline"></h2>
             
-            <div id="form">
+            <div>
                 <div class="form-outline mb-4">
                     <input id="firstName" class="form-control form-control-lg"/>
                     <label for="firstName">first name</label>                    
