@@ -113,7 +113,7 @@ function setUserPage(roleName, rootDestination, userDestination, adminDestinatio
         localStorage.setItem(modificationStorageKey, JSON.stringify(createUser(null)));
     }
 
-    setFormControlElementOnchange(function () {
+    setFormControlOnchange(function () {
         return createUser(JSON.parse(localStorage.getItem(modificationStorageKey))[userUuidDtoKey]);
     });
 

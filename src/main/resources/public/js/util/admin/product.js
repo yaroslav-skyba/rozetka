@@ -106,7 +106,7 @@ function setProductModificationPage(headlineInnerHtml, submitInnerHtml, httpMeth
         localStorage.setItem(modificationStorageKey, JSON.stringify(createProduct(null, null)));
     }
 
-    setFormControlElementOnchange(function () {
+    setFormControlOnchange(function () {
         const product = JSON.parse(localStorage.getItem(modificationStorageKey));
         return createProduct(product[productUuidDtoKey], product[productImgDtoKey]);
     });

@@ -14,15 +14,6 @@ let productApiUrl;
 let productReviewsApiUrl;
 let productReviewApiUrl;
 
-function setProductReviewInputs() {
-    const review = JSON.parse(localStorage.getItem(productReviewStorageKey));
-
-    if (review) {
-        productReviewContent.value = review[productReviewContentDtoKey];
-        productReviewRating.value = review[productReviewRatingDtoKey];
-    }
-}
-
 function setProductReviewSubmitOnclick(httpMethod) {
     const review = JSON.parse(localStorage.getItem(productReviewStorageKey));
 
@@ -33,17 +24,21 @@ function setProductReviewSubmitOnclick(httpMethod) {
     sendModificationHttpRequest(httpMethod, productReviewsApiUrl, productReviewContentType, review);
 }
 
+function createProductReview(uuid, userUuid) {
+    const review = {};
+    review[productReviewUuidDtoKey] = uuid;
+    review[productReviewUserUuidDtoKey] = userUuid;
+    review[productReviewContentDtoKey] = productReviewContent.value;
+    review[productReviewRatingDtoKey] = productReviewRating.value;
+
+    return review;
+}
+
 onload = function() {
-    const uuid = Object.fromEntries(new URLSearchParams(location.search).entries())[productUuidDtoKey];
-
-    if (!uuid) {
-        location.href = "/";
-    }
-
     setNavigation("", "profile/", "profile/admin/");
     setMainAttributes();
 
-    productApiUrl = productsApiUrl + "/" + uuid;
+    productApiUrl = productsApiUrl + "/" + Object.fromEntries(new URLSearchParams(location.search).entries())[productUuidDtoKey];
     productReviewsApiUrl = productApiUrl + "/reviews";
 
     xmlHttpRequest.open("GET", productApiUrl);
@@ -67,9 +62,10 @@ xmlHttpRequest.onreadystatechange = function () {
                         <p class="card-text">` + getProductDescription(product) + `</p>
                         The price: ` + getProductPrice(product) + `<br/>
                         
-                        <button class="btn btn-dark btn-outline-success mt-4 productAdding" type="button">Add to your cart</button>
+                        <button id="productAdding" class="btn btn-dark btn-outline-success mt-4" type="button">Add to your cart</button>
                     </div>
                 `);
+
                 setContainer(`
                     <div class="card-body">
                         <h2 class="text-uppercase text-center mb-5">type a review</h2>
@@ -77,20 +73,20 @@ xmlHttpRequest.onreadystatechange = function () {
                         <div id="currentReview">
                             <div class="form-outline mb-4">
                                 <input id="reviewContent" class="form-control form-control-lg"/>
-                                <label for="content">Review content</label>
+                                <label for="reviewContent">Review content</label>
                             </div>
                             
                             <div class="form-outline mb-4">
-                                <select id="rating" class="form-control form-control-lg">
+                                <select id="reviewRating" class="form-control form-control-lg">
                                     <option value=""></option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
+                                    <option value="1">Terrible</option>
+                                    <option value="2">Bad</option>
+                                    <option value="3">Normal</option>
+                                    <option value="4">Good</option>
+                                    <option value="5">Awesome</option>
                                 </select>
                                  
-                                <label for="rating">Review rating</label>
+                                <label for="reviewRating">Review rating</label>
                             </div>
                             
                             <div class="d-flex justify-content-center">
@@ -102,22 +98,27 @@ xmlHttpRequest.onreadystatechange = function () {
                     </div>
                 `);
 
-                setProductAddingButtonOnclick(product, 0);
+                setProductAddingButtonOnclick(document.getElementById("productAdding"), product, 0);
 
                 productReviewContent = document.getElementById("reviewContent");
                 productReviewRating = document.getElementById("reviewRating");
 
-                setProductReviewInputs();
+                const review = JSON.parse(localStorage.getItem(productReviewStorageKey));
+                if (review) {
+                    productReviewContent.value = review[productReviewContentDtoKey];
+                    productReviewRating.value = review[productReviewRatingDtoKey];
+                } else {
+                    localStorage.setItem(productReviewStorageKey, JSON.stringify(createProductReview(null, userUuid)));
+                }
 
-                for (const formControlElement of document.getElementsByClassName("form-control")) {
-                    formControlElement.onchange = function () {
-                        const review = {};
-                        review[productReviewUuidDtoKey] = null;
-                        review[productReviewUserUuidDtoKey] = userUuid;
-                        review[productReviewContentDtoKey] = productReviewContent.value;
-                        review[productReviewRatingDtoKey] = productReviewRating.value;
-
-                        localStorage.setItem(localStorage.getItem(productReviewStorageKey), JSON.stringify(review));
+                for (const formControl of document.getElementsByClassName("form-control")) {
+                    formControl.onchange = function () {
+                        localStorage.setItem(
+                            productReviewStorageKey,
+                            JSON.stringify(createProductReview(
+                                JSON.parse(localStorage.getItem(productReviewStorageKey)[productReviewUuidDtoKey]), userUuid)
+                            )
+                        );
                     }
                 }
 
@@ -174,8 +175,6 @@ xmlHttpRequest.onreadystatechange = function () {
 
                     for (let i = 0; i < reviewEditButtons.length; i++) {
                         reviewEditButtons[i].onclick = function() {
-                            setProductReviewInputs();
-
                             submit.onclick = function () {
                                 setProductReviewSubmitOnclick("PUT");
                             }
@@ -205,7 +204,13 @@ xmlHttpRequest.onreadystatechange = function () {
             alertMessage("success", xmlHttpRequest.responseText);
             location.reload();
         } else if (xmlHttpRequest.status === 404) {
-            location.href = "/";
+            if (xmlHttpRequest.responseURL === productApiUrl) {
+                location.href = "/";
+            } else if (xmlHttpRequest.responseURL === productReviewsApiUrl) {
+                /*document.getElementById("container").innerHTML += `
+                    <h1 class="text-uppercase text-center text-white py-5">there are no reviews</h1>
+                `;*/
+            }
         } else if (xmlHttpRequest.status === 409) {
             alertMessage("danger", xmlHttpRequest.responseText);
         }

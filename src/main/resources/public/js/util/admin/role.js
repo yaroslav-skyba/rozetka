@@ -44,7 +44,7 @@ function setRolePage(headlineInnerHtml, submitInnerHtml, httpMethod) {
         localStorage.setItem(modificationStorageKey, JSON.stringify(createRole(null)));
     }
 
-    setFormControlElementOnchange(function () {
+    setFormControlOnchange(function () {
         return createRole(JSON.parse(localStorage.getItem(modificationStorageKey))[roleUuidDtoKey]);
     });
 

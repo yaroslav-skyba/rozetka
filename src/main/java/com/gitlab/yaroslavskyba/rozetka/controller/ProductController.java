@@ -93,7 +93,7 @@ public class ProductController {
 
     
     @PostMapping(value = ControllerPath.REVIEWS, consumes = MediaType.REVIEW)
-    @PreAuthorize("principal.uuid.equals(#reviewDto.uuidUser)")
+    @PreAuthorize("principal.uuid.equals(#reviewDto.userUuid)")
     public ResponseEntity<String> createReview(@PathVariable UUID uuidProduct, @RequestBody ReviewDto reviewDto) {
         try {
             reviewService.createReview(reviewDto, uuidProduct);

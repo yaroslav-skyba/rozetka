@@ -166,7 +166,7 @@ function setMainAttributes() {
 
 function setContainer(content) {
     main.innerHTML +=
-        `<div class="container">
+        `<div id="container" class="container">
             <div class="row">
                 <div class="col">
                     <div class="card bg-dark text-white text-break" style="border-radius: 15px; border-color: #198754">` + content + `</div>
@@ -191,9 +191,9 @@ function setModificationPage(headlineInnerHtml, submitInnerHtml) {
     submit.innerHTML = submitInnerHtml;
 }
 
-function setFormControlElementOnchange(create) {
-    for (const formControlElement of document.getElementsByClassName("form-control")) {
-        formControlElement.onchange = function () {
+function setFormControlOnchange(create) {
+    for (const formControl of document.getElementsByClassName("form-control")) {
+        formControl.onchange = function () {
             localStorage.setItem(localStorage.getItem(modificationStorageKeyStorageKey), JSON.stringify(create()));
         }
     }
@@ -234,29 +234,31 @@ function getProductPrice(product) {
     return Math.round(product[productPriceDtoKey] * discountRatio * product[productQuantityDtoKey] * power) / power;
 }
 
-function setProductAddingButtonOnclick(product, i) {
-    const cartProducts = localStorage.getItem(cartProductsStorageKey);
+function setProductAddingButtonOnclick(button, product, i) {
+    button.onclick = function () {
+        const cartProducts = localStorage.getItem(cartProductsStorageKey);
 
-    let cartParsedProducts = [];
+        let cartParsedProducts = [];
 
-    if (cartProducts) {
-        cartParsedProducts = JSON.parse(cartProducts);
-    }
-
-    if (cartParsedProducts.find(value => value[productUuidDtoKey] === product[productUuidDtoKey])) {
-        location.href = "cart.html";
-    } else {
-        product[productQuantityDtoKey] = 1;
-        cartParsedProducts.push(product);
-        localStorage.setItem(cartProductsStorageKey, JSON.stringify(cartParsedProducts));
-
-        const alert = document.getElementById("alert");
-
-        if (alert) {
-            alert.remove();
+        if (cartProducts) {
+            cartParsedProducts = JSON.parse(cartProducts);
         }
 
-        document.getElementsByClassName("card-body")[i].innerHTML += '<div id="alert" class="mt-3"></div>';
-        alertMessage("success", "The product was successfully added to your cart!");
+        if (cartParsedProducts.find(value => value[productUuidDtoKey] === product[productUuidDtoKey])) {
+            location.href = "cart.html";
+        } else {
+            product[productQuantityDtoKey] = 1;
+            cartParsedProducts.push(product);
+            localStorage.setItem(cartProductsStorageKey, JSON.stringify(cartParsedProducts));
+
+            const alert = document.getElementById("alert");
+
+            if (alert) {
+                alert.remove();
+            }
+
+            document.getElementsByClassName("card-body")[i].innerHTML += '<div id="alert" class="mt-3"></div>';
+            alertMessage("success", "The product was successfully added to your cart!");
+        }
     }
 }

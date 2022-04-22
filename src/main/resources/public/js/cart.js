@@ -23,7 +23,7 @@ onload = function () {
                      alt="` + parsedProducts[i][productNameDtoKey] + `">
                  
                 <div class="card-body">
-                    <a href="product.html?` + productUuidDtoKey + `=` + products[i][productUuidDtoKey] + `">
+                    <a href="product.html?` + productUuidDtoKey + `=` + parsedProducts[i][productUuidDtoKey] + `">
                         <h3 class="card-title">` + parsedProducts[i][productNameDtoKey] + `</h3>    
                     </a>
                     
@@ -103,7 +103,7 @@ onload = function () {
             );
         }
     } else {
-        main.innerHTML = '<h1 class="text-center text-white">YOUR CART IS EMPTY</h1>';
+        main.innerHTML = '<h1 class="text-uppercase text-center text-white">your cart is empty</h1>';
     }
 }
 

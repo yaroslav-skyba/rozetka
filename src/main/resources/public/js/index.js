@@ -40,12 +40,10 @@ xmlHttpRequest.onreadystatechange = function () {
             const productAddingButtons = document.getElementsByClassName("productAdding");
 
             for (let i = 0; i < productAddingButtons.length; i++) {
-                productAddingButtons[i].onclick = function () {
-                    setProductAddingButtonOnclick(products[i], i);
-                }
+                setProductAddingButtonOnclick(productAddingButtons[i], products[i], i);
             }
         } else if (xmlHttpRequest.status === 404) {
-            main.innerHTML = '<h1 class="text-center text-white">THERE ARE NO PRODUCTS</h1>';
+            main.innerHTML = '<h1 class="text-uppercase text-center text-white">there are no products</h1>';
         }
     }
 }
