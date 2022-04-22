@@ -74,7 +74,7 @@ public class UserController {
     public ResponseEntity<String> deleteUser(@PathVariable UUID uuid) {
         try {
             userService.delete(uuid);
-            return ResponseEntity.ok("A user has been successfully deleted");
+            return ResponseEntity.noContent().build();
         } catch (UserServiceException userServiceException) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(userServiceException.getMessage());
         }

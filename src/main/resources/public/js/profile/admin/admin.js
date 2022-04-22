@@ -16,10 +16,7 @@ onload = function () {
     setContainer(`
         <div class="card-body">
             <div id="alert"></div>
-            
-            <div class="text-white">
-                Welcome, <span id="userName"></span>
-            </div>
+            Welcome, <span id="userName"></span>
         </div>
     `);
     setContainer(`
@@ -41,7 +38,7 @@ onload = function () {
                 <tbody id="userTableContent"></tbody>
             </table>
             
-            <button class="btn btn-dark btn-outline-success" type="button" onclick="location.href = '/profile/admin/creation/user.html'">
+            <button class="btn btn-dark btn-outline-success" onclick="location.href = '/profile/admin/creation/user.html'">
                 Create user
             </button>
         </div>
@@ -60,7 +57,7 @@ onload = function () {
                 <tbody id="roleTableContent"></tbody>
             </table>
             
-            <button class="btn btn-dark btn-outline-success" type="button" onclick="location.href = '/profile/admin/creation/role.html'">
+            <button class="btn btn-dark btn-outline-success" onclick="location.href = '/profile/admin/creation/role.html'">
                 Create role
             </button>
         </div>
@@ -81,7 +78,7 @@ onload = function () {
                 <tbody id="productTableContent"></tbody>
             </table>
             
-            <button class="btn btn-dark btn-outline-success" type="button" onclick="location.href = '/profile/admin/creation/product.html'">
+            <button class="btn btn-dark btn-outline-success" onclick="location.href = '/profile/admin/creation/product.html'">
                 Create product
             </button>
         </div>
@@ -210,14 +207,16 @@ xmlHttpRequest.onreadystatechange = function () {
                     tr.append(actionsTd);
                     document.getElementById("productTableContent").append(tr);
                 }
-            } else if (xmlHttpRequest.responseURL === userApiUrl) {
+            }
+        } else if (xmlHttpRequest.status === 204) {
+            if (xmlHttpRequest.responseURL === userApiUrl) {
                 const userToEdit = localStorage.getItem(userEditStorageKey);
 
                 if (userToEdit && JSON.parse(userToEdit)[userUuidDtoKey] === userToDeleteUuid) {
                     localStorage.removeItem(userEditStorageKey);
                 }
 
-                alertMessage("success", xmlHttpRequest.responseText);
+                location.reload();
             } else if (xmlHttpRequest.responseURL === roleApiUrl) {
                 const roleToEdit = localStorage.getItem(roleEditStorageKey);
 
@@ -225,7 +224,7 @@ xmlHttpRequest.onreadystatechange = function () {
                     localStorage.removeItem(roleEditStorageKey);
                 }
 
-                alertMessage("success", xmlHttpRequest.responseText);
+                location.reload();
             } else if (xmlHttpRequest.responseURL === productApiUrl) {
                 const productToEdit = localStorage.getItem(productEditStorageKey);
 
@@ -233,7 +232,7 @@ xmlHttpRequest.onreadystatechange = function () {
                     localStorage.removeItem(productEditStorageKey);
                 }
 
-                alertMessage("success", xmlHttpRequest.responseText);
+                location.reload();
             }
         } else if (xmlHttpRequest.status === 409) {
             alertMessage("danger", xmlHttpRequest.responseText);

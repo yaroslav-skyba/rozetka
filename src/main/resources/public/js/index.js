@@ -20,6 +20,9 @@ xmlHttpRequest.onreadystatechange = function () {
             const products = JSON.parse(xmlHttpRequest.responseText);
 
             for (let i = 0; i < products.length; i++) {
+                products[i][productPriceDtoKey] = getProductPrice(products[i]);
+                delete products[i][productDiscountDtoKey];
+
                 setContainer(`
                     <img src="` + products[i][productImgDtoKey] + `" style="border-radius: 15px"
                          alt="` + products[i][productNameDtoKey] + `">
@@ -30,9 +33,9 @@ xmlHttpRequest.onreadystatechange = function () {
                         </a>
                         
                         <p class="card-text">` + getProductDescription(products[i]) + `</p>
-                        <span>The price: ` + getProductPrice(products[i]) + `</span><br/>
+                        <span>Price: ` + products[i][productPriceDtoKey] + `</span><br/>
                         
-                        <button class="btn btn-dark btn-outline-success mt-4 productAdding" type="button">Add to your cart</button>
+                        <button class="btn btn-dark btn-outline-success mt-4 productAdding">Add to your cart</button>
                     </div>
                 `);
             }
@@ -43,7 +46,7 @@ xmlHttpRequest.onreadystatechange = function () {
                 setProductAddingButtonOnclick(productAddingButtons[i], products[i], i);
             }
         } else if (xmlHttpRequest.status === 404) {
-            main.innerHTML = '<h1 class="text-uppercase text-center text-white">there are no products</h1>';
+            setContainer(`<h1 class="text-uppercase text-center">there are no products</h1>`);
         }
     }
 }

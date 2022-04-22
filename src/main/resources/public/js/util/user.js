@@ -30,42 +30,42 @@ function setUserPage(roleName, rootDestination, userDestination, adminDestinatio
             <h2 class="text-uppercase text-center mb-5" id="headline"></h2>
             
             <div>
-                <div class="form-outline mb-4">
+                <div class="mb-4">
                     <input id="firstName" class="form-control form-control-lg"/>
                     <label for="firstName">first name</label>                    
                 </div>
             
-                <div class="form-outline mb-4">
+                <div class="mb-4">
                     <input id="lastName" class="form-control form-control-lg"/>
                     <label for="lastName">last name</label>
                 </div>
             
-                <div class="form-outline mb-4">
+                <div class="mb-4">
                     <input id="login" class="form-control form-control-lg"/>
                     <label for="login">login</label>
                 </div>
             
-                <div class="form-outline mb-4">
+                <div class="mb-4">
                     <input type="email" id="email" class="form-control form-control-lg"/>
                     <label for="email">An email</label>
                 </div>
             
-                <div class="form-outline mb-4">
+                <div class="mb-4">
                     <input type="date" id="birthday" class="form-control form-control-lg"/>
                     <label for="birthday">birthday</label>
                 </div>
             
-                <div class="form-outline mb-4">
+                <div class="mb-4">
                     <input type="password" id="password" class="form-control form-control-lg"/>
                     <label for="password">password</label>
                 </div>
                 
-                <div class="form-outline mb-4">
+                <div class="mb-4">
                     <input type="password" id="passwordConformation" class="form-control form-control-lg"/>
                     <label for="passwordConformation">password conformation</label>
                 </div>
     
-                <div id="roleDiv" class="form-outline mb-4" hidden>
+                <div id="roleDiv" class="mb-4" hidden>
                     <select id="role" class="form-control form-control-lg"></select> 
                     <label for="role">role</label>
                 </div>

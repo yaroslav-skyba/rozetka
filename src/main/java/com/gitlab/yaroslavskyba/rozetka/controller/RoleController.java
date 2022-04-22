@@ -83,7 +83,7 @@ public class RoleController {
     public ResponseEntity<String> deleteUser(@PathVariable UUID uuid) {
         try {
             roleService.delete(uuid);
-            return ResponseEntity.ok("A role has been successfully deleted");
+            return ResponseEntity.noContent().build();
         } catch (RoleServiceException roleServiceException) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(roleServiceException.getMessage());
         }

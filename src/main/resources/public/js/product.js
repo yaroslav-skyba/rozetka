@@ -7,29 +7,33 @@ const productReviewRatingDtoKey = "rating";
 
 const productReviewContentType = contentTypePrefix + "review" + contentTypeSuffix;
 
-let productReviewContent;
-let productReviewRating;
+// let productReviewContent;
+// let productReviewRating;
 
 let productApiUrl;
 let productReviewsApiUrl;
 let productReviewApiUrl;
 
+let product;
+
 function setProductReviewSubmitOnclick(httpMethod) {
-    const review = JSON.parse(localStorage.getItem(productReviewStorageKey));
+    document.getElementById("submit").onclick = function () {
+        const review = JSON.parse(localStorage.getItem(productReviewStorageKey));
 
-    if (!review[productReviewRatingDtoKey]) {
-        review[productReviewRatingDtoKey] = null;
+        if (!review[productReviewRatingDtoKey]) {
+            review[productReviewRatingDtoKey] = null;
+        }
+
+        sendModificationHttpRequest(httpMethod, productReviewsApiUrl, productReviewContentType, review);
     }
-
-    sendModificationHttpRequest(httpMethod, productReviewsApiUrl, productReviewContentType, review);
 }
 
-function createProductReview(uuid, userUuid) {
+function createProductReview(uuid, userUuid, productReviewContent, productReviewRating) {
     const review = {};
     review[productReviewUuidDtoKey] = uuid;
     review[productReviewUserUuidDtoKey] = userUuid;
-    review[productReviewContentDtoKey] = productReviewContent.value;
-    review[productReviewRatingDtoKey] = productReviewRating.value;
+    review[productReviewContentDtoKey] = productReviewContent;
+    review[productReviewRatingDtoKey] = productReviewRating;
 
     return review;
 }
@@ -48,10 +52,10 @@ onload = function() {
 xmlHttpRequest.onreadystatechange = function () {
     if (xmlHttpRequest.readyState === 4) {
         if (xmlHttpRequest.status === 200) {
-            const userUuid = JSON.parse(localStorage.getItem(currentUserStorageKey))[userUuidDtoKey];
-
             if (xmlHttpRequest.responseURL === productApiUrl) {
-                const product = JSON.parse(xmlHttpRequest.responseText);
+                product = JSON.parse(xmlHttpRequest.responseText);
+                product[productPriceDtoKey] = getProductPrice(product);
+                delete product[productDiscountDtoKey];
 
                 setContainer(`
                     <img src="` + product[productImgDtoKey] + `" style="border-radius: 15px" alt="` + product[productNameDtoKey] + `">
@@ -60,23 +64,22 @@ xmlHttpRequest.onreadystatechange = function () {
                         <h3 class="card-title">` + product[productNameDtoKey] + `</h3>
     
                         <p class="card-text">` + getProductDescription(product) + `</p>
-                        The price: ` + getProductPrice(product) + `<br/>
+                        Price: ` + product[productPriceDtoKey] + `<br/>
                         
-                        <button id="productAdding" class="btn btn-dark btn-outline-success mt-4" type="button">Add to your cart</button>
+                        <button id="productAdding" class="btn btn-dark btn-outline-success mt-4">Add to your cart</button>
                     </div>
                 `);
-
                 setContainer(`
                     <div class="card-body">
-                        <h2 class="text-uppercase text-center mb-5">type a review</h2>
+                        <h2 class="text-uppercase text-center mb-5">Post your review</h2>
                         
                         <div id="currentReview">
-                            <div class="form-outline mb-4">
+                            <div class="mb-4">
                                 <input id="reviewContent" class="form-control form-control-lg"/>
-                                <label for="reviewContent">Review content</label>
+                                <label for="reviewContent">Your review content</label>
                             </div>
                             
-                            <div class="form-outline mb-4">
+                            <div class="mb-4">
                                 <select id="reviewRating" class="form-control form-control-lg">
                                     <option value=""></option>
                                     <option value="1">Terrible</option>
@@ -86,7 +89,7 @@ xmlHttpRequest.onreadystatechange = function () {
                                     <option value="5">Awesome</option>
                                 </select>
                                  
-                                <label for="reviewRating">Review rating</label>
+                                <label for="reviewRating">Your review rating</label>
                             </div>
                             
                             <div class="d-flex justify-content-center">
@@ -98,17 +101,57 @@ xmlHttpRequest.onreadystatechange = function () {
                     </div>
                 `);
 
-                setProductAddingButtonOnclick(document.getElementById("productAdding"), product, 0);
+                xmlHttpRequest.open("GET", productReviewsApiUrl);
+                xmlHttpRequest.send();
+            } else if (xmlHttpRequest.responseURL === productReviewsApiUrl) {
+                const reviews = JSON.parse(xmlHttpRequest.responseText);
 
-                productReviewContent = document.getElementById("reviewContent");
-                productReviewRating = document.getElementById("reviewRating");
+                main.innerHTML += `<h2 class="text-white text-uppercase text-center mt-5">reviews</h2>`;
+
+                let isAdmin;
+                if (localStorage.getItem(currentUserRoleNameStorageKey) === adminRoleName) {
+                    isAdmin = true;
+                }
+
+                const userUuid = JSON.parse(localStorage.getItem(currentUserStorageKey))[userUuidDtoKey];
+                for (let i = 0; i < reviews.length; i++) {
+                    let reviewRating = "No rating";
+                    if (reviews[i][productReviewRatingDtoKey]) {
+                        reviewRating = reviews[i][productReviewRatingDtoKey];
+                    }
+
+                    let reviewButtons = ``;
+                    if (isAdmin || reviews[i][productReviewUserUuidDtoKey] === userUuid) {
+                        reviewButtons = `
+                            <button class="btn btn-dark btn-outline-success mt-4 reviewEdit" href="#currentReview">Edit</button>
+                            <button class="btn btn-dark btn-outline-success mt-4 reviewDeletion">Delete</button>
+                        `;
+                    }
+
+                    setContainer(`
+                        <div class="card-body">
+                            <h3 class="card-title">` + reviews[i]["userName"] + `</h3>
+        
+                            <p class="card-text">` + reviews[i][productReviewContentDtoKey] + `</p>
+                            Rating: ` + reviewRating + `<br/>`
+
+                            + reviewButtons +
+                        `</div>
+                    `);
+                }
+
+                const productReviewContent = document.getElementById("reviewContent");
+                const productReviewRating = document.getElementById("reviewRating");
 
                 const review = JSON.parse(localStorage.getItem(productReviewStorageKey));
                 if (review) {
                     productReviewContent.value = review[productReviewContentDtoKey];
                     productReviewRating.value = review[productReviewRatingDtoKey];
                 } else {
-                    localStorage.setItem(productReviewStorageKey, JSON.stringify(createProductReview(null, userUuid)));
+                    localStorage.setItem(
+                        productReviewStorageKey,
+                        JSON.stringify(createProductReview(null, userUuid, productReviewContent.value, productReviewRating.value))
+                    );
                 }
 
                 for (const formControl of document.getElementsByClassName("form-control")) {
@@ -116,100 +159,47 @@ xmlHttpRequest.onreadystatechange = function () {
                         localStorage.setItem(
                             productReviewStorageKey,
                             JSON.stringify(createProductReview(
-                                JSON.parse(localStorage.getItem(productReviewStorageKey)[productReviewUuidDtoKey]), userUuid)
-                            )
+                                JSON.parse(localStorage.getItem(productReviewStorageKey))[productReviewUuidDtoKey], userUuid,
+                                productReviewContent.value, productReviewRating.value
+                            ))
                         );
                     }
                 }
 
-                submit.onclick = function () {
-                    setProductReviewSubmitOnclick("POST");
+                setProductAddingButtonOnclick(document.getElementById("productAdding"), product, 0);
+                setProductReviewSubmitOnclick("POST");
+
+                const reviewEditButtons = document.getElementsByClassName("reviewEdit");
+                for (let i = 0; i < reviewEditButtons.length; i++) {
+                    reviewEditButtons[i].onclick = function() {
+                        setProductReviewSubmitOnclick("PUT");
+                    }
                 }
 
-                xmlHttpRequest.open("GET", productReviewsApiUrl);
-                xmlHttpRequest.send();
-            } else if (xmlHttpRequest.responseURL === productReviewsApiUrl) {
-                const contentType = xmlHttpRequest.getResponseHeader("Content-Type");
-
-                if (contentType === contentTypePrefix + "reviewList" + contentTypeSuffix) {
-                    const reviews = JSON.parse(xmlHttpRequest.responseText);
-
-                    let isAdmin = false;
-
-                    if (localStorage.getItem(currentUserRoleNameStorageKey) === adminRoleName) {
-                        isAdmin = true;
-                    }
-
-                    for (let i = 0; i < reviews.length; i++) {
-                        let reviewRating = "No rating";
-
-                        if (reviews[i][productReviewRatingDtoKey]) {
-                            reviewRating = reviews[i][productReviewRatingDtoKey];
-                        }
-
-                        let reviewButtons = ``;
-
-                        if (isAdmin || reviews[i][productReviewUserUuidDtoKey] === userUuid) {
-                            reviewButtons = `
-                                <button class="btn btn-dark btn-outline-success mt-4 reviewEdit" type="button" href="#currentReview">
-                                    Edit
-                                </button>
-                                
-                                <button class="btn btn-dark btn-outline-success mt-4 reviewDeletion" type="button">Delete</button>
-                            `;
-                        }
-
-                        setContainer(`
-                            <div class="card-body">
-                                <h3 class="card-title">` + reviews[i]["userName"] + `</h3>
-            
-                                <p class="card-text">` + reviews[i][productReviewContentDtoKey] + `</p>
-                                Rating: ` + reviewRating + `<br/>`
-
-                                + reviewButtons +
-                            `</div>
-                        `);
-                    }
-
-                    const reviewEditButtons = document.getElementsByClassName("reviewEdit");
-
-                    for (let i = 0; i < reviewEditButtons.length; i++) {
-                        reviewEditButtons[i].onclick = function() {
-                            submit.onclick = function () {
-                                setProductReviewSubmitOnclick("PUT");
-                            }
+                const reviewDeletionButtons = document.getElementsByClassName("reviewDeletion");
+                for (let i = 0; i < reviewDeletionButtons.length; i++) {
+                    reviewDeletionButtons[i].onclick = function() {
+                        if (confirm("Are you sure to delete this review?")) {
+                            productReviewApiUrl = productReviewsApiUrl + "/" + reviews[i][productReviewUuidDtoKey];
+                            sendHttpRequest(
+                                "DELETE", productReviewApiUrl, "Authorization", localStorage.getItem(jwtStorageKey), null
+                            );
                         }
                     }
-
-                    const reviewDeletionButtons = document.getElementsByClassName("reviewDeletion");
-
-                    for (let i = 0; i < reviewDeletionButtons.length; i++) {
-                        reviewDeletionButtons[i].onclick = function() {
-                            if (confirm("Are you sure to delete this review?")) {
-                                productReviewApiUrl = productReviewsApiUrl + "/" + reviews[i][productReviewUuidDtoKey];
-                                sendHttpRequest(
-                                    "DELETE", productReviewApiUrl, "Authorization", localStorage.getItem(jwtStorageKey), null
-                                );
-                            }
-                        }
-                    }
-                } else if (contentType === productReviewContentType) {
-                    alertMessage("success", xmlHttpRequest.responseText);
-                    location.reload();
                 }
             } else if (xmlHttpRequest.responseURL === productReviewApiUrl) {
-                location.reload();
+                localStorage.removeItem(productReviewStorageKey);
+                alertMessage("success", xmlHttpRequest.responseText);
             }
         } else if (xmlHttpRequest.status === 201) {
+            localStorage.removeItem(productReviewStorageKey);
             alertMessage("success", xmlHttpRequest.responseText);
+        } else if (xmlHttpRequest.status === 204) {
+            localStorage.removeItem(productReviewStorageKey);
             location.reload();
         } else if (xmlHttpRequest.status === 404) {
             if (xmlHttpRequest.responseURL === productApiUrl) {
                 location.href = "/";
-            } else if (xmlHttpRequest.responseURL === productReviewsApiUrl) {
-                /*document.getElementById("container").innerHTML += `
-                    <h1 class="text-uppercase text-center text-white py-5">there are no reviews</h1>
-                `;*/
             }
         } else if (xmlHttpRequest.status === 409) {
             alertMessage("danger", xmlHttpRequest.responseText);

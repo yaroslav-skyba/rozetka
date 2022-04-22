@@ -66,7 +66,7 @@ function setNavigation(rootFolderDestination, userFolderDestination, adminFolder
                     <img src="` + rootFolderDestination + `img/logo.png" alt="logo" width="50" height="50">
                 </a>
     
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -92,7 +92,7 @@ function setNavigation(rootFolderDestination, userFolderDestination, adminFolder
     
                     <form class="d-flex">
                         <input id="searchInput" class="form-control me-2" type="search" placeholder="Search products" aria-label="Search">
-                        <button id="searchButton" class="btn btn-outline-success" type="button">Search</button>
+                        <button id="searchButton" class="btn btn-outline-success">Search</button>
                     </form>
                 </div>
             </div>
@@ -118,7 +118,7 @@ function setNavigation(rootFolderDestination, userFolderDestination, adminFolder
                 
                 <div class="text-center p-3" style="background-color: #00000033">
                     © 2022 Copyright:
-                    <a class="text-white" href="https://thispersondoesnotexist.com/">Rozetka</a>
+                    <a href="https://thispersondoesnotexist.com/">Rozetka</a>
                 </div>
             </footer>`;
 
@@ -166,7 +166,7 @@ function setMainAttributes() {
 
 function setContainer(content) {
     main.innerHTML +=
-        `<div id="container" class="container">
+        `<div class="container">
             <div class="row">
                 <div class="col">
                     <div class="card bg-dark text-white text-break" style="border-radius: 15px; border-color: #198754">` + content + `</div>
@@ -179,16 +179,15 @@ function alertMessage(type, message) {
     document.getElementById("alert").innerHTML =
         `<div class="alert alert-` + type + ` alert-dismissible" role="alert">
             ` + message +
-            `<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" onclick="location.reload()"></button>
+            `<button class="btn-close" data-bs-dismiss="alert" aria-label="Close" onclick="location.reload()"></button>
         </div>`;
 }
 
 function setModificationPage(headlineInnerHtml, submitInnerHtml) {
     setMainAttributes();
-    document.getElementById("headline").innerHTML = headlineInnerHtml;
 
-    submit = document.getElementById("submit");
-    submit.innerHTML = submitInnerHtml;
+    document.getElementById("headline").innerHTML = headlineInnerHtml;
+    document.getElementById("submit").innerHTML = submitInnerHtml;
 }
 
 function setFormControlOnchange(create) {

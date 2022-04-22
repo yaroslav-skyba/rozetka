@@ -12,13 +12,13 @@ onload = function() {
         <div class="card-body p-5">
             <h2 class="text-uppercase text-center mb-5">login</h2>
 
-            <div class="form-outline mb-4">
+            <div class="mb-4">
                 <input id="login" class="form-control form-control-lg"/>
                 <label for="login">Your login</label>
                 
             </div>
 
-            <div class="form-outline mb-4">
+            <div class="mb-4">
                 <input id="password" class="form-control form-control-lg" type="password"/>
                 <label for="password">Your password</label>
                 <div id="password" class="invalid-feedback">Please, type your password</div>

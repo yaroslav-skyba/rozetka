@@ -85,7 +85,7 @@ public class ProductController {
     public ResponseEntity<String> deleteProduct(@PathVariable UUID uuid) {
         try {
             productService.delete(uuid);
-            return ResponseEntity.ok("A product has been successfully deleted");
+            return ResponseEntity.noContent().build();
         } catch (ProductServiceException productServiceException) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(productServiceException.getMessage());
         }
@@ -129,7 +129,7 @@ public class ProductController {
     public ResponseEntity<String> deleteReview(@PathVariable UUID uuidProduct, @PathVariable UUID uuid) {
         try {
             reviewService.deleteReviewByUuid(uuid, uuidProduct);
-            return ResponseEntity.ok("A review has been successfully deleted");
+            return ResponseEntity.noContent().build();
         } catch (ReviewServiceException reviewServiceException) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(reviewServiceException.getMessage());
         }

@@ -17,7 +17,7 @@ function setRolePage(headlineInnerHtml, submitInnerHtml, httpMethod) {
             <h2 class="text-uppercase text-center mb-5" id="headline"></h2>
             
             <div>
-                <div class="form-outline mb-4">
+                <div class="mb-4">
                     <input id="name" class="form-control form-control-lg"/>
                     <label for="name">name</label>
                     

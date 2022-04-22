@@ -15,7 +15,7 @@ onload = function () {
         }
 
         for (let i = 0; i < parsedProducts.length; i++) {
-            const productPrice = getProductPrice(parsedProducts[i]);
+            const productPrice = parsedProducts[i][productPriceDtoKey] * parsedProducts[i][productQuantityDtoKey];
             productOverallPrice += productPrice;
 
             setContainer(`
@@ -33,8 +33,8 @@ onload = function () {
                            max="100" value="` + parsedProducts[i][productQuantityDtoKey] + `">
                     <label id="productCounter_` + parsedProducts[i][productUuidDtoKey] + `"></label><br/>
                     
-                    <span>The price: ` + productPrice + `</span><br/>
-                    <button class="btn btn-dark btn-outline-success mt-4 productDeletion" type="button">Delete</button>
+                    <span>Price: ` + productPrice + `</span><br/>
+                    <button class="btn btn-dark btn-outline-success mt-4 productDeletion">Delete</button>
                 </div>
             `);
         }
@@ -103,7 +103,7 @@ onload = function () {
             );
         }
     } else {
-        main.innerHTML = '<h1 class="text-uppercase text-center text-white">your cart is empty</h1>';
+        setContainer(`<h1 class="text-uppercase text-center">your cart is empty</h1>`);
     }
 }
 
