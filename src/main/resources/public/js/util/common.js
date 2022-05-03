@@ -165,14 +165,16 @@ function setMainAttributes() {
 }
 
 function setContainer(content) {
-    main.innerHTML +=
-        `<div class="container">
-            <div class="row">
-                <div class="col">
-                    <div class="card bg-dark text-white text-break" style="border-radius: 15px; border-color: #198754">` + content + `</div>
-                </div>
+    const container = document.createElement("div");
+    container.className = "container";
+    container.innerHTML +=
+        `<div class="row">
+            <div class="col">
+                <div class="card bg-dark text-white text-break" style="border-radius: 15px; border-color: #198754">` + content + `</div>
             </div>
         </div>`;
+
+    main.append(container);
 }
 
 function alertMessage(type, message) {

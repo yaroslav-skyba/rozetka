@@ -7,8 +7,8 @@ const productReviewRatingDtoKey = "rating";
 
 const productReviewContentType = contentTypePrefix + "review" + contentTypeSuffix;
 
-// let productReviewContent;
-// let productReviewRating;
+let productReviewContent;
+let productReviewRating;
 
 let productApiUrl;
 let productReviewsApiUrl;
@@ -36,6 +36,34 @@ function createProductReview(uuid, userUuid, productReviewContent, productReview
     review[productReviewRatingDtoKey] = productReviewRating;
 
     return review;
+}
+
+function setProductReviewModificationForm(userUuid) {
+    const review = JSON.parse(localStorage.getItem(productReviewStorageKey));
+    if (review) {
+        productReviewContent.value = review[productReviewContentDtoKey];
+        productReviewRating.value = review[productReviewRatingDtoKey];
+    } else {
+        localStorage.setItem(
+            productReviewStorageKey,
+            JSON.stringify(createProductReview(null, userUuid, productReviewContent.value, productReviewRating.value))
+        );
+    }
+
+    for (const formControl of document.getElementsByClassName("form-control")) {
+        formControl.onchange = function () {
+            localStorage.setItem(
+                productReviewStorageKey,
+                JSON.stringify(createProductReview(
+                    JSON.parse(localStorage.getItem(productReviewStorageKey))[productReviewUuidDtoKey], userUuid,
+                    productReviewContent.value, productReviewRating.value
+                ))
+            );
+        }
+    }
+
+    setProductAddingButtonOnclick(document.getElementById("productAdding"), product, 0);
+    setProductReviewSubmitOnclick("POST");
 }
 
 onload = function() {
@@ -101,29 +129,37 @@ xmlHttpRequest.onreadystatechange = function () {
                     </div>
                 `);
 
+                productReviewContent = document.getElementById("reviewContent");
+                productReviewRating = document.getElementById("reviewRating");
+
                 xmlHttpRequest.open("GET", productReviewsApiUrl);
                 xmlHttpRequest.send();
             } else if (xmlHttpRequest.responseURL === productReviewsApiUrl) {
-                const reviews = JSON.parse(xmlHttpRequest.responseText);
+                const userUuid = JSON.parse(localStorage.getItem(currentUserStorageKey))[userUuidDtoKey];
 
                 main.innerHTML += `<h2 class="text-white text-uppercase text-center mt-5">reviews</h2>`;
+                setProductReviewModificationForm(userUuid);
 
                 let isAdmin;
+
                 if (localStorage.getItem(currentUserRoleNameStorageKey) === adminRoleName) {
                     isAdmin = true;
                 }
 
-                const userUuid = JSON.parse(localStorage.getItem(currentUserStorageKey))[userUuidDtoKey];
+                const reviews = JSON.parse(xmlHttpRequest.responseText);
+
                 for (let i = 0; i < reviews.length; i++) {
                     let reviewRating = "No rating";
+
                     if (reviews[i][productReviewRatingDtoKey]) {
                         reviewRating = reviews[i][productReviewRatingDtoKey];
                     }
 
                     let reviewButtons = ``;
+
                     if (isAdmin || reviews[i][productReviewUserUuidDtoKey] === userUuid) {
                         reviewButtons = `
-                            <button class="btn btn-dark btn-outline-success mt-4 reviewEdit" href="#currentReview">Edit</button>
+                            <button class="btn btn-dark btn-outline-success mt-4 reviewEdit">Edit</button>
                             <button class="btn btn-dark btn-outline-success mt-4 reviewDeletion">Delete</button>
                         `;
                     }
@@ -140,39 +176,14 @@ xmlHttpRequest.onreadystatechange = function () {
                     `);
                 }
 
-                const productReviewContent = document.getElementById("reviewContent");
-                const productReviewRating = document.getElementById("reviewRating");
-
-                const review = JSON.parse(localStorage.getItem(productReviewStorageKey));
-                if (review) {
-                    productReviewContent.value = review[productReviewContentDtoKey];
-                    productReviewRating.value = review[productReviewRatingDtoKey];
-                } else {
-                    localStorage.setItem(
-                        productReviewStorageKey,
-                        JSON.stringify(createProductReview(null, userUuid, productReviewContent.value, productReviewRating.value))
-                    );
-                }
-
-                for (const formControl of document.getElementsByClassName("form-control")) {
-                    formControl.onchange = function () {
-                        localStorage.setItem(
-                            productReviewStorageKey,
-                            JSON.stringify(createProductReview(
-                                JSON.parse(localStorage.getItem(productReviewStorageKey))[productReviewUuidDtoKey], userUuid,
-                                productReviewContent.value, productReviewRating.value
-                            ))
-                        );
-                    }
-                }
-
-                setProductAddingButtonOnclick(document.getElementById("productAdding"), product, 0);
-                setProductReviewSubmitOnclick("POST");
-
                 const reviewEditButtons = document.getElementsByClassName("reviewEdit");
                 for (let i = 0; i < reviewEditButtons.length; i++) {
                     reviewEditButtons[i].onclick = function() {
+                        productReviewContent.value = reviews[i][productReviewContentDtoKey];
+                        productReviewRating.value = reviews[i][productReviewRatingDtoKey];
+
                         setProductReviewSubmitOnclick("PUT");
+                        location.href += "#currentReview";
                     }
                 }
 
@@ -181,6 +192,7 @@ xmlHttpRequest.onreadystatechange = function () {
                     reviewDeletionButtons[i].onclick = function() {
                         if (confirm("Are you sure to delete this review?")) {
                             productReviewApiUrl = productReviewsApiUrl + "/" + reviews[i][productReviewUuidDtoKey];
+
                             sendHttpRequest(
                                 "DELETE", productReviewApiUrl, "Authorization", localStorage.getItem(jwtStorageKey), null
                             );
@@ -200,6 +212,8 @@ xmlHttpRequest.onreadystatechange = function () {
         } else if (xmlHttpRequest.status === 404) {
             if (xmlHttpRequest.responseURL === productApiUrl) {
                 location.href = "/";
+            } else if (xmlHttpRequest.responseURL === productReviewsApiUrl) {
+                setProductReviewModificationForm(JSON.parse(localStorage.getItem(currentUserStorageKey))[userUuidDtoKey]);
             }
         } else if (xmlHttpRequest.status === 409) {
             alertMessage("danger", xmlHttpRequest.responseText);
