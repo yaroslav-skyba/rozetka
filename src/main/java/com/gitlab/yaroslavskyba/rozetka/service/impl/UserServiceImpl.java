@@ -6,6 +6,7 @@ import com.gitlab.yaroslavskyba.rozetka.model.User;
 import com.gitlab.yaroslavskyba.rozetka.repository.RoleRepository;
 import com.gitlab.yaroslavskyba.rozetka.repository.UserRepository;
 import com.gitlab.yaroslavskyba.rozetka.service.UserService;
+import com.gitlab.yaroslavskyba.rozetka.util.RoleName;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -102,7 +103,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private void setFields(UserDto userDto, User user) {
-        user.setRole(roleRepository.findRoleByUuid(userDto.getUuidRole()).orElse(null));
+        user.setRole(roleRepository.findRoleByUuid(userDto.getUuidRole()).orElse(roleRepository.findRoleByName(RoleName.USER).orElseThrow()));
         user.setLogin(userDto.getLogin());
         user.setEmail(userDto.getEmail());
         user.setFirstName(userDto.getFirstName());

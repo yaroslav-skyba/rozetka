@@ -16,10 +16,8 @@ let productReviewApiUrl;
 
 let product;
 
-function setProductReviewSubmitOnclick(httpMethod) {
+function setProductReviewSubmitOnclick(review, httpMethod) {
     document.getElementById("submit").onclick = function () {
-        const review = JSON.parse(localStorage.getItem(productReviewStorageKey));
-
         if (!review[productReviewRatingDtoKey]) {
             review[productReviewRatingDtoKey] = null;
         }
@@ -63,7 +61,7 @@ function setProductReviewModificationForm(userUuid) {
     }
 
     setProductAddingButtonOnclick(document.getElementById("productAdding"), product, 0);
-    setProductReviewSubmitOnclick("POST");
+    setProductReviewSubmitOnclick(JSON.parse(localStorage.getItem(productReviewStorageKey)), "POST");
 }
 
 onload = function() {
@@ -110,11 +108,11 @@ xmlHttpRequest.onreadystatechange = function () {
                             <div class="mb-4">
                                 <select id="reviewRating" class="form-control form-control-lg">
                                     <option value=""></option>
-                                    <option value="1">Terrible</option>
-                                    <option value="2">Bad</option>
-                                    <option value="3">Normal</option>
-                                    <option value="4">Good</option>
-                                    <option value="5">Awesome</option>
+                                    <option value="5">5</option>
+                                    <option value="4">4</option>
+                                    <option value="3">3</option>
+                                    <option value="2">2</option>
+                                    <option value="1">1</option>
                                 </select>
                                  
                                 <label for="reviewRating">Your review rating</label>
@@ -135,69 +133,86 @@ xmlHttpRequest.onreadystatechange = function () {
                 xmlHttpRequest.open("GET", productReviewsApiUrl);
                 xmlHttpRequest.send();
             } else if (xmlHttpRequest.responseURL === productReviewsApiUrl) {
-                const userUuid = JSON.parse(localStorage.getItem(currentUserStorageKey))[userUuidDtoKey];
+                const contentType = xmlHttpRequest.getResponseHeader("Content-Type");
 
-                main.innerHTML += `<h2 class="text-white text-uppercase text-center mt-5">reviews</h2>`;
-                setProductReviewModificationForm(userUuid);
+                if (contentType === contentTypePrefix + "reviewlist" + contentTypeSuffix) {
+                    const reviewsH2 = document.createElement("h2");
+                    reviewsH2.className = "text-white text-uppercase text-center mt-5";
+                    reviewsH2.innerHTML = "reviews";
+                    main.append(reviewsH2);
 
-                let isAdmin;
+                    const userUuid = JSON.parse(localStorage.getItem(currentUserStorageKey))[userUuidDtoKey];
 
-                if (localStorage.getItem(currentUserRoleNameStorageKey) === adminRoleName) {
-                    isAdmin = true;
-                }
+                    setProductReviewModificationForm(userUuid);
 
-                const reviews = JSON.parse(xmlHttpRequest.responseText);
+                    let isAdmin;
 
-                for (let i = 0; i < reviews.length; i++) {
-                    let reviewRating = "No rating";
-
-                    if (reviews[i][productReviewRatingDtoKey]) {
-                        reviewRating = reviews[i][productReviewRatingDtoKey];
+                    if (localStorage.getItem(currentUserRoleNameStorageKey) === adminRoleName) {
+                        isAdmin = true;
                     }
 
-                    let reviewButtons = ``;
+                    const reviews = JSON.parse(xmlHttpRequest.responseText);
 
-                    if (isAdmin || reviews[i][productReviewUserUuidDtoKey] === userUuid) {
-                        reviewButtons = `
-                            <button class="btn btn-dark btn-outline-success mt-4 reviewEdit">Edit</button>
-                            <button class="btn btn-dark btn-outline-success mt-4 reviewDeletion">Delete</button>
-                        `;
+                    for (let i = 0; i < reviews.length; i++) {
+                        let reviewRating = "No rating";
+
+                        if (reviews[i][productReviewRatingDtoKey]) {
+                            reviewRating = reviews[i][productReviewRatingDtoKey];
+                        }
+
+                        let reviewButtons = ``;
+
+                        if (isAdmin || reviews[i][productReviewUserUuidDtoKey] === userUuid) {
+                            reviewButtons = `
+                                <button class="btn btn-dark btn-outline-success mt-4 reviewEdit">Edit</button>
+                                <button class="btn btn-dark btn-outline-success mt-4 reviewDeletion">Delete</button>
+                            `;
+                        }
+
+                        setContainer(`
+                            <div class="card-body">
+                                <h3 class="card-title">` + reviews[i]["userName"] + `</h3>
+            
+                                <p class="card-text">` + reviews[i][productReviewContentDtoKey] + `</p>
+                                Rating: ` + reviewRating + `<br/>`
+
+                                + reviewButtons +
+                            `</div>
+                        `);
                     }
 
-                    setContainer(`
-                        <div class="card-body">
-                            <h3 class="card-title">` + reviews[i]["userName"] + `</h3>
-        
-                            <p class="card-text">` + reviews[i][productReviewContentDtoKey] + `</p>
-                            Rating: ` + reviewRating + `<br/>`
+                    const reviewEditButtons = document.getElementsByClassName("reviewEdit");
+                    for (let i = 0; i < reviewEditButtons.length; i++) {
+                        reviewEditButtons[i].onclick = function() {
+                            productReviewContent.value = reviews[i][productReviewContentDtoKey];
+                            productReviewRating.value = reviews[i][productReviewRatingDtoKey];
 
-                            + reviewButtons +
-                        `</div>
-                    `);
-                }
+                            setProductReviewSubmitOnclick(createProductReview(
+                                reviews[i][productReviewUuidDtoKey], reviews[i][productReviewUserUuidDtoKey],
+                                productReviewContent.value, productReviewRating.value
+                            ), "PUT");
 
-                const reviewEditButtons = document.getElementsByClassName("reviewEdit");
-                for (let i = 0; i < reviewEditButtons.length; i++) {
-                    reviewEditButtons[i].onclick = function() {
-                        productReviewContent.value = reviews[i][productReviewContentDtoKey];
-                        productReviewRating.value = reviews[i][productReviewRatingDtoKey];
-
-                        setProductReviewSubmitOnclick("PUT");
-                        location.href += "#currentReview";
-                    }
-                }
-
-                const reviewDeletionButtons = document.getElementsByClassName("reviewDeletion");
-                for (let i = 0; i < reviewDeletionButtons.length; i++) {
-                    reviewDeletionButtons[i].onclick = function() {
-                        if (confirm("Are you sure to delete this review?")) {
-                            productReviewApiUrl = productReviewsApiUrl + "/" + reviews[i][productReviewUuidDtoKey];
-
-                            sendHttpRequest(
-                                "DELETE", productReviewApiUrl, "Authorization", localStorage.getItem(jwtStorageKey), null
-                            );
+                            if (!location.href.includes("#")) {
+                                location.href += "#currentReview";
+                            }
                         }
                     }
+
+                    const reviewDeletionButtons = document.getElementsByClassName("reviewDeletion");
+                    for (let i = 0; i < reviewDeletionButtons.length; i++) {
+                        reviewDeletionButtons[i].onclick = function() {
+                            if (confirm("Are you sure to delete this review?")) {
+                                productReviewApiUrl = productReviewsApiUrl + "/" + reviews[i][productReviewUuidDtoKey];
+
+                                sendHttpRequest(
+                                    "DELETE", productReviewApiUrl, "Authorization", localStorage.getItem(jwtStorageKey), null
+                                );
+                            }
+                        }
+                    }
+                } else if (contentType === "text/plain;charset=UTF-8") {
+                    localStorage.removeItem(productReviewStorageKey);
+                    alertMessage("success", xmlHttpRequest.responseText);
                 }
             } else if (xmlHttpRequest.responseURL === productReviewApiUrl) {
                 localStorage.removeItem(productReviewStorageKey);

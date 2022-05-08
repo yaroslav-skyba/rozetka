@@ -148,8 +148,9 @@ function setNavigation(rootFolderDestination, userFolderDestination, adminFolder
         navItem2.innerHTML = "Logout";
         navItem2.href = loginPath;
         navItem2.onclick = function () {
-            localStorage.removeItem(jwtStorageKey);
-            localStorage.removeItem(currentUserRoleNameStorageKey);
+            if (confirm("Do you want to log out?")) {
+
+            }
         }
     }
 

@@ -13,7 +13,7 @@ xmlHttpRequest.onreadystatechange = function () {
 
             if (userLogin.value !== localStorage.getItem(currentUserLoginStorageKey)) {
                 sendHttpRequest(
-                    "POST", authorityApi + "jwts", "Content-Type", "text/plain", localStorage.getItem(jwtStorageKey)
+                    "POST", authorityApi + "refreshes", "Content-Type", "text/plain", localStorage.getItem(jwtStorageKey)
                 );
             }
         } else if (xmlHttpRequest.status === 201) {

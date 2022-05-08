@@ -58,7 +58,6 @@ public class UserDetailsImpl implements UserDetails {
         return user.getUuid();
     }
 
-    
     public List<UUID> getReviewUuidList() {
         return user.getReviewList().stream().map(Review::getUuid).collect(Collectors.toList());
     }

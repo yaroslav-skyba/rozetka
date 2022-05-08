@@ -99,7 +99,7 @@ onload = function () {
             }
 
             sendModificationHttpRequest(
-                "POST", authorityApi + "orders", contentTypePrefix + "orderItemList" + contentTypeSuffix, orderItems
+                "POST", authorityApi + "orders", contentTypePrefix + "orderitemlist" + contentTypeSuffix, orderItems
             );
         }
     } else {

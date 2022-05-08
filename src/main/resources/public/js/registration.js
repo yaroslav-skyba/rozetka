@@ -1,6 +1,18 @@
-setNavigation("index.html", "productImg/logo.png", "cart.html", "about.html", "login.html",
-    "registration.html", "profile/admin/admin.html", "profile/user.html");
-setUserPage();
+onload = function () {
+    localStorage.setItem(modificationStorageKeyStorageKey, currentUserStorageKey);
 
-document.getElementById("headline").innerHTML = "Create an account";
-submit.innerHTML = "Register";
+    setUserPage(
+        userRoleName, "", "profile/", "profile/admin/",
+        "register", "Register", "POST"
+    );
+}
+
+xmlHttpRequest.onreadystatechange = function () {
+    if (xmlHttpRequest.readyState === 4) {
+        if (xmlHttpRequest.status === 201) {
+            alertMessage("success", xmlHttpRequest.responseText);
+        } else if (xmlHttpRequest.status === 409) {
+            alertMessage("danger", xmlHttpRequest.responseText);
+        }
+    }
+}

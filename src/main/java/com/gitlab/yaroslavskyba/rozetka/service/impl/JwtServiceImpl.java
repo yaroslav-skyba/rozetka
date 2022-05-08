@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.Date;
-import java.util.UUID;
 
 @Service
 public class JwtServiceImpl implements JwtService {
@@ -35,16 +34,14 @@ public class JwtServiceImpl implements JwtService {
 
     @Override
     @Transactional
-    public String createJwt(UserDto userDto) {
+    public String create(UserDto userDto) {
         try {
             final String jwtValue = generateJwtValue(userDto);
             final String fullJwtValue = TOKEN_TYPE + jwtValue;
 
             final Jwt jwt = new Jwt();
-            jwt.setUuid(UUID.randomUUID());
             jwt.setUser(userRepository.findUserByUuid(userDto.getUuid()).orElseThrow());
             jwt.setValue(fullJwtValue);
-            jwt.setExpiryDate(Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(jwtValue).getBody().getExpiration().toInstant());
 
             jwtRepository.saveAndFlush(jwt);
 
@@ -60,7 +57,8 @@ public class JwtServiceImpl implements JwtService {
         try {
             final Jwt jwt = jwtRepository.findJwtByValue(value).orElseThrow();
 
-            if (jwt.getExpiryDate().compareTo(Instant.now()) < 0) {
+            if (Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(jwt.getValue()).getBody().getExpiration().toInstant()
+                    .compareTo(Instant.now()) < 0) {
                 jwtRepository.delete(jwt);
                 throw new JwtServiceException("A jwt has been expired. Please, make a new sign-in request");
             }
@@ -72,6 +70,16 @@ public class JwtServiceImpl implements JwtService {
             return jwtValue;
         } catch (Exception exception) {
             throw new JwtServiceException("An error occurred while refreshing a jwt value", exception);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void delete(String jwtValue) {
+        try {
+            jwtRepository.delete(jwtRepository.findJwtByValue(jwtValue).orElseThrow());
+        } catch (Exception exception) {
+            throw new JwtServiceException("An error occurred while deleting a JWT", exception);
         }
     }
 

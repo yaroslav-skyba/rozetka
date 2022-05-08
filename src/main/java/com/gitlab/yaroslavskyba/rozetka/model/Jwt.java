@@ -1,9 +1,5 @@
 package com.gitlab.yaroslavskyba.rozetka.model;
 
-import java.time.Instant;
-import java.util.Objects;
-import java.util.UUID;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import java.util.Objects;
 
 @Entity
 @Table(name = "o2n_jwt")
@@ -23,10 +20,6 @@ public class Jwt {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idJwt;
 
-    @NotNull
-    @Column(nullable = false, unique = true)
-    private UUID uuid;
-
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_user")
     private User user;
@@ -34,10 +27,6 @@ public class Jwt {
     @NotNull
     @Column(nullable = false, unique = true)
     private String value;
-
-    @NotNull
-    @Column(name = "expiry_date", nullable = false)
-    private Instant expiryDate;
 
     @Override
     public boolean equals(Object o) {
@@ -51,23 +40,20 @@ public class Jwt {
 
         final Jwt that = (Jwt) o;
 
-        return idJwt.equals(that.idJwt) && uuid.equals(that.uuid) && user.equals(that.user) && Objects.equals(user, that.user)
-               && expiryDate.equals(that.expiryDate);
+        return idJwt.equals(that.idJwt) && user.equals(that.user) && Objects.equals(user, that.user);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idJwt, uuid, user, value, expiryDate);
+        return Objects.hash(idJwt, user, value);
     }
 
     @Override
     public String toString() {
         return "RefreshToken{" +
                "idRefreshToken=" + idJwt +
-               ", uuid=" + uuid +
                ", user=" + user +
                ", productName='" + value + '\'' +
-               ", expiryDate=" + expiryDate +
                '}';
     }
 
@@ -79,14 +65,6 @@ public class Jwt {
     
     public void setIdJwt(Long idRefreshToken) {
         this.idJwt = idRefreshToken;
-    }
-
-    public UUID getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
     }
 
     public User getUser() {
@@ -103,13 +81,5 @@ public class Jwt {
 
     public void setValue(String name) {
         this.value = name;
-    }
-
-    public Instant getExpiryDate() {
-        return expiryDate;
-    }
-
-    public void setExpiryDate(Instant expiryDate) {
-        this.expiryDate = expiryDate;
     }
 }
