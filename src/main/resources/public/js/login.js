@@ -32,12 +32,18 @@ onload = function() {
         </div>
     `);
 
+    const successUserCreationHttpResponse = localStorage.getItem(successUserCreationHttpResponseStorageKey);
+
+    if (successUserCreationHttpResponse) {
+        alertMessage("success", successUserCreationHttpResponse);
+    }
+
     document.getElementById("submit").onclick = function() {
         const login = document.getElementById("login").value;
         localStorage.setItem(currentUserLoginStorageKey, login);
 
         sendHttpRequest(
-            "POST", authorityApi + "logins", "Content-Type", contentTypePrefix + "login" + contentTypeSuffix,
+            "POST", jwtsApiUrl, "Content-Type", contentTypePrefix + "login" + contentTypeSuffix,
             JSON.stringify({username:login, password:document.getElementById("password").value})
         );
     }

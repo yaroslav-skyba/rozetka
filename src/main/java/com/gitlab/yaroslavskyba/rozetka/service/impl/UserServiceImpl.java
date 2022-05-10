@@ -103,7 +103,8 @@ public class UserServiceImpl implements UserService {
     }
 
     private void setFields(UserDto userDto, User user) {
-        user.setRole(roleRepository.findRoleByUuid(userDto.getUuidRole()).orElse(roleRepository.findRoleByName(RoleName.USER).orElseThrow()));
+        user.setRole(
+            roleRepository.findRoleByUuid(userDto.getUuidRole()).orElse(roleRepository.findRoleByName(RoleName.USER).orElseThrow()));
         user.setLogin(userDto.getLogin());
         user.setEmail(userDto.getEmail());
         user.setFirstName(userDto.getFirstName());

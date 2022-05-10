@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(produces = org.springframework.http.MediaType.TEXT_PLAIN_VALUE)
+@RequestMapping(value = ControllerPath.JWTS, produces = org.springframework.http.MediaType.TEXT_PLAIN_VALUE)
 public class JwtController {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
@@ -30,7 +30,7 @@ public class JwtController {
         this.userService = userService;
     }
 
-    @PostMapping(value = ControllerPath.LOGINS, consumes = MediaType.LOGIN)
+    @PostMapping(consumes = MediaType.LOGIN)
     public ResponseEntity<String> createJwt(@RequestBody LoginDto loginDto) {
         try {
             final String username = loginDto.getUsername();
@@ -42,16 +42,16 @@ public class JwtController {
         }
     }
 
-    @PostMapping(value = ControllerPath.REFRESHES, consumes = org.springframework.http.MediaType.TEXT_PLAIN_VALUE)
+    @PostMapping(consumes = org.springframework.http.MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<String> updateJwt(@RequestBody String value) {
         try {
-            return ResponseEntity.status(HttpStatus.CREATED).body(jwtService.refreshJwtValue(value));
+            return ResponseEntity.status(HttpStatus.CREATED).body(jwtService.update(value));
         } catch (JwtServiceException jwtServiceException) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(jwtServiceException.getMessage());
         }
     }
 
-    @DeleteMapping(ControllerPath.LOGOUTS)
+    @DeleteMapping
     public ResponseEntity<String> deleteJwt(@RequestBody String value) {
         try {
             jwtService.delete(value);

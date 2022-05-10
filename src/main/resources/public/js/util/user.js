@@ -22,8 +22,6 @@ function createUser(uuid) {
 }
 
 function setUserPage(roleName, rootDestination, userDestination, adminDestination, headlineInnerHtml, submitInnerHtml, httpMethod) {
-    redirectWithoutSpecificRole(roleName);
-
     setNavigation(rootDestination, userDestination, adminDestination);
     setContainer(`
         <div class="card-body">
@@ -97,9 +95,6 @@ function setUserPage(roleName, rootDestination, userDestination, adminDestinatio
         for (const role of Object.values(JSON.parse(roles))) {
             userRole.innerHTML += `<option value="` + role[roleUuidDtoKey] + `">` + role[roleNameDtoKey] + `</option>`;
         }
-    } else {
-        userRole.innerHTML =
-            `<option value="` + user[userRoleUuidDtoKey] + `">` + localStorage.getItem(currentUserRoleNameStorageKey) + `</option>`;
     }
 
     if (user) {
@@ -108,7 +103,13 @@ function setUserPage(roleName, rootDestination, userDestination, adminDestinatio
         userEmail.value = user[userEmailDtoKey];
         userFirstName.value = user[userFirstNameDtoKey];
         userLastName.value = user[userLastNameDtoKey];
-        userBirthday.value = new Date(user[userBirthdayDtoKey]).toISOString().slice(0, 10);
+
+        const birthday = user[userBirthdayDtoKey];
+        const lastBirthdaySliceIndex = 10;
+
+        if (birthday.length > lastBirthdaySliceIndex) {
+            userBirthday.value = new Date(birthday).toISOString().slice(0, lastBirthdaySliceIndex);
+        }
     } else {
         localStorage.setItem(modificationStorageKey, JSON.stringify(createUser(null)));
     }
@@ -119,6 +120,10 @@ function setUserPage(roleName, rootDestination, userDestination, adminDestinatio
 
     submit.onclick = function () {
         const user = JSON.parse(localStorage.getItem(modificationStorageKey));
+
+        if (!user[userRoleUuidDtoKey]) {
+            user[userRoleUuidDtoKey] = null;
+        }
 
         if (!user[userPasswordDtoKey]) {
             user[userPasswordDtoKey] = null;

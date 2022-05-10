@@ -14,7 +14,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "o2n_jwt")
-public class Jwt {
+public class Jwt extends AbstractModel {
     @Id
     @Column(name = "id_jwt")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

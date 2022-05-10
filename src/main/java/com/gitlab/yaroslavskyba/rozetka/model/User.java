@@ -48,7 +48,7 @@ public class User extends AbstractModel {
     @Column(nullable = false, length = MAX_COLUMN_VARCHAR_LENGTH)
     private String password;
 
-    @NotBlank(message = "An email should be present and contains at least one non-whitespace character")
+    @NotBlank(message = "An email should be present and contains at least one non-whitespace character before @ symbol and one after")
     @Size(max = MAX_COLUMN_VARCHAR_LENGTH, message = "An email should be less or equal to " + MAX_COLUMN_VARCHAR_LENGTH + " symbols")
     @Email(message = "An email should be in such the format as text@text")
     @Column(unique = true, nullable = false, length = MAX_COLUMN_VARCHAR_LENGTH)

@@ -18,6 +18,7 @@ const currentUserRoleNameStorageKey = "currentUserRoleName";
 const rolesStorageKey = "roles";
 const modificationStorageKeyStorageKey = "modificationStorageKey";
 const successModificationHttpResponseStorageKey = "successModificationHttpResponse";
+const successUserCreationHttpResponseStorageKey = "successUserCreationHttpResponse";
 const cartProductsStorageKey = "cartProducts";
 const searchedProductNameStorageKey = "searchedProductName";
 
@@ -25,6 +26,7 @@ const authorityApi = "http://localhost:8080/api/v1/";
 const usersApiUrl = authorityApi + "users";
 const rolesApiUrl = authorityApi + "roles";
 const productsApiUrl = authorityApi + "products";
+const jwtsApiUrl = authorityApi + "jwts";
 
 const contentTypePrefix = "application/vnd.rozetka.";
 const contentTypeSuffix = "+json";
@@ -149,7 +151,8 @@ function setNavigation(rootFolderDestination, userFolderDestination, adminFolder
         navItem2.href = loginPath;
         navItem2.onclick = function () {
             if (confirm("Do you want to log out?")) {
-
+                localStorage.clear();
+                location.href = "login.html";
             }
         }
     }

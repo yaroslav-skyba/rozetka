@@ -1,6 +1,7 @@
 onload = function () {
-    localStorage.setItem(modificationStorageKeyStorageKey, currentUserStorageKey);
+    redirectWithoutSpecificRole(roleName);
 
+    localStorage.setItem(modificationStorageKeyStorageKey, currentUserStorageKey);
     setUserPage(
         userRoleName, "../", "", "admin/", "edit your profile", innerHtmlEditSubmit, "PUT"
     );
@@ -13,7 +14,7 @@ xmlHttpRequest.onreadystatechange = function () {
 
             if (userLogin.value !== localStorage.getItem(currentUserLoginStorageKey)) {
                 sendHttpRequest(
-                    "POST", authorityApi + "refreshes", "Content-Type", "text/plain", localStorage.getItem(jwtStorageKey)
+                    "PUT", jwtsApiUrl, "Content-Type", "text/plain", localStorage.getItem(jwtStorageKey)
                 );
             }
         } else if (xmlHttpRequest.status === 201) {

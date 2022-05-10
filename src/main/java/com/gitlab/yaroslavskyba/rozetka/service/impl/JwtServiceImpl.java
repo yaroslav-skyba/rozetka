@@ -53,7 +53,7 @@ public class JwtServiceImpl implements JwtService {
 
     @Override
     @Transactional
-    public String refreshJwtValue(String value) {
+    public String update(String value) {
         try {
             final Jwt jwt = jwtRepository.findJwtByValue(value).orElseThrow();
 
@@ -84,14 +84,14 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
-    public String getUsernameByJwtValue(String jwtValue) {
-        return Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(jwtValue).getBody().getSubject();
+    public String getUsernameByJwtValue(String value) {
+        return Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(value).getBody().getSubject();
     }
 
     @Override
-    public boolean isJwtValueValid(String jwtValue) {
+    public boolean isJwtValueValid(String value) {
         try {
-            Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(jwtValue);
+            Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(value);
             return true;
         } catch (SignatureException signatureException) {
             return false;

@@ -4,9 +4,7 @@ public class ControllerPath {
     private static final String ROOT = "/api/v1/";
     private static final String UUID = "/{uuid}";
 
-    public static final String LOGINS = ROOT + "logins";
-    public static final String REFRESHES = ROOT + "refreshes";
-    public static final String LOGOUTS = ROOT + "logouts";
+    public static final String JWTS = ROOT + "jwts";
     public static final String ORDERS = ROOT + "orders";
     public static final String PRODUCTS = ROOT + "products";
     public static final String PRODUCT = PRODUCTS + UUID;
