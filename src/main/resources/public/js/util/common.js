@@ -151,6 +151,9 @@ function setNavigation(rootFolderDestination, userFolderDestination, adminFolder
         navItem2.href = loginPath;
         navItem2.onclick = function () {
             if (confirm("Do you want to log out?")) {
+                xmlHttpRequest.open("DELETE", jwtsApiUrl);
+                xmlHttpRequest.send(localStorage.getItem(jwtStorageKey));
+
                 localStorage.clear();
                 location.href = "login.html";
             }

@@ -22,13 +22,13 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Transactional
-    public void create(RoleDto roleDto) {
+    public Role create(RoleDto roleDto) {
         try {
             final Role role = new Role();
             role.setUuid(UUID.randomUUID());
             role.setName(roleDto.getName());
 
-            roleRepository.saveAndFlush(role);
+            return roleRepository.saveAndFlush(role);
         } catch (Exception exception) {
             throw new RoleServiceException("An error occurred while creating a role", exception);
         }

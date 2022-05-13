@@ -1,31 +1,39 @@
 package com.gitlab.yaroslavskyba.rozetka.service.impl;
 
+import com.gitlab.yaroslavskyba.rozetka.dto.RoleDto;
 import com.gitlab.yaroslavskyba.rozetka.dto.UserDto;
 import com.gitlab.yaroslavskyba.rozetka.exception.UserServiceException;
 import com.gitlab.yaroslavskyba.rozetka.model.User;
 import com.gitlab.yaroslavskyba.rozetka.repository.RoleRepository;
 import com.gitlab.yaroslavskyba.rozetka.repository.UserRepository;
+import com.gitlab.yaroslavskyba.rozetka.service.RoleService;
 import com.gitlab.yaroslavskyba.rozetka.service.UserService;
-import com.gitlab.yaroslavskyba.rozetka.util.RoleName;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+import javax.validation.ConstraintViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.ConstraintViolationException;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
+
+import static com.gitlab.yaroslavskyba.rozetka.util.RoleName.USER;
 
 @Service
 @Transactional
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+
+    private final RoleService roleService;
+
     private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository,
+                           RoleService roleService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -103,8 +111,12 @@ public class UserServiceImpl implements UserService {
     }
 
     private void setFields(UserDto userDto, User user) {
-        user.setRole(
-            roleRepository.findRoleByUuid(userDto.getUuidRole()).orElse(roleRepository.findRoleByName(RoleName.USER).orElseThrow()));
+        user.setRole(roleRepository.findRoleByUuid(userDto.getUuidRole()).orElse(roleRepository.findRoleByName(USER).orElseGet(() -> {
+            final RoleDto roleDto = new RoleDto();
+            roleDto.setName(USER);
+
+            return roleService.create(roleDto);
+        })));
         user.setLogin(userDto.getLogin());
         user.setEmail(userDto.getEmail());
         user.setFirstName(userDto.getFirstName());
