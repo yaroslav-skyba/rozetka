@@ -25,7 +25,7 @@ onload = function() {
             </div>
 
             <div class="d-flex justify-content-center">
-                <button id="submit" class="btn btn-dark btn-outline-success">Login</button>
+                <button id="submit" class="btn btn-dark btn-outline-success">Log in</button>
             </div>
             
             <div id="alert" class="mt-3"></div>
@@ -36,6 +36,7 @@ onload = function() {
 
     if (successUserCreationHttpResponse) {
         alertMessage("success", successUserCreationHttpResponse);
+        localStorage.removeItem(successUserCreationHttpResponseStorageKey);
     }
 
     document.getElementById("submit").onclick = function() {
@@ -53,9 +54,22 @@ xmlHttpRequest.onreadystatechange = function() {
     if (xmlHttpRequest.readyState === 4) {
         if (xmlHttpRequest.status === 200) {
             if (xmlHttpRequest.responseURL === userApiUrl) {
-                roleApiUrl = rolesApiUrl + "/" + JSON.parse(xmlHttpRequest.responseText)[userRoleUuidDtoKey];
+                const user = JSON.parse(xmlHttpRequest.responseText);
+                const dateFillingZero = "0";
 
-                localStorage.setItem(currentUserStorageKey, xmlHttpRequest.responseText);
+                if (user[userBirthdayDtoKey][1].toString().length === 1) {
+                    user[userBirthdayDtoKey][1] = dateFillingZero + user[userBirthdayDtoKey][1];
+                }
+
+                if (user[userBirthdayDtoKey][2].toString().length === 1) {
+                    user[userBirthdayDtoKey][2] = dateFillingZero + user[userBirthdayDtoKey][2];
+                }
+
+                user[userBirthdayDtoKey] = user[userBirthdayDtoKey].join("-");
+
+                roleApiUrl = rolesApiUrl + "/" + user[userRoleUuidDtoKey];
+
+                localStorage.setItem(currentUserStorageKey, JSON.stringify(user));
                 sendHttpRequest("GET", roleApiUrl, "Authorization", localStorage.getItem(jwtStorageKey), null);
             } else if (xmlHttpRequest.responseURL === roleApiUrl) {
                 localStorage.setItem(currentUserRoleNameStorageKey, JSON.parse(xmlHttpRequest.responseText)[roleNameDtoKey]);

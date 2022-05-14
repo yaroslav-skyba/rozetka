@@ -19,7 +19,7 @@ function setRolePage(headlineInnerHtml, submitInnerHtml, httpMethod) {
             <div>
                 <div class="mb-4">
                     <input id="name" class="form-control form-control-lg"/>
-                    <label for="name">name</label>
+                    <label for="name">Name</label>
                     
                 </div>
                 
@@ -34,6 +34,8 @@ function setRolePage(headlineInnerHtml, submitInnerHtml, httpMethod) {
     setModificationPage(headlineInnerHtml, submitInnerHtml);
 
     roleName = document.getElementById("name");
+
+    submit = document.getElementById("submit");
 
     const modificationStorageKey = localStorage.getItem(modificationStorageKeyStorageKey);
 

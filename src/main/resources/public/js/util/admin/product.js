@@ -32,31 +32,31 @@ function setProductModificationPage(headlineInnerHtml, submitInnerHtml, httpMeth
             <div>
                 <div class="mb-4">
                     <input id="name" class="form-control form-control-lg"/>
-                    <label for="name">name</label>
+                    <label for="name">Name</label>
                     
                 </div>
                 
                 <div class="mb-4">
                     <input id="quantity" class="form-control form-control-lg"/>
-                    <label for="quantity">quantity</label>
+                    <label for="quantity">Quantity</label>
                     
                 </div>
                 
                 <div class="mb-4">
                     <input id="price" class="form-control form-control-lg"/>
-                    <label for="price">price</label>
+                    <label for="price">Price</label>
                     
                 </div>
                 
                 <div class="mb-4">
                     <input id="discount" class="form-control form-control-lg"/>
-                    <label for="discount">discount</label>
+                    <label for="discount">Discount</label>
                     
                 </div>
                 
                 <div class="mb-4">
                     <input id="description" class="form-control form-control-lg"/>
-                    <label for="description">description</label>
+                    <label for="description">Description</label>
                 </div>
                 
                 <div id="productImgCard" class="card mb-4" style="border-radius: 15px" hidden>
@@ -87,6 +87,8 @@ function setProductModificationPage(headlineInnerHtml, submitInnerHtml, httpMeth
     productImgCard = document.getElementById("productImgCard");
     productImgValue = document.getElementById("productImgValue");
     productImgUploader = document.getElementById("productImgUploader");
+
+    submit = document.getElementById("submit");
 
     const modificationStorageKey = localStorage.getItem(modificationStorageKeyStorageKey);
 

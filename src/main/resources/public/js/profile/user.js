@@ -1,5 +1,5 @@
 onload = function () {
-    redirectWithoutSpecificRole(roleName);
+    redirectWithoutSpecificRole(userRoleName);
 
     localStorage.setItem(modificationStorageKeyStorageKey, currentUserStorageKey);
     setUserPage(
@@ -10,16 +10,18 @@ onload = function () {
 xmlHttpRequest.onreadystatechange = function () {
     if (xmlHttpRequest.readyState === 4) {
         if (xmlHttpRequest.status === 200) {
-            alertMessage("success", xmlHttpRequest.responseText);
+            if (xmlHttpRequest.responseURL === usersApiUrl) {
+                alertMessage("success", xmlHttpRequest.responseText);
 
-            if (userLogin.value !== localStorage.getItem(currentUserLoginStorageKey)) {
-                sendHttpRequest(
-                    "PUT", jwtsApiUrl, "Content-Type", "text/plain", localStorage.getItem(jwtStorageKey)
-                );
+                if (userLogin.value !== localStorage.getItem(currentUserLoginStorageKey)) {
+                    sendHttpRequest(
+                        "PUT", jwtsApiUrl, "Content-Type", "text/plain", localStorage.getItem(jwtStorageKey)
+                    );
+                }
+            } else if (xmlHttpRequest.responseURL === jwtsApiUrl) {
+                localStorage.setItem(jwtStorageKey, xmlHttpRequest.responseText);
+                localStorage.setItem(currentUserLoginStorageKey, userLogin.value);
             }
-        } else if (xmlHttpRequest.status === 201) {
-            localStorage.setItem(jwtStorageKey, xmlHttpRequest.responseText);
-            localStorage.setItem(currentUserLoginStorageKey, userLogin.value);
         } else if (xmlHttpRequest.status === 409) {
             alertMessage("danger", xmlHttpRequest.responseText);
         }

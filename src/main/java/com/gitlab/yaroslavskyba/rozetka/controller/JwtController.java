@@ -13,6 +13,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,10 +43,10 @@ public class JwtController {
         }
     }
 
-    @PostMapping(consumes = org.springframework.http.MediaType.TEXT_PLAIN_VALUE)
+    @PutMapping(consumes = org.springframework.http.MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<String> updateJwt(@RequestBody String value) {
         try {
-            return ResponseEntity.status(HttpStatus.CREATED).body(jwtService.update(value));
+            return ResponseEntity.ok(jwtService.update(value));
         } catch (JwtServiceException jwtServiceException) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(jwtServiceException.getMessage());
         }

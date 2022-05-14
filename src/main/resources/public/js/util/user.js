@@ -30,42 +30,42 @@ function setUserPage(roleName, rootDestination, userDestination, adminDestinatio
             <div>
                 <div class="mb-4">
                     <input id="firstName" class="form-control form-control-lg"/>
-                    <label for="firstName">first name</label>                    
+                    <label for="firstName">First name</label>                    
                 </div>
             
                 <div class="mb-4">
                     <input id="lastName" class="form-control form-control-lg"/>
-                    <label for="lastName">last name</label>
+                    <label for="lastName">Last name</label>
                 </div>
             
                 <div class="mb-4">
                     <input id="login" class="form-control form-control-lg"/>
-                    <label for="login">login</label>
+                    <label for="login">Login</label>
                 </div>
             
                 <div class="mb-4">
                     <input type="email" id="email" class="form-control form-control-lg"/>
-                    <label for="email">An email</label>
+                    <label for="email">Email</label>
                 </div>
             
                 <div class="mb-4">
                     <input type="date" id="birthday" class="form-control form-control-lg"/>
-                    <label for="birthday">birthday</label>
+                    <label for="birthday">Birthday</label>
                 </div>
             
                 <div class="mb-4">
                     <input type="password" id="password" class="form-control form-control-lg"/>
-                    <label for="password">password</label>
+                    <label for="password">Password</label>
                 </div>
                 
                 <div class="mb-4">
                     <input type="password" id="passwordConformation" class="form-control form-control-lg"/>
-                    <label for="passwordConformation">password conformation</label>
+                    <label for="passwordConformation">Password conformation</label>
                 </div>
     
                 <div id="roleDiv" class="mb-4" hidden>
                     <select id="role" class="form-control form-control-lg"></select> 
-                    <label for="role">role</label>
+                    <label for="role">Role</label>
                 </div>
                 
                 <div class="d-flex justify-content-center">
@@ -87,6 +87,8 @@ function setUserPage(roleName, rootDestination, userDestination, adminDestinatio
     userLastName = document.getElementById("lastName");
     userBirthday = document.getElementById("birthday");
 
+    submit = document.getElementById("submit");
+
     const modificationStorageKey = localStorage.getItem(modificationStorageKeyStorageKey);
     const user = JSON.parse(localStorage.getItem(modificationStorageKey));
 
@@ -104,11 +106,13 @@ function setUserPage(roleName, rootDestination, userDestination, adminDestinatio
         userFirstName.value = user[userFirstNameDtoKey];
         userLastName.value = user[userLastNameDtoKey];
 
-        const birthday = user[userBirthdayDtoKey];
+        const birthday = user[userBirthdayDtoKey]
         const lastBirthdaySliceIndex = 10;
 
         if (birthday.length > lastBirthdaySliceIndex) {
             userBirthday.value = new Date(birthday).toISOString().slice(0, lastBirthdaySliceIndex);
+        } else {
+            userBirthday.value = birthday;
         }
     } else {
         localStorage.setItem(modificationStorageKey, JSON.stringify(createUser(null)));

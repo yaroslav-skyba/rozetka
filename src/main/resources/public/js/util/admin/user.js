@@ -1,5 +1,5 @@
 function setUserAdminPage(storageKey, headlineInnerHtml, submitInnerHtml, httpMethod) {
-    redirectWithoutSpecificRole(roleName);
+    redirectWithoutSpecificRole(adminRoleName);
 
     localStorage.setItem(modificationStorageKeyStorageKey, storageKey);
 
