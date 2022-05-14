@@ -50,8 +50,7 @@ function setRolePage(headlineInnerHtml, submitInnerHtml, httpMethod) {
         return createRole(JSON.parse(localStorage.getItem(modificationStorageKey))[roleUuidDtoKey]);
     });
 
-    setSubmitOnclick(
-        createRole(JSON.parse(localStorage.getItem(modificationStorageKey))[roleUuidDtoKey]), httpMethod, rolesApiUrl,
-        contentTypePrefix + "role" + contentTypeSuffix
-    );
+    setSubmitOnclick(function () {
+        return JSON.parse(localStorage.getItem(modificationStorageKey));
+    }, httpMethod, rolesApiUrl, contentTypePrefix + "role" + contentTypeSuffix);
 }

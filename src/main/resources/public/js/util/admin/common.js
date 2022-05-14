@@ -2,9 +2,9 @@ const innerHtmlCreationSubmit = "Create";
 
 let submit;
 
-function setSubmitOnclick(body, method, url, contentType) {
+function setSubmitOnclick(create, method, url, contentType) {
     submit.onclick = function () {
-        sendModificationHttpRequest(method, url, contentType, body);
+        sendModificationHttpRequest(method, url, contentType, create());
     }
 }
 

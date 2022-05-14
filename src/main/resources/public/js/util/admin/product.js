@@ -133,8 +133,7 @@ function setProductModificationPage(headlineInnerHtml, submitInnerHtml, httpMeth
         };
     }
 
-    setSubmitOnclick(
-        createProduct(JSON.parse(localStorage.getItem(modificationStorageKey))[productUuidDtoKey]), httpMethod, productsApiUrl,
-        contentTypePrefix + "product" + contentTypeSuffix
-    );
+    setSubmitOnclick(function () {
+        return JSON.parse(localStorage.getItem(modificationStorageKey));
+    }, httpMethod, productsApiUrl, contentTypePrefix + "product" + contentTypeSuffix);
 }
