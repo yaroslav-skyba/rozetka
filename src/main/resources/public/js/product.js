@@ -2,6 +2,7 @@ const productReviewStorageKey = "productReview";
 
 const productReviewUuidDtoKey = "uuid";
 const productReviewUserUuidDtoKey = "userUuid";
+const productReviewUserNameDtoKey = "userName";
 const productReviewContentDtoKey = "content";
 const productReviewRatingDtoKey = "rating";
 
@@ -16,8 +17,11 @@ let productReviewApiUrl;
 
 let product;
 
-function setProductReviewSubmitOnclick(review, httpMethod) {
+function setProductReviewSubmitOnclick(uuid, httpMethod) {
     document.getElementById("submit").onclick = function () {
+        const review = JSON.parse(localStorage.getItem(productReviewStorageKey));
+        review[productReviewUuidDtoKey] = uuid;
+
         if (!review[productReviewRatingDtoKey]) {
             review[productReviewRatingDtoKey] = null;
         }
@@ -30,6 +34,7 @@ function createProductReview(uuid, userUuid, productReviewContent, productReview
     const review = {};
     review[productReviewUuidDtoKey] = uuid;
     review[productReviewUserUuidDtoKey] = userUuid;
+    review[productReviewUserNameDtoKey] = null;
     review[productReviewContentDtoKey] = productReviewContent;
     review[productReviewRatingDtoKey] = productReviewRating;
 
@@ -61,7 +66,7 @@ function setProductReviewModificationForm(userUuid) {
     }
 
     setProductAddingButtonOnclick(document.getElementById("productAdding"), product, 0);
-    setProductReviewSubmitOnclick(JSON.parse(localStorage.getItem(productReviewStorageKey)), "POST");
+    setProductReviewSubmitOnclick(null, "POST");
 }
 
 onload = function() {
@@ -171,7 +176,7 @@ xmlHttpRequest.onreadystatechange = function () {
 
                         setContainer(`
                             <div class="card-body">
-                                <h3 class="card-title">` + reviews[i]["userName"] + `</h3>
+                                <h3 class="card-title">` + reviews[i][productReviewUserNameDtoKey] + `</h3>
             
                                 <p class="card-text">` + reviews[i][productReviewContentDtoKey] + `</p>
                                 Rating: ` + reviewRating + `<br/>`
@@ -184,16 +189,19 @@ xmlHttpRequest.onreadystatechange = function () {
                     const reviewEditButtons = document.getElementsByClassName("reviewEdit");
                     for (let i = 0; i < reviewEditButtons.length; i++) {
                         reviewEditButtons[i].onclick = function() {
-                            productReviewContent.value = reviews[i][productReviewContentDtoKey];
-                            productReviewRating.value = reviews[i][productReviewRatingDtoKey];
+                            for (let j = 0; j < reviews.length; j++) {
+                                if (reviews[j][productReviewUserUuidDtoKey] === userUuid) {
+                                    productReviewContent.value = reviews[j][productReviewContentDtoKey];
+                                    productReviewRating.value = reviews[j][productReviewRatingDtoKey];
 
-                            setProductReviewSubmitOnclick(createProductReview(
-                                reviews[i][productReviewUuidDtoKey], reviews[i][productReviewUserUuidDtoKey],
-                                productReviewContent.value, productReviewRating.value
-                            ), "PUT");
+                                    setProductReviewSubmitOnclick(reviews[j][productReviewUuidDtoKey], "PUT");
 
-                            if (!location.href.includes("#")) {
-                                location.href += "#currentReview";
+                                    if (!location.href.includes("#")) {
+                                        location.href += "#currentReview";
+                                    }
+
+                                    break;
+                                }
                             }
                         }
                     }

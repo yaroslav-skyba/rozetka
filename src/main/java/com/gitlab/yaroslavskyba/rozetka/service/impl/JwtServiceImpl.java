@@ -11,11 +11,9 @@ import com.gitlab.yaroslavskyba.rozetka.service.UserService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.SignatureException;
+import java.util.Date;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.Instant;
-import java.util.Date;
 
 @Service
 public class JwtServiceImpl implements JwtService {
@@ -56,14 +54,8 @@ public class JwtServiceImpl implements JwtService {
     public String update(String value) {
         try {
             final Jwt jwt = jwtRepository.findJwtByValue(value).orElseThrow();
-
-            if (Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(jwt.getValue()).getBody().getExpiration().toInstant()
-                    .compareTo(Instant.now()) < 0) {
-                jwtRepository.delete(jwt);
-                throw new JwtServiceException("A jwt has been expired. Please, make a new sign-in request");
-            }
-
             final String jwtValue = TOKEN_TYPE + generateJwtValue(userService.get(jwt.getUser().getLogin()));
+
             jwt.setValue(jwtValue);
             jwtRepository.saveAndFlush(jwt);
 

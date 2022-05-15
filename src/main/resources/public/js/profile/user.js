@@ -20,7 +20,7 @@ xmlHttpRequest.onreadystatechange = function () {
                 }
             } else if (xmlHttpRequest.responseURL === jwtsApiUrl) {
                 localStorage.setItem(jwtStorageKey, xmlHttpRequest.responseText);
-                localStorage.setItem(currentUserLoginStorageKey, userLogin.value);
+                localStorage.setItem(currentUserLoginStorageKey, JSON.parse(localStorage.getItem(currentUserStorageKey))[userLoginDtoKey]);
             }
         } else if (xmlHttpRequest.status === 409) {
             alertMessage("danger", xmlHttpRequest.responseText);

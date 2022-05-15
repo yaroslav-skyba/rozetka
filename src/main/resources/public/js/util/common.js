@@ -92,10 +92,10 @@ function setNavigation(rootFolderDestination, userFolderDestination, adminFolder
                         </li>
                     </ul>
     
-                    <form class="d-flex">
+                    <div class="d-flex">
                         <input id="searchInput" class="form-control me-2" type="search" placeholder="Search products" aria-label="Search">
-                        <button id="searchButton" class="btn btn-outline-success">Search</button>
-                    </form>
+                        <button id="searchButton" class="btn btn-outline-success" type="button">Search</button>
+                    </div>
                 </div>
             </div>
         </nav>`;
