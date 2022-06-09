@@ -1,0 +1,19 @@
+services:
+  db:
+    container_name: rozetka_db
+    ports:
+      - 5432:5432
+    env_file:
+      - .env.db
+    image: postgres:14.3
+    volumes:
+      - db-data:/var/lib/postgresql/data
+  web:
+    container_name: rozetka_web
+    ports:
+      - 8080:8080
+    env_file:
+      - .env.web
+    build: .
+volumes:
+  db-data:
