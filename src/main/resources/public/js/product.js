@@ -95,9 +95,9 @@ xmlHttpRequest.onreadystatechange = function () {
                         <h3 class="card-title">` + product[productNameDtoKey] + `</h3>
     
                         <p class="card-text">` + getProductDescription(product) + `</p>
-                        Price: ` + product[productPriceDtoKey] + `<br/>
+                        Price: ` + product[productPriceDtoKey] + ` $<br/>
                         
-                        <button id="productAdding" class="btn btn-dark btn-outline-success mt-4">Add to your cart</button>
+                        <button id="productAdding" class="btn btn-dark btn-outline-primary mt-4">Add to your cart</button>
                     </div>
                 `);
                 setContainer(`
@@ -124,7 +124,7 @@ xmlHttpRequest.onreadystatechange = function () {
                             </div>
                             
                             <div class="d-flex justify-content-center">
-                                <button class="btn btn-dark btn-outline-success" id="submit">Post</button>
+                                <button class="btn btn-dark btn-outline-primary" id="submit">Post</button>
                             </div>
                         </div>
                         
@@ -169,8 +169,8 @@ xmlHttpRequest.onreadystatechange = function () {
 
                         if (isAdmin || reviews[i][productReviewUserUuidDtoKey] === userUuid) {
                             reviewButtons = `
-                                <button class="btn btn-dark btn-outline-success mt-4 reviewEdit">Edit</button>
-                                <button class="btn btn-dark btn-outline-success mt-4 reviewDeletion">Delete</button>
+                                <button class="btn btn-dark btn-outline-primary mt-4 reviewEdit">Edit</button>
+                                <button class="btn btn-dark btn-outline-primary mt-4 reviewDeletion">Delete</button>
                             `;
                         }
 

@@ -38,7 +38,7 @@ onload = function () {
                 <tbody id="userTableContent"></tbody>
             </table>
             
-            <button class="btn btn-dark btn-outline-success" onclick="location.href = '/profile/admin/creation/user.html'">
+            <button class="btn btn-dark btn-outline-primary" onclick="location.href = '/profile/admin/creation/user.html'">
                 Create user
             </button>
         </div>
@@ -57,7 +57,7 @@ onload = function () {
                 <tbody id="roleTableContent"></tbody>
             </table>
             
-            <button class="btn btn-dark btn-outline-success" onclick="location.href = '/profile/admin/creation/role.html'">
+            <button class="btn btn-dark btn-outline-primary" onclick="location.href = '/profile/admin/creation/role.html'">
                 Create role
             </button>
         </div>
@@ -78,7 +78,7 @@ onload = function () {
                 <tbody id="productTableContent"></tbody>
             </table>
             
-            <button class="btn btn-dark btn-outline-success" onclick="location.href = '/profile/admin/creation/product.html'">
+            <button class="btn btn-dark btn-outline-primary" onclick="location.href = '/profile/admin/creation/product.html'">
                 Create product
             </button>
         </div>
@@ -250,7 +250,7 @@ function appendButton(textContent, onclick, actionsTd) {
     const button = document.createElement("button");
     button.textContent = textContent;
     button.onclick = onclick;
-    button.className = "btn btn-dark btn-outline-success";
+    button.className = "btn btn-dark btn-outline-primary";
 
     actionsTd.append(button);
 }

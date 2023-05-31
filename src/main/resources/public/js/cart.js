@@ -14,35 +14,49 @@ onload = function () {
             location.reload();
         }
 
+        const rowCols = document.createElement("div");
+
+        rowCols.className = "row row-cols-3";
+
         for (let i = 0; i < parsedProducts.length; i++) {
             const productPrice = parsedProducts[i][productPriceDtoKey] * parsedProducts[i][productQuantityDtoKey];
             productOverallPrice += productPrice;
 
-            setContainer(`
-                <img src="` + parsedProducts[i][productImgDtoKey] + `" style="border-radius: 15px"
-                     alt="` + parsedProducts[i][productNameDtoKey] + `">
-                 
-                <div class="card-body">
-                    <a href="product.html?` + productUuidDtoKey + `=` + parsedProducts[i][productUuidDtoKey] + `">
-                        <h3 class="card-title">` + parsedProducts[i][productNameDtoKey] + `</h3>    
-                    </a>
-                    
-                    <p class="card-text">` + getProductDescription(parsedProducts[i]) + `</p>
-                    
-                    <input id="productCounter_` + parsedProducts[i][productUuidDtoKey] + `" class="productCounter" type="number" min="1" 
-                           max="100" value="` + parsedProducts[i][productQuantityDtoKey] + `">
-                    <label id="productCounter_` + parsedProducts[i][productUuidDtoKey] + `"></label><br/>
-                    
-                    <span>Price: ` + productPrice + `</span><br/>
-                    <button class="btn btn-dark btn-outline-success mt-4 productDeletion">Delete</button>
+            rowCols.innerHTML += `
+                <div class="card bg-dark text-white text-break" style="border-radius: 15px; border-color: #0d6dfcff">
+                    <img src="` + parsedProducts[i][productImgDtoKey] + `" style="border-radius: 15px"
+                         alt="` + parsedProducts[i][productNameDtoKey] + `">
+                     
+                    <div class="card-body">
+                        <a href="product.html?` + productUuidDtoKey + `=` + parsedProducts[i][productUuidDtoKey] + `">
+                            <h3 class="card-title">` + parsedProducts[i][productNameDtoKey] + `</h3>    
+                        </a>
+                        
+                        <p class="card-text">` + getProductDescription(parsedProducts[i]) + `</p>
+                        
+                        <input id="productCounter_` + parsedProducts[i][productUuidDtoKey] + `" class="productCounter" type="number" min="1" 
+                               max="100" value="` + parsedProducts[i][productQuantityDtoKey] + `">
+                        <label id="productCounter_` + parsedProducts[i][productUuidDtoKey] + `"></label><br/>
+                        
+                        <span>Price: ` + productPrice + ` $</span><br/>
+                        <button class="btn btn-dark btn-outline-primary mt-4 productDeletion">Delete</button>
+                    </div>
                 </div>
-            `);
+            `;
         }
+
+        const container = document.createElement("div");
+
+        container.className = "container";
+
+        container.append(rowCols);
+
+        document.getElementById("main").append(container);
 
         setContainer(`
             <div class="card-body">
                 Overall: ` + productOverallPrice + `<br/>
-                <button id="submit" class="btn btn-dark btn-outline-success">Place an order</button>
+                <button id="submit" class="btn btn-dark btn-outline-primary">Place an order</button>
                 
                 <div id="alert" class="mt-3"></div> 
             </div>

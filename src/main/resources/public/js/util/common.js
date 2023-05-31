@@ -94,7 +94,7 @@ function setNavigation(rootFolderDestination, userFolderDestination, adminFolder
     
                     <div class="d-flex">
                         <input id="searchInput" class="form-control me-2" type="search" placeholder="Search products" aria-label="Search">
-                        <button id="searchButton" class="btn btn-outline-success" type="button">Search</button>
+                        <button id="searchButton" class="btn btn-outline-primary" type="button">Search</button>
                     </div>
                 </div>
             </div>
@@ -119,8 +119,7 @@ function setNavigation(rootFolderDestination, userFolderDestination, adminFolder
                 </div>
                 
                 <div class="text-center p-3" style="background-color: #00000033">
-                    © 2022 Copyright:
-                    <a href="https://thispersondoesnotexist.com/">Rozetka</a>
+                    © 2023 Copyright: The best internet-shop
                 </div>
             </footer>`;
 
@@ -167,19 +166,14 @@ function setNavigation(rootFolderDestination, userFolderDestination, adminFolder
 }
 
 function setMainAttributes() {
-    main.style.backgroundColor = "#201c24";
+    main.style.backgroundColor = "#1d1f22ff";
     main.className = "min-vh-100";
 }
 
 function setContainer(content) {
     const container = document.createElement("div");
     container.className = "container";
-    container.innerHTML +=
-        `<div class="row">
-            <div class="col">
-                <div class="card bg-dark text-white text-break" style="border-radius: 15px; border-color: #198754">` + content + `</div>
-            </div>
-        </div>`;
+    container.innerHTML += `<div class="card bg-dark text-white text-break" style="border-radius: 15px; border-color: #0d6dfcff">` + content + `</div>`;
 
     main.append(container);
 }

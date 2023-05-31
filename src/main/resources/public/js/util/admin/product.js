@@ -69,7 +69,7 @@ function setProductModificationPage(headlineInnerHtml, submitInnerHtml, httpMeth
                 </div>
                 
                 <div class="d-flex justify-content-center">
-                    <button class="btn btn-dark btn-outline-success" id="submit"></button>
+                    <button class="btn btn-dark btn-outline-primary" id="submit"></button>
                 </div>
             </div>
             

@@ -25,7 +25,7 @@ onload = function() {
             </div>
 
             <div class="d-flex justify-content-center">
-                <button id="submit" class="btn btn-dark btn-outline-success">Log in</button>
+                <button id="submit" class="btn btn-dark btn-outline-primary">Log in</button>
             </div>
             
             <div id="alert" class="mt-3"></div>
